@@ -9,6 +9,8 @@
 #include <vector>
 #include <cstdlib>
 
+#include "TSP.h"
+
 #define DATASET_PATHS "../dataset/"
 
 #define EXTRA_FULLY_CONNECTED_GRAPHS_25_EDGES "Extra_Fully_Connected_Graphs/edges_25.csv"
@@ -30,14 +32,14 @@
 #define TOY_GRAPH_STADIUMS "Toy-Graphs/stadiums.csv"
 #define TOY_GRAPH_TOURISM "Toy-Graphs/tourism.csv"
 
-#define REAL_WORLD_GRAPH_1_EDGES "Real-Word/graph1/edges.csv"
-#define REAL_WORLD_GRAPH_1_NODES "Real-Word/graph1/nodes.csv"
+#define REAL_WORLD_GRAPH_1_EDGES "Real-world Graphs/graph1/edges.csv"
+#define REAL_WORLD_GRAPH_1_NODES "Real-world Graphs/graph1/nodes.csv"
 
-#define REAL_WORLD_GRAPH_2_EDGES "Real-Word/graph2/edges.csv"
-#define REAL_WORLD_GRAPH_2_NODES "Real-Word/graph2/nodes.csv"
+#define REAL_WORLD_GRAPH_2_EDGES "Real-world Graphs/graph2/edges.csv"
+#define REAL_WORLD_GRAPH_2_NODES "Real-world Graphs/graph2/nodes.csv"
 
-#define REAL_WORLD_GRAPH_3_EDGES "Real-Word/graph3/edges.csv"
-#define REAL_WORLD_GRAPH_3_NODES "Real-Word/graph3/nodes.csv"
+#define REAL_WORLD_GRAPH_3_EDGES "Real-world Graphs/graph3/edges.csv"
+#define REAL_WORLD_GRAPH_3_NODES "Real-world Graphs/graph3/nodes.csv"
 
 /**@brief Class that manages the menu.*/
 class Application {
@@ -130,17 +132,17 @@ public:
 
                 switch (graphChoice) {
                     case 1:
-                        this->edgePath = DATASET_PATHS TOY_GRAPH_SHIPPING;
+                        this->nodePath = DATASET_PATHS TOY_GRAPH_SHIPPING;
                         break;
                     case 2:
-                        this->edgePath = DATASET_PATHS TOY_GRAPH_STADIUMS;
+                        this->nodePath = DATASET_PATHS TOY_GRAPH_STADIUMS;
                         break;
                     case 3:
-                        this->edgePath = DATASET_PATHS TOY_GRAPH_TOURISM;
+                        this->nodePath = DATASET_PATHS TOY_GRAPH_TOURISM;
                         break;
                     default:
                         std::cout << "Unrecognized option, defaulting to shipping graph.\n";
-                        this->edgePath = DATASET_PATHS TOY_GRAPH_SHIPPING;
+                        this->nodePath = DATASET_PATHS TOY_GRAPH_SHIPPING;
                 }
                 break;
             case 3:
@@ -181,6 +183,9 @@ public:
         // DEBUG
         // TODO remove clearScreen();
         // TODO remove std::cout << "The current path for nodes is " << nodePath << " and edge's is " << edgePath << " cur env " << env << "\n";
+
+        tsp.parseData(nodePath, edgePath, edgeFileSeparatedFromNodeFile);
+        clearScreen();
     }
 
     void clearScreen();
@@ -192,6 +197,8 @@ public:
     static int processKey(const std::string &option);
 
 private:
+
+    TSP tsp;
 
     /* Private functions */
     std::string showMainMenu();
@@ -206,8 +213,8 @@ private:
 
     /* Attributes */
     std::string env; // System environment variable
-    std::string edgePath; // Path for edges.csv
-    std::string nodePath; // Path for nodes.csv
+    std::string edgePath = ""; // Path for edges.csv
+    std::string nodePath = ""; // Path for nodes.csv
     bool edgeFileSeparatedFromNodeFile = false;
 };
 

@@ -12,10 +12,10 @@
 class TSP {
 public:
     // Data parsing
-    // TODO
+    void parseData(std::string nodesFilePath, std::string edgesFilePath, bool bothFilesProvided);
 
     // Free allocated space
-    // TODO
+    void dataGoBoom();
 
     // T2.1
     // TODO
@@ -30,8 +30,23 @@ public:
     // TODO
 
 private:
-    Graph<GeoPoint*> tspNetwork; // Graph  // FIXME: Use pointer?
-    std::unordered_map<int, GeoPoint> geoMap; // Contains all geo points
+    Graph<GeoPoint*> tspNetwork; // Graph
+    std::unordered_map<int, GeoPoint*> geoMap; // Contains all geo points
+
+
+
+
+    void parseEdgesFromMemory(char* data, size_t size);
+    void loadFileUsingMMap(const std::string& filename);
+
+
+
+
+
+
+    void parsingGeoPointsAndEdges(std::ifstream &in);
+    void parsingGeoPoints(std::ifstream &in);
+    void parsingEdges(std::ifstream &in);
 };
 
 #endif //PROJ_DA_1_MENU_H
