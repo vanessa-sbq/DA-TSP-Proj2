@@ -75,13 +75,7 @@ void TSP::parseData(std::string nodesFilePath, std::string edgesFilePath, bool b
         parsingGeoPoints(in);
         in.close();
 
-        in.open(edgesFilePath);
-        if (!in.is_open()) {
-            std::cout << "Unable to open edges csv.\n";
-            return;
-        }
-        parsingEdges(in);
-        in.close();
+        parsingEdges(edgesFilePath);
 
     } else {
         in.open(nodesFilePath);
@@ -265,9 +259,9 @@ void TSP::loadFileUsingMMap(const std::string& filename) {
  * @brief Function that helps parsing the edges that are inside the csv.
  * @details This functions expects the following order: origin, destination, haversine_distance.
  * */
-void TSP::parsingEdges(std::ifstream &in) {
+void TSP::parsingEdges(std::string &in) {
 
-    loadFileUsingMMap("../dataset/Real-world Graphs/graph1/edges.csv");
+    loadFileUsingMMap(in);
 
     // FALL BACK
 
