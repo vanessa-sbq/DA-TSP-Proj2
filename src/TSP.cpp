@@ -3,6 +3,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <cmath>
 #include <unordered_map>
 #include <sys/mman.h>
 #include <fcntl.h>
@@ -75,7 +76,15 @@ void TSP::parseData(std::string nodesFilePath, std::string edgesFilePath, bool b
         parsingGeoPoints(in);
         in.close();
 
-        parsingEdges(edgesFilePath);
+        in.open(edgesFilePath);
+        if (!in.is_open()) {
+            std::cout << "Unable to open edges csv.\n";
+            return;
+        }
+        parsingEdges(in);
+        in.close();
+
+
 
     } else {
         in.open(nodesFilePath);
@@ -130,8 +139,8 @@ void TSP::parsingGeoPointsAndEdges(std::ifstream &in) {
         this->geoMap[stoi(origin)] = geoPointSource;
         this->geoMap[stoi(destination)] = geoPointDestination;
 
-        tspNetwork.addVertex(geoPointSource);
-        tspNetwork.addVertex(geoPointDestination);
+        this->vertexGeoMap[stoi(origin)] = tspNetwork.addVertex(geoPointSource);
+        this->vertexGeoMap[stoi(destination)] = tspNetwork.addVertex(geoPointDestination);
     }
 
     in.clear();
@@ -154,17 +163,17 @@ void TSP::parsingGeoPointsAndEdges(std::ifstream &in) {
             }
         }
 
-        GeoPoint* geoPointSource = geoMap[stoi(origin)] ;
-        GeoPoint* geoPointTarget = geoMap[stoi(destination)] ;
+        Vertex<GeoPoint*>* geoPointSource = vertexGeoMap[stoi(origin)] ;
+        Vertex<GeoPoint*>* geoPointTarget = vertexGeoMap[stoi(destination)] ;
 
         if (geoPointSource == nullptr || geoPointTarget == nullptr) {
             std::cerr << "Error in parsingGeoPointsAndEdges, problem with finding vertex in geoMap.\n";
-            return;
+            continue;
         }
 
-        if (!this->tspNetwork.addEdge(geoPointSource, geoPointTarget, std::stod(distance))) {
+        if (!geoPointSource->addEdge(geoPointTarget, std::stod(distance))) {
             std::cerr << "Problem while adding an edge to the graph\n";
-            return;
+            continue;
         }
 
     }
@@ -189,21 +198,26 @@ void TSP::parsingGeoPoints(std::ifstream &in) {
 
         this->geoMap[stoi(id)] = geoPoint;
 
-        if (!tspNetwork.addVertex(geoPoint)) {
+        Vertex<GeoPoint*>* vertex = tspNetwork.addVertex(geoPoint);
+
+        if (vertex == nullptr) {
             std::cout << "Error in parsingGeoPoints, error while adding vertex to graph.\n";
         }
+
+        this->vertexGeoMap[stoi(id)] = vertex;
     }
 }
 
 void TSP::parseEdgesFromMemory(char* data, size_t size) {
-    std::istringstream in(std::string(data, size));
+    /*std::istringstream in(std::string(data, size));
     std::string line;
 
     // Skip the header
-    getline(in, line);
+    std::getline(in, line);
 
     // Process the rest of the data
-    while (getline(in, line)) {
+    while (std::getline(in, line)) {
+        std::cout << "line: " << line << std::endl;
         std::istringstream s(line);
         std::string origin, destination, distance;
 
@@ -212,23 +226,23 @@ void TSP::parseEdgesFromMemory(char* data, size_t size) {
             continue;
         }
 
-        GeoPoint* geoPointSource = geoMap[std::stoi(origin)];
-        GeoPoint* geoPointDestination = geoMap[std::stoi(destination)];
+        Vertex<GeoPoint*>* geoPointSource = vertexGeoMap.at(std::stoi(origin));
+        Vertex<GeoPoint*>* geoPointDestination = vertexGeoMap.at(std::stoi(destination));
 
         if (geoPointSource == nullptr || geoPointDestination == nullptr) {
             std::cerr << "Error in parsingEdges, problem with finding vertex in maps.\n";
             continue;
         }
 
-        if (!tspNetwork.addEdge(geoPointSource, geoPointDestination, std::stod(distance))) {
+        if (!geoPointSource->addEdge(geoPointDestination, std::stod(distance))) {
             std::cerr << "Error in parsingEdges, problem while adding an edge to the graph\n";
             continue;
         }
-    }
+    }*/
 }
 
 void TSP::loadFileUsingMMap(const std::string& filename) {
-    int fd = open(filename.c_str(), O_RDONLY);
+    /*int fd = open(filename.c_str(), O_RDONLY);
     if (fd == -1) {
         std::cerr << "Error opening file." << std::endl;
         return;
@@ -252,30 +266,29 @@ void TSP::loadFileUsingMMap(const std::string& filename) {
     parseEdgesFromMemory(data, st.st_size);
 
     munmap(data, st.st_size);
-    close(fd);
+    close(fd);*/
 }
 
 /**
  * @brief Function that helps parsing the edges that are inside the csv.
  * @details This functions expects the following order: origin, destination, haversine_distance.
  * */
-void TSP::parsingEdges(std::string &in) {
-
-    loadFileUsingMMap(in);
+void TSP::parsingEdges(std::ifstream &in) {
 
     // FALL BACK
 
     // DO NOT REMOVE
+    //loadFileUsingMMap(in);
 
-    /*std::string line;
+    std::string line;
     getline(in, line); // Header
     int numberOfHeadings = countHeaders(line);
 
     std::cout << "NUMBER OF HEADINGS: " << numberOfHeadings << std::endl;
 
 
-    GeoPoint *geoPointSource = nullptr;
-    GeoPoint *geoPointDestination = nullptr;
+    Vertex<GeoPoint*>* geoPointSource = nullptr;
+    Vertex<GeoPoint*>* geoPointDestination = nullptr;
 
     if (numberOfHeadings == -1) { // The header itself is already data...
         std::istringstream s(line);
@@ -284,21 +297,19 @@ void TSP::parsingEdges(std::string &in) {
             std::cerr << "Error in parsingEdges, invalid line in the CSV file" << line << std::endl;
         }
 
-        geoPointSource = geoMap[stoi(origin)];
-        geoPointDestination = geoMap[stoi(destination)];
+        Vertex<GeoPoint*>* geoPointSource = vertexGeoMap.at(std::stoi(origin));
+        Vertex<GeoPoint*>* geoPointDestination = vertexGeoMap.at(std::stoi(destination));
 
         if (geoPointSource == nullptr || geoPointDestination == nullptr) {
             std::cerr << "Error in parsingEdges, problem with finding vertex in maps.\n";
-            return;
         }
 
-        if (!this->tspNetwork.addEdge(geoPointSource, geoPointDestination, std::stod(distance))) {
+        if (!geoPointSource->addEdge(geoPointDestination, std::stod(distance))) {
             std::cerr << "Error in parsingEdges, problem while adding an edge to the graph\n";
-            return;
         }
     } // else ignore the header and process the rest of the data.
 
-    while (getline(in, line)) {
+    while (std::getline(in, line)) {
         std::istringstream s(line);
         std::string origin, destination, distance;
 
@@ -306,21 +317,20 @@ void TSP::parsingEdges(std::string &in) {
             std::cerr << "Error in parsingEdges, invalid line in the CSV file" << line << std::endl;
         }
 
-        geoPointSource = geoMap[stoi(origin)];
-        geoPointDestination = geoMap[stoi(destination)];
+        geoPointSource = vertexGeoMap.at(std::stoi(origin));
+        geoPointDestination = vertexGeoMap.at(std::stoi(destination));
 
         if (geoPointSource == nullptr || geoPointDestination == nullptr) {
             std::cerr << "Error in parsingEdges, problem with finding vertex in maps.\n";
-            return;
+            continue;
         }
 
-        if (!this->tspNetwork.addEdge(geoPointSource, geoPointDestination, std::stod(distance))) {
+        if (!geoPointSource->addEdge(geoPointDestination, std::stod(distance))) {
             std::cerr << "Error in parsingEdges, problem while adding an edge to the graph\n";
-            return;
+            continue;
         }
 
     }
-*/
 }
 
 /* Data parsing end */
