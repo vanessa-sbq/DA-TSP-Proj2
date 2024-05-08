@@ -9,3 +9,8 @@
 # CMake
 
 cmake-build-*/
+
+# large files
+
+dataset/*
+dataset/
