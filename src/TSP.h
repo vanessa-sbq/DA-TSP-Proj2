@@ -38,7 +38,7 @@ private:
 
     void parsingGeoPointsAndEdges(std::ifstream &in);
     void parsingGeoPoints(std::ifstream &in);
-    void parsingEdges(std::string &in);
+    void parsingEdges(std::ifstream &in);
 };
 
 #endif //PROJ_DA_1_MENU_H

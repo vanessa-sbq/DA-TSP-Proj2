@@ -1,13 +1,18 @@
 #include <iostream>
+#include <string>
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include <sys/mman.h>
+#include <windows.h>
+//#include <sys/mman.h>
+#include <math.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <thread>
+#include <mutex>
 #include "TSP.h"
 
 /* Data parsing begin */
@@ -56,6 +61,26 @@ double calculateHaversineDistance(const std::pair<double, double> p1, const std:
 }
 
 
+void processChunk(const std::string& filename, std::streampos start, std::streampos end, std::mutex& mtx, size_t& lineCount) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Error opening file: " << filename << std::endl;
+        return;
+    }
+
+    // Move the file pointer to the start position of the chunk
+    file.seekg(start);
+    std::cout << "start: " << start << "\n"; // TODO: Remove
+
+    // Process data in the chunk
+    std::string line;
+    while (file.tellg() < end && std::getline(file, line)) {
+        std::lock_guard<std::mutex> lock(mtx); // Lock to safely update shared variable
+        lineCount++;
+    }
+}
+
+
 /**
  * @brief Function that helps parse data
  * @param bothFilesProvided If false the first argument will contain the file that incorporates both nodes / edges.
@@ -67,7 +92,41 @@ void TSP::parseData(std::string nodesFilePath, std::string edgesFilePath, bool b
 
     if (bothFilesProvided) {
 
-        in.open(nodesFilePath);
+
+        const size_t numThreads = 4; // Number of threads to use
+        std::vector<std::thread> threads(numThreads);
+        std::vector<std::streampos> chunkStarts(numThreads);
+        std::mutex mtx; // Mutex to protect shared variable
+        size_t lineCount = 0;
+
+        std::string filename = nodesFilePath;
+        std::ifstream file(filename, std::ios::binary);
+        if (!file.is_open()) {
+            std::cerr << "Error opening file: " << filename << std::endl;
+            return;
+        }
+        file.seekg(0, std::ios::end);
+        std::streampos fileSize = file.tellg();
+        std::cout << "file size: " << fileSize << "\n";
+        file.close();
+
+        // Calculate chunk sizes
+        std::streampos chunkSize = fileSize / static_cast<std::streampos>(numThreads);
+        for (size_t i = 0; i < numThreads; ++i) {
+            chunkStarts[i] = i * chunkSize;
+            std::streampos chunkEnd = (i == numThreads - 1) ? fileSize : static_cast<std::streampos>((i + 1) * chunkSize);
+            threads[i] = std::thread(processChunk, filename, chunkStarts[i], chunkEnd, std::ref(mtx), std::ref(lineCount));
+        }
+
+
+        // Join threads
+        for (auto& thread : threads) {
+            thread.join();
+        }
+
+
+        return;
+
         if (!in.is_open()) {
             std::cout << "Unable to open nodes csv.\n";
             return;
@@ -75,8 +134,15 @@ void TSP::parseData(std::string nodesFilePath, std::string edgesFilePath, bool b
         parsingGeoPoints(in);
         in.close();
 
-        parsingEdges(edgesFilePath);
+        in.open(edgesFilePath);
+        if (!in.is_open()) {
+            std::cout << "Unable to open nodes csv.\n";
+            return;
+        }
 
+        parsingEdges(in);
+
+        in.close();
     } else {
         in.open(nodesFilePath);
         if (!in.is_open()) {
@@ -196,7 +262,7 @@ void TSP::parsingGeoPoints(std::ifstream &in) {
 }
 
 void TSP::parseEdgesFromMemory(char* data, size_t size) {
-    std::istringstream in(std::string(data, size));
+    /*std::istringstream in(std::string(data, size));
     std::string line;
 
     // Skip the header
@@ -224,11 +290,11 @@ void TSP::parseEdgesFromMemory(char* data, size_t size) {
             std::cerr << "Error in parsingEdges, problem while adding an edge to the graph\n";
             continue;
         }
-    }
+    }*/
 }
 
 void TSP::loadFileUsingMMap(const std::string& filename) {
-    int fd = open(filename.c_str(), O_RDONLY);
+    /*int fd = open(filename.c_str(), O_RDONLY);
     if (fd == -1) {
         std::cerr << "Error opening file." << std::endl;
         return;
@@ -252,22 +318,22 @@ void TSP::loadFileUsingMMap(const std::string& filename) {
     parseEdgesFromMemory(data, st.st_size);
 
     munmap(data, st.st_size);
-    close(fd);
+    close(fd);*/
 }
 
 /**
  * @brief Function that helps parsing the edges that are inside the csv.
  * @details This functions expects the following order: origin, destination, haversine_distance.
  * */
-void TSP::parsingEdges(std::string &in) {
+void TSP::parsingEdges(std::ifstream &in) {
 
-    loadFileUsingMMap(in);
+    //loadFileUsingMMap(in);
 
     // FALL BACK
 
     // DO NOT REMOVE
 
-    /*std::string line;
+    std::string line;
     getline(in, line); // Header
     int numberOfHeadings = countHeaders(line);
 
@@ -314,13 +380,13 @@ void TSP::parsingEdges(std::string &in) {
             return;
         }
 
+
         if (!this->tspNetwork.addEdge(geoPointSource, geoPointDestination, std::stod(distance))) {
             std::cerr << "Error in parsingEdges, problem while adding an edge to the graph\n";
             return;
         }
 
     }
-*/
 }
 
 /* Data parsing end */
@@ -337,4 +403,3 @@ void TSP::parsingEdges(std::string &in) {
 
 // T2.4
 // TODO
-
