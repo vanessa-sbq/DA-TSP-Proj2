@@ -5,7 +5,7 @@
 #include <vector>
 #include <cmath>
 #include <unordered_map>
-#include <sys/mman.h>
+//#include <sys/mman.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/stat.h>
@@ -339,8 +339,134 @@ void TSP::parsingEdges(std::ifstream &in) {
 // T2.1
 // TODO
 
+
+template <class T>
+std::vector<Vertex<T> *> TSP::prim(Graph<T> * g) {
+    MutablePriorityQueue<Vertex<T>> q;
+    for(Vertex<T>* v : g->getVertexSet()){
+        v->setDist(std::numeric_limits<double>::infinity());
+    }
+    Vertex<T>* r = vertexGeoMap[0];
+    r->setDist(0);
+    q.insert(r);
+
+    while(!q.empty()){
+        Vertex<T>* u = q.extractMin();
+        u->setVisited(true);
+        for(Edge<T> *e : u->getAdj()){
+            Vertex<T>* v = e->getDest();
+            if(!v->isVisited() && e->getWeight() < v->getDist()){
+                v->setDist(e->getWeight());
+                v->setPath(e);
+                q.insert(v);
+                q.decreaseKey(v);
+            }
+        }
+    }
+
+    return g->getVertexSet();
+}
+
+template <class T>
+double TSP::spanningTreeCost(const std::vector<Vertex<T> *> &res){
+    double ret = 0;
+    for(const Vertex<T> *v: res){
+        if(v->getPath() == nullptr) continue;
+        const Vertex<T> *u = v->getPath()->getOrig();
+        for(const auto e: u->getAdj()){
+            if(e->getDest()->getInfo() == v->getInfo()){
+                ret += e->getWeight();
+                break;
+            }
+        }
+    }
+    return ret;
+}
+
+template <class T>
+void TSP::preOrderWalk(Vertex<T>* root, std::vector<Vertex<T>*> &visitOrder){
+    if(root == nullptr) return;
+    visitOrder.push_back(root);
+    root->setVisited(true);
+    for(Edge<T>* edge : root->getAdj()){
+        if(!edge->getDest()->isVisited()){
+            preOrderWalk(edge->getDest(), visitOrder);
+        }
+    }
+
+
+}
+
 // T2.2
-// TODO
+double TSP::triangularApproximation(){
+    for(Vertex<GeoPoint*>* v : tspNetwork.getVertexSet()){
+        v->setVisited(false);
+    }
+
+    std::vector<Vertex<GeoPoint*>*> MST = prim(&tspNetwork);
+
+    std::stringstream ss;
+    for(const auto v : MST) {
+        ss << v->getInfo()->getId() << "<-";
+        if ( v->getPath() != nullptr ) {
+            ss << v->getPath()->getOrig()->getInfo()->getId();
+        }
+        ss << "|";
+    }
+    std::cout << "MST" <<ss.str() << std::endl;
+
+
+    for(Vertex<GeoPoint*>* v : MST){
+        v->setVisited(false);
+    }
+
+    // Step 2: Perform a pre-order walk of the MST to create the visit order
+    Vertex<GeoPoint*>* root = vertexGeoMap[0];
+    std::vector<Vertex<GeoPoint*>*> visitOrder;
+    preOrderWalk(root, visitOrder);
+
+    std::stringstream sr;
+    for(const auto v : visitOrder) {
+        sr << v->getInfo()->getId() << "<-";
+        if ( v->getPath() != nullptr ) {
+            sr << v->getPath()->getOrig()->getInfo()->getId();
+        }
+        sr << "|";
+    }
+    std::cout << "Visit Order"<< sr.str() << std::endl;
+
+    // Step 3: Create the tour H using the visit order
+    std::vector<Vertex<GeoPoint*>*> tour;
+    std::unordered_set<Vertex<GeoPoint*>*> visited;
+    for(Vertex<GeoPoint*>* v : visitOrder){
+        if(visited.find(v) == visited.end()){
+            tour.push_back(v);
+            visited.insert(v);
+        }
+    }
+
+    // Add the root vertex again to complete the tour
+    tour.push_back(root);
+
+    std::stringstream sd;
+    for(const auto v : tour) {
+        sd << v->getInfo()->getId() << "<-";
+        if ( v->getPath() != nullptr ) {
+            sd << v->getPath()->getOrig()->getInfo()->getId();
+        }
+        sd << "|";
+    }
+    std::cout << "TOUR" <<sd.str() << std::endl;
+
+    // Step 4: Calculate the total distance of the tour
+    double totalCost = 0.0;
+    for(size_t i = 0; i < tour.size() - 1; ++i){
+        totalCost += tour.at(i)->getDist();
+
+    }
+
+    return totalCost;
+}
 
 // T2.3
 // TODO

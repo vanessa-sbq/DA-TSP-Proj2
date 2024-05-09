@@ -13,7 +13,9 @@ add_executable(DA_TSP_Proj2
         src/Graph.h
         src/main.cpp
         src/TSP.cpp
-        src/TSP.h)
+        src/TSP.h
+        src/MutablePriorityQueue.h
+)
 
 # Doxygen Build
 find_package(Doxygen)

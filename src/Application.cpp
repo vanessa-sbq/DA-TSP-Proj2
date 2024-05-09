@@ -132,7 +132,7 @@ void Application::backtrackingAlgorithmTSP(){
 void Application::triangularApproximationTSP(){
     clearScreen();
 
-    //Code here
+    tsp.triangularApproximation();
 
     showGoBackMenu(2, "Execute triangle approximation heuristic for TSP."); // At the end make a call to goBackMenu()
 }

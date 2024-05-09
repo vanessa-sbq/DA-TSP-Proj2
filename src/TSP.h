@@ -5,9 +5,11 @@
 #include <iostream>
 #include <sstream>
 #include <unordered_map>
+#include <unordered_set>
 
 #include "Graph.h"
 #include "GeoPoint.h"
+#include "MutablePriorityQueue.h"
 
 class TSP {
 public:
@@ -21,7 +23,7 @@ public:
     // TODO
 
     // T2.2
-    // TODO
+    double triangularApproximation();
 
     // T2.3
     // TODO
@@ -41,6 +43,14 @@ private:
     void parsingGeoPointsAndEdges(std::ifstream &in);
     void parsingGeoPoints(std::ifstream &in);
     void parsingEdges(std::ifstream &in);
+
+    //TSP 2
+    template <class T>
+    std::vector<Vertex<T> *> prim(Graph<T> * g);
+    template <class T>
+    double spanningTreeCost(const std::vector<Vertex<T> *> &res);
+    template <class T>
+    void preOrderWalk(Vertex<T>* root, std::vector<Vertex<T>*> &visitOrder);
 };
 
 #endif //PROJ_DA_1_MENU_H

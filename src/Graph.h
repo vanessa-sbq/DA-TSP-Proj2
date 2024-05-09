@@ -9,6 +9,7 @@
 #include <queue>
 #include <limits>
 #include <algorithm>
+#include "MutablePriorityQueue.h"
 
 template <class T>
 class Edge;
@@ -41,6 +42,8 @@ public:
     Edge<T> * addEdge(Vertex<T> *dest, double w);
     bool removeEdge(T in);
     void removeOutgoingEdges();
+
+    friend class MutablePriorityQueue<Vertex>;
 
 protected:
     T info;                // info node
