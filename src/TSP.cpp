@@ -338,6 +338,11 @@ void TSP::parsingEdges(std::ifstream &in) {
             continue;
         }
 
+        if (!geoPointDestination->addEdge(geoPointSource, std::stod(distance))) {
+            std::cerr << "Error in parsingEdges, problem while adding an edge to the graph\n";
+            continue;
+        }
+
     }
 }
 
@@ -434,6 +439,8 @@ bool TSP::isAdjacent(Vertex<GeoPoint *> *&v1, Vertex<GeoPoint *> *&v2) {
         if(v->getDest()->getInfo()->getId() == v2->getInfo()->getId()) return true;
     }
     return false;
+
+    //FIND ANOTHER WAY TO DO THIS
 }
 
 // T2.2
