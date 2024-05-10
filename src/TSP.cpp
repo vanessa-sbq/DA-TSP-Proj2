@@ -364,7 +364,7 @@ std::vector<Vertex<T> *> TSP::prim(Graph<T> * g) {
     q.insert(r);
 
     while(!q.empty()){
-        Vertex<T>* u = q.extractMin();
+        Vertex<T>* u =  q.extractMin();
         u->setVisited(true);
         for(Edge<T> *e : u->getAdj()){
             Vertex<T>* v = e->getDest();
@@ -483,10 +483,12 @@ double TSP::triangularApproximation(){
     // Step 3: Create the tour H using the visit order
     std::vector<Vertex<GeoPoint*>*> tour;
     std::unordered_set<Vertex<GeoPoint*>*> visited;
+    Vertex<GeoPoint*>* auxV;
     for(Vertex<GeoPoint*>* v : visitOrder){
         if(visited.find(v) == visited.end()){
             v->setVisited(false);
             tour.push_back(v);
+            auxV = v;
             visited.insert(v);
         }
     }
@@ -519,6 +521,12 @@ double TSP::triangularApproximation(){
         }
     }
 
+    for(auto v : root->getAdj()){
+        if(v->getDest()->getInfo()->getId() == auxV->getInfo()->getId()) {
+            totalCost += v->getWeight();
+            break;
+        }
+    }
     return totalCost;
 }
 
