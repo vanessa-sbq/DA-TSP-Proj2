@@ -36,7 +36,6 @@ private:
 
     std::unordered_map<int, GeoPoint*> geoMap; // Contains all geo points
     std::unordered_map<int, Vertex<GeoPoint*>*> vertexGeoMap; // Contains all vertexes that represent geo points
-
     void parseEdgesFromMemory(char* data, size_t size);
     void loadFileUsingMMap(const std::string& filename);
 
@@ -51,6 +50,8 @@ private:
     double spanningTreeCost(const std::vector<Vertex<T> *> &res);
     template <class T>
     void preOrderWalk(Vertex<T>* root, std::vector<Vertex<T>*> &visitOrder);
+
+    bool isAdjacent(Vertex<GeoPoint *> *&v1, Vertex<GeoPoint *> *&v2);
 };
 
 #endif //PROJ_DA_1_MENU_H

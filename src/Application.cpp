@@ -132,8 +132,8 @@ void Application::backtrackingAlgorithmTSP(){
 void Application::triangularApproximationTSP(){
     clearScreen();
 
-    tsp.triangularApproximation();
-
+    double res = tsp.triangularApproximation();
+    std::cout << res;
     showGoBackMenu(2, "Execute triangle approximation heuristic for TSP."); // At the end make a call to goBackMenu()
 }
 
@@ -149,7 +149,6 @@ void Application::optimizedTSP(){
 // T2.4
 void Application::realWorldTSP(){
     clearScreen();
-
     //Code here
 
     showGoBackMenu(4, "Execute TSP in the Real World."); // At the end make a call to goBackMenu()
