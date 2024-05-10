@@ -468,8 +468,79 @@ double TSP::triangularApproximation(){
     return totalCost;
 }
 
+
 // T2.3
-// TODO
+double TSP::otherHeuristic(){
+    double res = 0; // TSP approximate solution tour length
+
+    // 1. Create clusters, using K-means Clustering
+    int k = 5; // FIXME: Change value of k
+    std::vector<std::vector<GeoPoint>> clusters;
+    createClusters(clusters, k);
+
+    // 2. Compute the TSP for each cluster, using Prim's algorithm
+    //    - Compute the MST
+    //    - Choose the preorder traversal as the tour
+    for (int i = 0; i < k; i++){  // MST for each cluster
+        for (Vertex<GeoPoint*>* v : tspNetwork.getVertexSet()){
+            v->setVisited(false);
+        }
+        for (Vertex<GeoPoint*>* v : tspNetwork.getVertexSet()){
+            // TODO: Add attribute cluster to Graph.h
+            //if (v->getCluster() != k) v->setVisited(true); // Exclude vertices of other clusters
+        }
+        prim(&tspNetwork); // FIXME: apply prim ONLY on not visited vertices
+        preorderTraversal(); // Choose tour inside each cluster, using preoder traversal
+    }
+
+    // 3. Connect the clusters:
+    //    - Compute the MST of the cluster centroids
+    primClusterCentroids();
+
+    // 4. Locally optimize the initial TSP solution:
+    //    - Apply 2-opt optimizations inside each cluster
+    //    - Repeat until no further improvements can be made
+    // TODO
+
+    return res;
+}
+
+/**
+ * @brief Creates clusters of GeoPoints based on k and relative distance (K-means Clustering)
+ * @param clusters vector of clusters to be filled
+ * @param k number of clusters to be created
+ */
+void TSP::createClusters(std::vector<std::vector<GeoPoint>>& clusters, int k){
+    std::vector<GeoPoint*> centroids(k);
+    std::unordered_set<int> chosenIds; // To ensure that the same point isn't chosen twice
+
+    // initialize centroids randomly (without choosing the same one twice)
+    for (int i = 0; i < k; ++i) {
+        GeoPoint* randomGP;
+        do {
+            randomGP = geoMap.at(rand() % geoMap.size());
+        } while (chosenIds.count(randomGP->getId()) > 0); // Check if GeoPoint has been chosen before
+        centroids[i] = randomGP;
+        chosenIds.insert(randomGP->getId());
+        std::cout << "centroid: " << centroids[i]->getId() << "\n";
+    }
+
+}
+
+/**
+ * @brief Does a preorder traversal on an MST
+ */
+void TSP::preorderTraversal(){
+    // TODO
+}
+
+/**
+ * @brief Finds a minimal spanning tree using the cluster centroids, in order to find the final tour in the full graph
+ */
+void TSP::primClusterCentroids(){
+    // TODO
+}
+
 
 // T2.4
 // TODO

@@ -2,6 +2,13 @@
 
 using namespace std;
 
+GeoPoint::GeoPoint() {
+    this->id = 0;
+    this->label = "Default";
+    this->longitude = 0;
+    this->latitude = 0;
+}
+
 GeoPoint::GeoPoint(int id, std::string label, double longitude, double latitude) {
     this->id = id;
     this->label = label;

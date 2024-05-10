@@ -140,9 +140,7 @@ void Application::triangularApproximationTSP(){
 // T2.3
 void Application::optimizedTSP(){
     clearScreen();
-
-    //Code here
-
+    tsp.otherHeuristic();
     showGoBackMenu(3, "Execute optimized TSP."); // At the end make a call to goBackMenu()
 }
 

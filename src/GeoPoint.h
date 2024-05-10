@@ -11,6 +11,7 @@ private:
     double latitude;
 
 public:
+    GeoPoint(); // Default constructor
     GeoPoint(int id, std::string label, double longitude, double latitude);
     int getId();
     void setId(int id);

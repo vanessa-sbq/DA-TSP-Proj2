@@ -6,6 +6,7 @@
 #include <sstream>
 #include <unordered_map>
 #include <unordered_set>
+#include <vector>
 
 #include "Graph.h"
 #include "GeoPoint.h"
@@ -26,7 +27,7 @@ public:
     double triangularApproximation();
 
     // T2.3
-    // TODO
+    double otherHeuristic();
 
     // T2.4
     // TODO
@@ -51,6 +52,11 @@ private:
     double spanningTreeCost(const std::vector<Vertex<T> *> &res);
     template <class T>
     void preOrderWalk(Vertex<T>* root, std::vector<Vertex<T>*> &visitOrder);
+
+    // T2.3
+    void createClusters(std::vector<std::vector<GeoPoint>>& clusters, int k);
+    void preorderTraversal();
+    void primClusterCentroids();
 };
 
 #endif //PROJ_DA_1_MENU_H
