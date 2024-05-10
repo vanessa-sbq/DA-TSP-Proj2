@@ -44,7 +44,7 @@ private:
     void parsingEdges(std::ifstream &in);
 
     // TSP 1
-    void tspRec(unsigned int numVertexes, unsigned int currentVertex, double curBestMin, double& min, std::vector<Vertex<GeoPoint*>*>& bestPath);
+    void tspRec(unsigned int numVertexes, unsigned int currentVertex, double curBestMin, std::vector<Vertex<GeoPoint*>*>& curPath, double& min, std::vector<Vertex<GeoPoint*>*>& bestPath);
 
         //TSP 2
     template <class T>
