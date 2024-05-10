@@ -25,7 +25,7 @@ public:
     bool operator<(Vertex<T> & vertex) const; // // required by MutablePriorityQueue
 
     T getInfo() const;
-    std::vector<Edge<T> *> getAdj() const;
+    std::vector<Edge<T> *> getAdj();
     bool isVisited() const;
     bool isProcessing() const;
     unsigned int getIndegree() const;
@@ -70,11 +70,11 @@ class Edge {
 public:
     Edge(Vertex<T> *orig, Vertex<T> *dest, double w);
 
-    Vertex<T> * getDest() const;
+    Vertex<T> * getDest();
     double getWeight() const;
     bool isSelected() const;
-    Vertex<T> * getOrig() const;
-    Edge<T> *getReverse() const;
+    Vertex<T> * getOrig();
+    Edge<T> *getReverse();
     double getFlow() const;
 
     void setSelected(bool selected);
@@ -121,7 +121,7 @@ public:
     bool addBidirectionalEdge(const T &sourc, const T &dest, double w);
 
     int getNumVertex() const;
-    std::vector<Vertex<T> *> getVertexSet() const;
+    std::vector<Vertex<T> *> getVertexSet();
 
     std:: vector<T> dfs() const;
     std:: vector<T> dfs(const T & source) const;
@@ -211,7 +211,7 @@ T Vertex<T>::getInfo() const {
 }
 
 template <class T>
-std::vector<Edge<T>*> Vertex<T>::getAdj() const {
+std::vector<Edge<T>*> Vertex<T>::getAdj() {
     return this->adj;
 }
 
@@ -297,7 +297,7 @@ template <class T>
 Edge<T>::Edge(Vertex<T> *orig, Vertex<T> *dest, double w): orig(orig), dest(dest), weight(w) {}
 
 template <class T>
-Vertex<T> * Edge<T>::getDest() const {
+Vertex<T> * Edge<T>::getDest() {
     return this->dest;
 }
 
@@ -307,12 +307,12 @@ double Edge<T>::getWeight() const {
 }
 
 template <class T>
-Vertex<T> * Edge<T>::getOrig() const {
+Vertex<T> * Edge<T>::getOrig() {
     return this->orig;
 }
 
 template <class T>
-Edge<T> *Edge<T>::getReverse() const {
+Edge<T> *Edge<T>::getReverse() {
     return this->reverse;
 }
 
@@ -349,7 +349,7 @@ int Graph<T>::getNumVertex() const {
 }
 
 template <class T>
-std::vector<Vertex<T> *> Graph<T>::getVertexSet() const {
+std::vector<Vertex<T> *> Graph<T>::getVertexSet() {
     return vertexSet;
 }
 

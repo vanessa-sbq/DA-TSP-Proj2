@@ -20,7 +20,7 @@ public:
     void dataGoBoom();
 
     // T2.1
-    // TODO
+    double tspBTSetup();
 
     // T2.2
     double triangularApproximation();
@@ -44,7 +44,10 @@ private:
     void parsingGeoPoints(std::ifstream &in);
     void parsingEdges(std::ifstream &in);
 
-    //TSP 2
+    // TSP 1
+    void tspRec(unsigned int numVertexes, unsigned int currentVertex, double curBestMin, double& min, std::vector<Vertex<GeoPoint*>*>& bestPath);
+
+        //TSP 2
     template <class T>
     std::vector<Vertex<T> *> prim(Graph<T> * g);
     template <class T>
