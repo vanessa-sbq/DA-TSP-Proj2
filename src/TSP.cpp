@@ -136,11 +136,14 @@ void TSP::parsingGeoPointsAndEdges(std::ifstream &in) {
         GeoPoint *geoPointSource = new GeoPoint(stoi(origin), label_origin, std::stod(distance), 0);
         GeoPoint *geoPointDestination = new GeoPoint(stoi(destination), label_destination, std::stod(distance), 0);
 
+
         this->geoMap[stoi(origin)] = geoPointSource;
         this->geoMap[stoi(destination)] = geoPointDestination;
 
-        this->vertexGeoMap[stoi(origin)] = tspNetwork.addVertex(geoPointSource);
-        this->vertexGeoMap[stoi(destination)] = tspNetwork.addVertex(geoPointDestination);
+        if(this->vertexGeoMap.find(stoi(origin))==this->vertexGeoMap.end())
+            this->vertexGeoMap[stoi(origin)] = tspNetwork.addVertex(geoPointSource);
+        if(this->vertexGeoMap.find(stoi(destination))==this->vertexGeoMap.end())
+            this->vertexGeoMap[stoi(destination)] = tspNetwork.addVertex(geoPointDestination);
     }
 
     in.clear();
@@ -172,6 +175,11 @@ void TSP::parsingGeoPointsAndEdges(std::ifstream &in) {
         }
 
         if (!geoPointSource->addEdge(geoPointTarget, std::stod(distance))) {
+            std::cerr << "Problem while adding an edge to the graph\n";
+            continue;
+        }
+
+        if (!geoPointTarget->addEdge(geoPointSource, std::stod(distance))) {
             std::cerr << "Problem while adding an edge to the graph\n";
             continue;
         }
@@ -330,6 +338,11 @@ void TSP::parsingEdges(std::ifstream &in) {
             continue;
         }
 
+        if (!geoPointDestination->addEdge(geoPointSource, std::stod(distance))) {
+            std::cerr << "Error in parsingEdges, problem while adding an edge to the graph\n";
+            continue;
+        }
+
     }
 }
 
@@ -452,12 +465,12 @@ std::vector<Vertex<T> *> TSP::prim(Graph<T> * g) {
     for(Vertex<T>* v : g->getVertexSet()){
         v->setDist(std::numeric_limits<double>::infinity());
     }
-    Vertex<T>* r = vertexGeoMap[0];
+    Vertex<T>* r = g->getVertexSet().front();
     r->setDist(0);
     q.insert(r);
 
     while(!q.empty()){
-        Vertex<T>* u = q.extractMin();
+        Vertex<T>* u =  q.extractMin();
         u->setVisited(true);
         for(Edge<T> *e : u->getAdj()){
             Vertex<T>* v = e->getDest();
@@ -503,76 +516,127 @@ void TSP::preOrderWalk(Vertex<T>* root, std::vector<Vertex<T>*> &visitOrder){
 
 }
 
+bool TSP::isAdjacent(Vertex<GeoPoint *> *&v1, Vertex<GeoPoint *> *&v2) {
+/*    // Get the source vertex
+    auto s = v1;
+    if (s == nullptr) {
+        return false;
+    }
+
+    // Perform the actual BFS using a queue
+    std::queue<Vertex<GeoPoint*> *> q;
+    q.push(s);
+    s->setVisited(true);
+    while (!q.empty()) {
+        auto v = q.front();
+        q.pop();
+        if(v->getInfo()->getId() == v2->getInfo()->getId()) return true;
+            for (auto & e : v->getAdj()) {
+                auto w = e->getDest();
+                if ( ! w->isVisited()) {
+                    q.push(w);
+                    w->setVisited(true);
+                }
+            }
+        }
+        return false;
+        */
+    for(auto v : v1->getAdj()){
+        if(v->getDest()->getInfo()->getId() == v2->getInfo()->getId()) return true;
+    }
+    return false;
+
+    //FIND ANOTHER WAY TO DO THIS
+}
+
 // T2.2
 double TSP::triangularApproximation(){
     for(Vertex<GeoPoint*>* v : tspNetwork.getVertexSet()){
+        //std::cout << v->getInfo()->getLabel() << std::endl;
         v->setVisited(false);
     }
 
     std::vector<Vertex<GeoPoint*>*> MST = prim(&tspNetwork);
-
+/*
     std::stringstream ss;
     for(const auto v : MST) {
-        ss << v->getInfo()->getId() << "<-";
+        ss << v->getInfo()->getId() << "->";
         if ( v->getPath() != nullptr ) {
             ss << v->getPath()->getOrig()->getInfo()->getId();
         }
+
+
         ss << "|";
     }
-    std::cout << "MST" <<ss.str() << std::endl;
-
+    std::cout << "MST  " <<ss.str() << std::endl;
+*/
 
     for(Vertex<GeoPoint*>* v : MST){
         v->setVisited(false);
     }
 
     // Step 2: Perform a pre-order walk of the MST to create the visit order
-    Vertex<GeoPoint*>* root = vertexGeoMap[0];
+    Vertex<GeoPoint*>* root = MST.front();
     std::vector<Vertex<GeoPoint*>*> visitOrder;
     preOrderWalk(root, visitOrder);
-
+/*
     std::stringstream sr;
     for(const auto v : visitOrder) {
-        sr << v->getInfo()->getId() << "<-";
-        if ( v->getPath() != nullptr ) {
-            sr << v->getPath()->getOrig()->getInfo()->getId();
-        }
-        sr << "|";
+        sr << v->getInfo()->getId() << "->";
     }
     std::cout << "Visit Order"<< sr.str() << std::endl;
-
+*/
     // Step 3: Create the tour H using the visit order
     std::vector<Vertex<GeoPoint*>*> tour;
     std::unordered_set<Vertex<GeoPoint*>*> visited;
+    Vertex<GeoPoint*>* auxV;
     for(Vertex<GeoPoint*>* v : visitOrder){
         if(visited.find(v) == visited.end()){
+            v->setVisited(false);
             tour.push_back(v);
+            auxV = v;
             visited.insert(v);
         }
     }
 
     // Add the root vertex again to complete the tour
     tour.push_back(root);
-
+/*
     std::stringstream sd;
     for(const auto v : tour) {
         sd << v->getInfo()->getId() << "<-";
         if ( v->getPath() != nullptr ) {
-            sd << v->getPath()->getOrig()->getInfo()->getId();
+            sd << v->getPath()->getDest()->getInfo()->getId();
         }
         sd << "|";
     }
-    std::cout << "TOUR" <<sd.str() << std::endl;
-
+    std::cout << "TOUR >> " <<sd.str() << std::endl;
+*/
     // Step 4: Calculate the total distance of the tour
     double totalCost = 0.0;
     for(size_t i = 0; i < tour.size() - 1; ++i){
-        totalCost += tour.at(i)->getDist();
 
+        if (!isAdjacent(tour[i],tour[i+1])) {
+            // Calculate distance using Haversine function if nodes are not directly connected
+            double distance = calculateHaversineDistance({tour[i]->getInfo()->getLatitude(),tour[i]->getInfo()->getLongitude()},{tour[i+1]->getInfo()->getLatitude(),tour[i+1]->getInfo()->getLongitude()});
+            totalCost += distance;
+        }
+
+    else{
+        totalCost += tour[i]->getDist();
+        }
     }
 
+    for(auto v : root->getAdj()){
+        if(v->getDest()->getInfo()->getId() == auxV->getInfo()->getId()) {
+            totalCost += v->getWeight();
+            break;
+        }
+    }
     return totalCost;
 }
+
+
 
 // T2.3
 // TODO
