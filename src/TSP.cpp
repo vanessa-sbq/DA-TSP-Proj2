@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include "TSP.h"
+#include <set>
 
 /* Data parsing begin */
 
@@ -531,7 +532,7 @@ double TSP::otherHeuristic(){
 
     // 1. Create clusters, using K-means Clustering
     int k = 5; // FIXME: Change value of k
-    std::vector<std::vector<GeoPoint>> clusters;
+    std::vector<std::set<int>> clusters;
     createClusters(clusters, k);
 
     // 2. Compute the TSP for each cluster, using Prim's algorithm
@@ -566,21 +567,73 @@ double TSP::otherHeuristic(){
  * @param clusters vector of clusters to be filled
  * @param k number of clusters to be created
  */
-void TSP::createClusters(std::vector<std::vector<GeoPoint>>& clusters, int k){
-    std::vector<GeoPoint*> centroids(k);
+void TSP::createClusters(std::vector<std::set<int>>& clusters, int k){
+    std::vector<int> centroids(k);
     std::unordered_set<int> chosenIds; // To ensure that the same point isn't chosen twice
 
-    // initialize centroids randomly (without choosing the same one twice)
-    for (int i = 0; i < k; ++i) {
+    // Initialize centroids randomly (without choosing the same one twice)
+    srand((unsigned)time(0));
+    for (int i = 0; i < k; i++) {
         GeoPoint* randomGP;
         do {
-            randomGP = geoMap.at(rand() % geoMap.size());
+            randomGP = geoMap.at(rand() % geoMap.size()); // FIXME: Not totally random (always the same)
         } while (chosenIds.count(randomGP->getId()) > 0); // Check if GeoPoint has been chosen before
-        centroids[i] = randomGP;
+        centroids[i] = randomGP->getId();
         chosenIds.insert(randomGP->getId());
-        std::cout << "centroid: " << centroids[i]->getId() << "\n";
+        std::cout << "centroid: " << centroids[i] << "\n"; // TODO: Remove (DEBUG)
     }
 
+    clusters.resize(k);
+
+    for (int i = 0; i < k; i++){
+        clusters[i].insert(centroids[i]); // Add centroids to clusters
+    }
+
+    // Assign GeoPoints to clusters based on proximity to centroids
+    for (auto& pair : geoMap) {
+        GeoPoint* point = pair.second;
+        double minDistance = INFINITY;
+        int closestCentroidIdx = -1;
+
+        // Find the closest centroid
+        for (int i = 0; i < k; ++i) {
+            GeoPoint* centroid = geoMap.at(centroids[i]);
+            double distance = calculateHaversineDistance(std::make_pair(point->getLatitude(), point->getLongitude()), std::make_pair(centroid->getLatitude(), centroid->getLongitude())); // TODO: Implement computeDistance
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestCentroidIdx = i;
+            }
+        }
+
+        // Assign the GeoPoint to the closest cluster
+        clusters[closestCentroidIdx].insert(point->getId());
+    }
+
+    // Associate each vertex to a cluster
+    for (int i = 0; i < k; i++){
+        std::set<int> cluster = clusters[i];
+        for (int id : cluster){
+            GeoPoint* gp = geoMap.at(id);
+
+            //Vertex<GeoPoint*>* v = tspNetwork.findVertex(gp); // FIXME: findVertex not working for some reason (used for loop instead)
+            for (auto v : tspNetwork.getVertexSet()){
+                if (v->getInfo()->getId() == gp->getId()) {
+                    v->setIndegree(i);
+                    //std::cout << "Vertex " << id << " -> " << v->getIndegree() << "\n"; // TODO: Remove (DEBUG)
+                    break;
+                }
+            }
+        }
+    }
+
+    // TODO: Remove (DEBUG)
+    for (int i = 0; i < k; i++){
+        std::cout << "\nCluster " << i << ": ";
+        std::set<int> cluster = clusters[i];
+        for (int id : cluster){
+            std::cout << id << ", ";
+        }
+    }
 }
 
 /**

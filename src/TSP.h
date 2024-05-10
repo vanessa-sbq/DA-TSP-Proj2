@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include <set>
 
 #include "Graph.h"
 #include "GeoPoint.h"
@@ -53,7 +54,7 @@ private:
     void preOrderWalk(Vertex<T>* root, std::vector<Vertex<T>*> &visitOrder);
 
     // T2.3
-    void createClusters(std::vector<std::vector<GeoPoint>>& clusters, int k);
+    void createClusters(std::vector<std::set<int>>& clusters, int k);
     void preorderTraversal();
     void primClusterCentroids();
 
