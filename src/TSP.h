@@ -37,7 +37,6 @@ private:
 
     std::unordered_map<int, GeoPoint*> geoMap; // Contains all geo points
     std::unordered_map<int, Vertex<GeoPoint*>*> vertexGeoMap; // Contains all vertexes that represent geo points
-
     void parseEdgesFromMemory(char* data, size_t size);
     void loadFileUsingMMap(const std::string& filename);
 
@@ -57,6 +56,8 @@ private:
     void createClusters(std::vector<std::vector<GeoPoint>>& clusters, int k);
     void preorderTraversal();
     void primClusterCentroids();
+
+    bool isAdjacent(Vertex<GeoPoint *> *&v1, Vertex<GeoPoint *> *&v2);
 };
 
 #endif //PROJ_DA_1_MENU_H
