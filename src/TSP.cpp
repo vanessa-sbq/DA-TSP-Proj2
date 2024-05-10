@@ -142,8 +142,8 @@ void TSP::parsingGeoPointsAndEdges(std::ifstream &in) {
 
         if(this->vertexGeoMap.find(stoi(origin))==this->vertexGeoMap.end())
             this->vertexGeoMap[stoi(origin)] = tspNetwork.addVertex(geoPointSource);
-            if(this->vertexGeoMap.find(stoi(destination))==this->vertexGeoMap.end())
-        this->vertexGeoMap[stoi(destination)] = tspNetwork.addVertex(geoPointDestination);
+        if(this->vertexGeoMap.find(stoi(destination))==this->vertexGeoMap.end())
+            this->vertexGeoMap[stoi(destination)] = tspNetwork.addVertex(geoPointDestination);
     }
 
     in.clear();
