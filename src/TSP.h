@@ -57,9 +57,10 @@ private:
     void preOrderWalk(Vertex<T>* root, std::vector<Vertex<T>*> &visitOrder);
 
     // T2.3
-    void createClusters(std::vector<std::set<int>>& clusters, int k);
+    void createClusters(std::vector<std::set<int>>& clusters, std::vector<int>& centroids, int k);
     std::set<Vertex<GeoPoint*> *> clusterPrim(Graph<GeoPoint*> * g);
-    void preorderTraversal();
+    void preOrderCluster(Vertex<GeoPoint*>* root, std::vector<Vertex<GeoPoint*>*>& preorder);
+    double getWeightBetween(Vertex<GeoPoint*>* v1, Vertex<GeoPoint*>* v2);
     void primClusterCentroids();
 
     bool isAdjacent(Vertex<GeoPoint *> *&v1, Vertex<GeoPoint *> *&v2);

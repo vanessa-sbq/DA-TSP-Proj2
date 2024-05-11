@@ -640,16 +640,21 @@ double TSP::triangularApproximation(){
 
 
 
-
 // T2.3
+// TODO: Time Complexity
+/**
+ * @brief Optimized version of the Triangular Approximation Heuristic, analyzing only one cluster at a time instead of the whole network
+ * @details Time Complexity: O()
+ * @return Total distance
+ */
 double TSP::otherHeuristic(){
     double res = 0; // TSP approximate solution tour length
 
     // 1. Create clusters, using K-means Clustering
-    int k = 9; // FIXME: Change value of k
+    int k = 100; // FIXME: Change value of k
     std::vector<std::set<int>> clusters;
-    createClusters(clusters, k);
-    std::cout << "\n";
+    std::vector<int> centroids(k);
+    createClusters(clusters, centroids, k);
 
     // 2. Compute the TSP for each cluster, using Prim's algorithm
     //    - Compute the MST
@@ -668,16 +673,64 @@ double TSP::otherHeuristic(){
             }
         }
         std::set<Vertex<GeoPoint*> *> clusterMST = clusterPrim(&tspNetwork); // Apply prim ONLY on not visited vertices (vertices that are in the cluster)
-        /*std::cout << "\nCluster " << i << " MST: ";
-        for (auto mst : clusterMST){
-            std::cout << mst->getInfo()->getId() << ", ";
-        }*/
 
-        //preorderTraversal(); // Choose tour inside each cluster, using preoder traversal
+        // Select only the cluster
+        for(Vertex<GeoPoint*>* v : clusterMST){
+            v->setVisited(false);
+        }
+
+        // Perform a pre-order walk of each MST to create the visit order
+        int centroidId = centroids[i];
+        Vertex<GeoPoint*>* root = nullptr; // Select a node from the MST
+        for (auto v : tspNetwork.getVertexSet()){
+            if (v->getInfo()->getId() == centroidId) {
+                root = v;
+                break;
+            }
+        }
+        if (root == nullptr){
+            std::cout << "Centroid is null\n";
+            return 0;
+        }
+
+        ///------------- DEBUG ---------------///
+        ///-----------------------------------///
+
+        for (auto a : clusterMST){
+            if (a->getPath() != nullptr){
+                a->getPath()->setSelected(true);
+            }
+        }
+
+        Vertex<GeoPoint*>* debugRoot = nullptr;
+        for (auto a : clusterMST){
+            if (a->getPath() == nullptr){
+                debugRoot = a;
+                break;
+            }
+        }
+        std::vector<Vertex<GeoPoint*>*> preOrder;
+        preOrder.clear();
+        std::cout << "\nCluster " << i << " pre-order walk: ";
+        preOrderCluster(debugRoot, preOrder);
+        preOrder.push_back(debugRoot);
+
+        std::cout << "\n";
+
+        // Calculate the total distance of the tour
+        double totalCost = 0.0;
+        for (size_t i = 1; i < preOrder.size(); i++){
+            //std::cout << "preOrder[" << i << "]: " << preOrder[i-1]->getInfo()->getId() << " -> " << preOrder[i]->getInfo()->getId() << ": +" << getWeightBetween(preOrder[i-1], preOrder[i]) << "\n";
+            totalCost += getWeightBetween(preOrder[i-1], preOrder[i]);
+        }
+
+        std::cout << "MST " << i << " has a total cost of " << totalCost << "\n";
+
     }
 
     // 3. Connect the clusters:
     //    - Compute the MST of the cluster centroids
+    // TODO
     primClusterCentroids();
 
     // 4. Locally optimize the initial TSP solution:
@@ -690,14 +743,15 @@ double TSP::otherHeuristic(){
 
 /**
  * @brief Creates clusters of GeoPoints based on k and relative distance (K-means Clustering)
+ * @details Time Complexity: O(V * k), where V is the number of vertices in the graph and k is the number of clusters
  * @param clusters vector of clusters to be filled
  * @param k number of clusters to be created
  */
-void TSP::createClusters(std::vector<std::set<int>>& clusters, int k){
-    std::vector<int> centroids(k);
+void TSP::createClusters(std::vector<std::set<int>>& clusters, std::vector<int>& centroids, int k){
     std::unordered_set<int> chosenIds; // To ensure that the same point isn't chosen twice
 
     // Initialize centroids randomly (without choosing the same one twice)
+    std::cout << "--------- Centroids and clusters --------\n";
     srand((unsigned)time(0)); // "Randomize" seed
     for (int i = 0; i < k; i++) {
         GeoPoint* randomGP;
@@ -770,8 +824,14 @@ void TSP::createClusters(std::vector<std::set<int>>& clusters, int k){
             std::cout << id << ", ";
         }
     }
+    std::cout << "\n-----------------------------------------\n";
 }
 
+/**
+ * @brief Executes Prim's algorithm on a part of the graph (cluster), depending on which vertices are visited
+ * @details Time Complexity: O((V + E) * log(V)), where V is the number of vertices in the cluster and E is the number of edges in the cluster
+ * @return A set containing the MST of the cluster
+ */
 std::set<Vertex<GeoPoint*> *> TSP::clusterPrim(Graph<GeoPoint*> * g) {
     std::set<Vertex<GeoPoint*> *> resMST;
     resMST.clear();
@@ -779,13 +839,11 @@ std::set<Vertex<GeoPoint*> *> TSP::clusterPrim(Graph<GeoPoint*> * g) {
     for(Vertex<GeoPoint*>* v : g->getVertexSet()){
         v->setDist(std::numeric_limits<double>::infinity());
     }
-    std::cout << "\nprim: ";
 
     // Find first vertex of MST
     Vertex<GeoPoint*>* r = nullptr;
     for(Vertex<GeoPoint*>* v : g->getVertexSet()){
         if (!v->isVisited()) {
-            //std::cout << "first: " << v->getInfo()->getId() << "\n";
             r = v; // Choose vertex from cluster
             break;
         }
@@ -793,17 +851,18 @@ std::set<Vertex<GeoPoint*> *> TSP::clusterPrim(Graph<GeoPoint*> * g) {
     if (r == nullptr) return resMST; // Empty cluster
 
     r->setDist(0);
+    r->setPath(nullptr);
     q.insert(r);
+    resMST.insert(r);
     while(!q.empty()){
         Vertex<GeoPoint*>* u = q.extractMin();
-        std::cout << u->getInfo()->getId() << ", ";
         u->setVisited(true);
-        resMST.insert(u);
         for(Edge<GeoPoint*> *e : u->getAdj()){
             Vertex<GeoPoint*>* v = e->getDest();
             if(!v->isVisited() && e->getWeight() < v->getDist()){
                 v->setDist(e->getWeight());
                 v->setPath(e);
+                resMST.insert(v);
                 q.insert(v);
                 q.decreaseKey(v);
             }
@@ -813,10 +872,43 @@ std::set<Vertex<GeoPoint*> *> TSP::clusterPrim(Graph<GeoPoint*> * g) {
 }
 
 /**
- * @brief Does a preorder traversal on an MST
+ * @brief Does a pre-order traversal on an MST
+ * @details Time Complexity: O(VE), where V is the number of vertices in the MST and E is the number of edges of each vertex
+ * @param root root node of the pre-order traversal
+ * @param preorder vector that contains the solution (vertices in preorder)
  */
-void TSP::preorderTraversal(){
-    // TODO
+void TSP::preOrderCluster(Vertex<GeoPoint*>* root, std::vector<Vertex<GeoPoint*>*>& preorder){
+    if (root == nullptr) return;
+
+    // Print the current node's data
+    std::cout << root->getInfo()->getId() << " ";
+    preorder.push_back(root);
+
+    // Recursively traverse the left subtree
+    for (auto e : root->getAdj()){
+        if (e->isSelected()) {
+            e->setSelected(false);
+            e->getDest()->setPath(e);
+            preOrderCluster(e->getDest(), preorder);
+        }
+    }
+}
+
+/**
+ * @brief Computes the weight of an edge between two vertices
+ * @details Time Complexity: O(E), where E is the number of outgoing edges of v1
+ * @param v1 Origin vertex
+ * @param v2 Destination vertex
+ * @return weight between v1 and v2
+ */
+double TSP::getWeightBetween(Vertex<GeoPoint*>* v1, Vertex<GeoPoint*>* v2){
+    double weight = 0;
+    for (auto e : v1->getAdj()){
+        if (e->getDest()->getInfo()->getId() == v2->getInfo()->getId()){
+            return e->getWeight();
+        }
+    }
+    return weight;
 }
 
 /**
