@@ -55,6 +55,7 @@ private:
 
     // T2.3
     void createClusters(std::vector<std::set<int>>& clusters, int k);
+    std::set<Vertex<GeoPoint*> *> clusterPrim(Graph<GeoPoint*> * g);
     void preorderTraversal();
     void primClusterCentroids();
 

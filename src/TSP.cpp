@@ -531,7 +531,7 @@ double TSP::otherHeuristic(){
     double res = 0; // TSP approximate solution tour length
 
     // 1. Create clusters, using K-means Clustering
-    int k = 5; // FIXME: Change value of k
+    int k = 9; // FIXME: Change value of k
     std::vector<std::set<int>> clusters;
     createClusters(clusters, k);
 
@@ -540,14 +540,24 @@ double TSP::otherHeuristic(){
     //    - Choose the preorder traversal as the tour
     for (int i = 0; i < k; i++){  // MST for each cluster
         for (Vertex<GeoPoint*>* v : tspNetwork.getVertexSet()){
-            v->setVisited(false);
+            v->setVisited(true);
         }
-        for (Vertex<GeoPoint*>* v : tspNetwork.getVertexSet()){
-            // TODO: Add attribute cluster to Graph.h
-            //if (v->getCluster() != k) v->setVisited(true); // Exclude vertices of other clusters
+        for (int clusterV : clusters[i]){
+            GeoPoint* gp = geoMap.at(clusterV);
+            for (auto v : tspNetwork.getVertexSet()){ // FIXME: findVertex() not working for some reason
+                if (v->getInfo()->getId() == gp->getId()) {
+                    v->setVisited(false);
+                    break;
+                }
+            }
         }
-        prim(&tspNetwork); // FIXME: apply prim ONLY on not visited vertices
-        preorderTraversal(); // Choose tour inside each cluster, using preoder traversal
+        std::set<Vertex<GeoPoint*> *> clusterMST = clusterPrim(&tspNetwork); // Apply prim ONLY on not visited vertices (vertices that are in the cluster)
+        /*std::cout << "\nCluster " << i << " MST: ";
+        for (auto mst : clusterMST){
+            std::cout << mst->getInfo()->getId() << ", ";
+        }*/
+
+        //preorderTraversal(); // Choose tour inside each cluster, using preoder traversal
     }
 
     // 3. Connect the clusters:
@@ -572,11 +582,11 @@ void TSP::createClusters(std::vector<std::set<int>>& clusters, int k){
     std::unordered_set<int> chosenIds; // To ensure that the same point isn't chosen twice
 
     // Initialize centroids randomly (without choosing the same one twice)
-    srand((unsigned)time(0));
+    srand((unsigned)time(0)); // "Randomize" seed
     for (int i = 0; i < k; i++) {
         GeoPoint* randomGP;
         do {
-            randomGP = geoMap.at(rand() % geoMap.size()); // FIXME: Not totally random (always the same)
+            randomGP = geoMap.at(rand() % geoMap.size());
         } while (chosenIds.count(randomGP->getId()) > 0); // Check if GeoPoint has been chosen before
         centroids[i] = randomGP->getId();
         chosenIds.insert(randomGP->getId());
@@ -605,6 +615,9 @@ void TSP::createClusters(std::vector<std::set<int>>& clusters, int k){
             }
         }
 
+        // FIXME: DUPLICATE VERTICES IN CLUSTERS (-> Problem is size of k)
+        // TODO: PRINT SEED FOR DEBUGGING
+
         // Assign the GeoPoint to the closest cluster
         clusters[closestCentroidIdx].insert(point->getId());
     }
@@ -619,7 +632,6 @@ void TSP::createClusters(std::vector<std::set<int>>& clusters, int k){
             for (auto v : tspNetwork.getVertexSet()){
                 if (v->getInfo()->getId() == gp->getId()) {
                     v->setIndegree(i);
-                    //std::cout << "Vertex " << id << " -> " << v->getIndegree() << "\n"; // TODO: Remove (DEBUG)
                     break;
                 }
             }
@@ -634,6 +646,46 @@ void TSP::createClusters(std::vector<std::set<int>>& clusters, int k){
             std::cout << id << ", ";
         }
     }
+}
+
+std::set<Vertex<GeoPoint*> *> TSP::clusterPrim(Graph<GeoPoint*> * g) {
+    std::set<Vertex<GeoPoint*> *> resMST;
+    resMST.clear();
+    MutablePriorityQueue<Vertex<GeoPoint*>> q;
+    for(Vertex<GeoPoint*>* v : g->getVertexSet()){
+        v->setDist(std::numeric_limits<double>::infinity());
+    }
+    std::cout << "\nprim\n";
+
+    // Find first vertex of MST
+    Vertex<GeoPoint*>* r = nullptr;
+    for(Vertex<GeoPoint*>* v : g->getVertexSet()){
+        if (!v->isVisited()) {
+            //std::cout << "first: " << v->getInfo()->getId() << "\n";
+            r = v; // Choose vertex from cluster
+            break;
+        }
+    }
+    if (r == nullptr) return resMST; // Empty cluster
+
+    r->setDist(0);
+    q.insert(r);
+    while(!q.empty()){
+        Vertex<GeoPoint*>* u = q.extractMin();
+        std::cout << u->getInfo()->getId() << ", ";
+        u->setVisited(true);
+        resMST.insert(u);
+        for(Edge<GeoPoint*> *e : u->getAdj()){
+            Vertex<GeoPoint*>* v = e->getDest();
+            if(!v->isVisited() && e->getWeight() < v->getDist()){
+                v->setDist(e->getWeight());
+                v->setPath(e);
+                q.insert(v);
+                q.decreaseKey(v);
+            }
+        }
+    }
+    return resMST;
 }
 
 /**
