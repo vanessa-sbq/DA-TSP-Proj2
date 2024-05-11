@@ -349,9 +349,116 @@ void TSP::parsingEdges(std::ifstream &in) {
 
 /* Data parsing end */
 
+bool allNodesVisited(std::unordered_map<int, Vertex<GeoPoint*>*>& geoPoints) {
+    for (const auto& geoPoint : geoPoints) {
+       if (!geoPoint.second->isVisited()) {
+           return false;
+       }
+    }
+    return true;
+}
 
 // T2.1
-// TODO
+
+/**
+ * @brief Helper function.
+ * @details Given two vertexes, the one we are now, and the one we want to go to the function returns nullptr if it fails
+ * to find the desired edge and returns the edge that connects the two vertexes in case it finds it.
+ **/
+Edge<GeoPoint*>* edgeFromCurVertexToNextVertex(Vertex<GeoPoint*>* currentVertex, Vertex<GeoPoint*>* nextVertex) {
+
+    if (currentVertex == nullptr || nextVertex == nullptr) {
+        return nullptr;
+    }
+
+    for (auto& edge : currentVertex->getAdj()) {
+        if (edge->getDest() == nextVertex) {
+            return edge;
+        }
+    }
+    return nullptr;
+}
+
+
+void TSP::tspRec(unsigned int n, unsigned int curI, double curDist, std::vector<Vertex<GeoPoint*>*>& curPath, double& minDist, std::vector<Vertex<GeoPoint*>*>& path) {
+
+    if (curI == n) {
+        curDist += edgeFromCurVertexToNextVertex(curPath.at(n - 1), curPath.at(0))->getWeight();
+        if (curDist < minDist) { // Since we reached the last vertex we wll now check if this newly found tsp path has a distance that is smaller than the one before.
+            minDist = curDist; // Update the minimum distance found.
+            path.clear();
+            for (int i = 0; i < n; i++) { // Update the optimal path that leads to the desired outcome. (tsp)
+                path.push_back(curPath.at(i));
+            }
+        }
+        return;
+    }
+
+
+
+    for (int i = 1; i < n; i++) { // Iterate through possible nodes
+        auto nextEdge = edgeFromCurVertexToNextVertex(curPath.at(curI), vertexGeoMap[i]);
+        double distance = 0;
+        if (nextEdge != nullptr) {
+            distance = nextEdge->getWeight();
+        }
+
+        if (curDist + distance < minDist) { // Bound -> If the distance of the current node to i is bigger than minDist then we should skip.
+            bool newNode = true; // Set the current node as a possible new node to visit.
+            for (int j = 1; j < curI; j++) { // The number of nodes that we need to check for possibly being in the tsp path already are the nodes from the starting node until the current node
+                if (curPath.at(j) == nullptr) {
+                    continue;
+                }
+                if (curPath.at(j) == vertexGeoMap[i]) { // Check's if the next node is already in the tsp Path. // Fixme: curPath[j]
+                    newNode = false;
+                    break;
+                }
+            }
+
+            if (newNode) { // If we haven't checked this new node yet then let's do it now.
+                curPath.at(curI) = vertexGeoMap[i];
+                auto dist = edgeFromCurVertexToNextVertex(curPath.at(curI - 1), curPath.at(curI));
+                if (dist != nullptr) {
+                    curDist += dist->getWeight();
+                }
+                tspRec(n, curI + 1 , curDist , curPath ,minDist, path);
+                if (dist != nullptr) {
+                    curDist -= dist->getWeight();
+                }
+            }
+        }
+    }
+
+
+}
+
+
+double TSP::tspBTSetup() {
+    std::vector<Vertex<GeoPoint*>*> path;
+    std::vector<Vertex<GeoPoint*>*> curPath;
+
+    double minDistance = INFINITY;
+
+    for (Vertex<GeoPoint*>*& geoPointVertex : tspNetwork.getVertexSet()) {
+        geoPointVertex->setVisited(false);
+        geoPointVertex->setPath(nullptr);
+        geoPointVertex->addEdge(geoPointVertex, 0.0);
+        curPath.push_back(nullptr);
+    }
+
+    curPath[0] = vertexGeoMap[0];
+
+    tspRec(vertexGeoMap.size(), 1, 0, curPath, minDistance, path);
+
+    std::cout << "\n";
+    for (Vertex<GeoPoint*>* vertex : path) {
+        std::cout <<  vertex->getInfo()->getId() << " -> ";
+    }
+    std::cout << "\n";
+
+
+    return minDistance;
+}
 
 
 template <class T>
@@ -365,7 +472,7 @@ std::vector<Vertex<T> *> TSP::prim(Graph<T> * g) {
     q.insert(r);
 
     while(!q.empty()){
-        Vertex<T>* u = q.extractMin();
+        Vertex<T>* u =  q.extractMin();
         u->setVisited(true);
         for(Edge<T> *e : u->getAdj()){
             Vertex<T>* v = e->getDest();
@@ -484,10 +591,12 @@ double TSP::triangularApproximation(){
     // Step 3: Create the tour H using the visit order
     std::vector<Vertex<GeoPoint*>*> tour;
     std::unordered_set<Vertex<GeoPoint*>*> visited;
+    Vertex<GeoPoint*>* auxV;
     for(Vertex<GeoPoint*>* v : visitOrder){
         if(visited.find(v) == visited.end()){
             v->setVisited(false);
             tour.push_back(v);
+            auxV = v;
             visited.insert(v);
         }
     }
@@ -520,6 +629,12 @@ double TSP::triangularApproximation(){
         }
     }
 
+    for(auto v : root->getAdj()){
+        if(v->getDest()->getInfo()->getId() == auxV->getInfo()->getId()) {
+            totalCost += v->getWeight();
+            break;
+        }
+    }
     return totalCost;
 }
 

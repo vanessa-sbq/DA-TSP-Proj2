@@ -125,6 +125,8 @@ void Application::backtrackingAlgorithmTSP(){
 
     //Code here
 
+    std::cout << "\nFinal result is: " <<  this->tsp.tspBTSetup() << "\n";
+
     showGoBackMenu(1,"Execute backtracking algorithm for TSP."); // At the end make a call to goBackMenu()
 }
 
