@@ -650,10 +650,13 @@ double TSP::triangularApproximation(){
 double TSP::otherHeuristic(){
     double res = 0; // TSP approximate solution tour length
 
+    // TODO: Add missing edges!!!
+
     // 1. Create clusters, using K-means Clustering
-    int k = 100; // FIXME: Change value of k
+    int k = 20; // FIXME: Change value of k
     std::vector<std::set<int>> clusters;
     std::vector<int> centroids(k);
+    std::vector<std::vector<Vertex<GeoPoint*>*>> clusterPreorders;
     createClusters(clusters, centroids, k);
 
     // 2. Compute the TSP for each cluster, using Prim's algorithm
@@ -713,6 +716,7 @@ double TSP::otherHeuristic(){
         preOrder.clear();
         std::cout << "\nCluster " << i << " pre-order walk: ";
         preOrderCluster(debugRoot, preOrder);
+        clusterPreorders.push_back(preOrder);
         preOrder.push_back(debugRoot);
 
         std::cout << "\n";
@@ -720,7 +724,6 @@ double TSP::otherHeuristic(){
         // Calculate the total distance of the tour
         double totalCost = 0.0;
         for (size_t i = 1; i < preOrder.size(); i++){
-            //std::cout << "preOrder[" << i << "]: " << preOrder[i-1]->getInfo()->getId() << " -> " << preOrder[i]->getInfo()->getId() << ": +" << getWeightBetween(preOrder[i-1], preOrder[i]) << "\n";
             totalCost += getWeightBetween(preOrder[i-1], preOrder[i]);
         }
 
@@ -728,10 +731,34 @@ double TSP::otherHeuristic(){
 
     }
 
+    std::cout << "All Preorder walks together: \n";
+    std::vector<Vertex<GeoPoint*>*> finalTour;
+    for (int i = 0; i < clusterPreorders.size(); i++){
+        for (auto b : clusterPreorders[i]){
+            finalTour.push_back(b);
+        }
+    }
+
+    std::cout << "Final tour: \n";
+    for (auto a : finalTour){
+        std::cout << a->getInfo()->getId() << " ";
+    }
+
+    double totalCost = 0.0;
+    for (size_t i = 1; i < finalTour.size(); i++){
+        if (i == finalTour.size() - 1){
+            //std::cout << "Weight between " << finalTour[i]->getInfo()->getId() << " and " << finalTour[0]->getInfo()->getId() << " is " << getWeightBetween(finalTour[i], finalTour[0]) << "\n";
+            totalCost += getWeightBetween(finalTour[i], finalTour[0]); // Close the tour
+        }
+        totalCost += getWeightBetween(finalTour[i-1], finalTour[i]);
+        //std::cout << "Weight between " << finalTour[i-1]->getInfo()->getId() << " and " << finalTour[i]->getInfo()->getId() << " is " << getWeightBetween(finalTour[i-1], finalTour[i]) << "\n";
+    }
+
+    std::cout << "Total Cost: " << totalCost;
+
     // 3. Connect the clusters:
     //    - Compute the MST of the cluster centroids
-    // TODO
-    primClusterCentroids();
+    //greedyConnectClusters(clusters, centroids);
 
     // 4. Locally optimize the initial TSP solution:
     //    - Apply 2-opt optimizations inside each cluster
@@ -911,13 +938,88 @@ double TSP::getWeightBetween(Vertex<GeoPoint*>* v1, Vertex<GeoPoint*>* v2){
     return weight;
 }
 
+// TODO: Time Complexity
 /**
- * @brief Finds a minimal spanning tree using the cluster centroids, in order to find the final tour in the full graph
+ * @brief Greedy algorithm that connects the clusters to form the final tour
  */
-void TSP::primClusterCentroids(){
-    // TODO
+void TSP::greedyConnectClusters(std::vector<std::set<int>> clusters, std::vector<int> centroids){
+    // 1. Initialize a list of unvisited clusters
+    std::vector<int> unvisitedClusters;
+    for (int i = 0; i < clusters.size(); i++){
+        unvisitedClusters.push_back(i); // Store the IDs of the unvisited clusters
+        std::cout << "centroids[" << i << "] = " << centroids[i] << "\n";
+    }
+
+    // 2. Choose a starting cluster arbitrarily
+    int currentClusterId = 0;
+    unvisitedClusters.erase(std::remove(unvisitedClusters.begin(), unvisitedClusters.end(), currentClusterId), unvisitedClusters.end());
+
+    // 3. Iteratively find the nearest centroid and connect the clusters
+    while (!unvisitedClusters.empty() && clusters.size() > 1) {
+        double minDistance = std::numeric_limits<double>::max(); // Initialize minimum distance
+        int nearestClusterId = -1;
+
+        // Find the nearest unvisited cluster
+        for (int i : unvisitedClusters) {
+            if (i != currentClusterId) {
+                /// Find Vertex // FIXME: findVertex() not working for some reason
+                std::cout << "currentClusterId = " << currentClusterId << ", otherClusterId = " << i << "\n";
+                std::cout << "currentClusterCentroid = " << centroids[currentClusterId] << ", otherClusterCentroid = " << centroids[i] << "\n";
+
+
+                GeoPoint* currentGP = geoMap.at(centroids[currentClusterId]);
+                Vertex<GeoPoint*>* currentCentroid;
+                for (auto v : tspNetwork.getVertexSet()){
+                    if (v->getInfo()->getId() == currentGP->getId()) {
+                        currentCentroid = v;
+                        break;
+                    }
+                }
+                GeoPoint* otherGP = geoMap.at(centroids[i]);
+                Vertex<GeoPoint*>* otherCentroid;
+                for (auto v : tspNetwork.getVertexSet()){
+                    if (v->getInfo()->getId() == otherGP->getId()) {
+                        otherCentroid = v;
+                        break;
+                    }
+                }
+                ///
+                double distance = calculateHaversineDistance(std::make_pair(currentCentroid->getInfo()->getLatitude(), currentCentroid->getInfo()->getLongitude()), std::make_pair(otherCentroid->getInfo()->getLatitude(), otherCentroid->getInfo()->getLongitude()));
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    nearestClusterId = i;
+                }
+            }
+        }
+
+        // Connect the current cluster to the nearest unvisited cluster
+        connectClusters(clusters, currentClusterId, nearestClusterId); // TODO
+        std::cout << " -> Connect the centroids " << centroids[currentClusterId] << " and " << centroids[nearestClusterId] << "\n";
+
+        // Mark the nearest cluster as visited and remove it from the list of unvisited clusters
+        unvisitedClusters.erase(std::remove(unvisitedClusters.begin(), unvisitedClusters.end(), nearestClusterId), unvisitedClusters.end());
+
+        // Update the current cluster to the nearest cluster
+        currentClusterId = nearestClusterId;
+    }
+
+    /// DEBUG
+    std::cout << "Complete cluster: ";
+    for (auto a : clusters[0]){
+        std::cout << a << " ";
+    }
+    std::cout << "\n";
 }
 
+void TSP::connectClusters(std::vector<std::set<int>>& clusters, int currentClusterId, int nearestClusterId){
+    std::cout << "currentClusterId = " << currentClusterId << ", nearestClusterId = " << nearestClusterId;
+
+    // Choose new centroid
+
+    // Connect clusters (resize current one and remove nearest one)
+    clusters[currentClusterId].insert(clusters[nearestClusterId].begin(), clusters[nearestClusterId].end());
+    clusters.erase(clusters.begin() + nearestClusterId);
+}
 
 // T2.4
 // TODO
