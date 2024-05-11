@@ -649,6 +649,7 @@ double TSP::otherHeuristic(){
     int k = 9; // FIXME: Change value of k
     std::vector<std::set<int>> clusters;
     createClusters(clusters, k);
+    std::cout << "\n";
 
     // 2. Compute the TSP for each cluster, using Prim's algorithm
     //    - Compute the MST
@@ -717,6 +718,10 @@ void TSP::createClusters(std::vector<std::set<int>>& clusters, int k){
     // Assign GeoPoints to clusters based on proximity to centroids
     for (auto& pair : geoMap) {
         GeoPoint* point = pair.second;
+
+        // Skip if the current GeoPoint is a centroid
+        if (std::find(centroids.begin(), centroids.end(), point->getId()) != centroids.end()) continue;
+
         double minDistance = INFINITY;
         int closestCentroidIdx = -1;
 
@@ -728,9 +733,13 @@ void TSP::createClusters(std::vector<std::set<int>>& clusters, int k){
                 minDistance = distance;
                 closestCentroidIdx = i;
             }
+            else if (distance == minDistance) { // Select random centroid in case of a tie
+                if (rand() % 2 == 0) {
+                    closestCentroidIdx = i;
+                }
+            }
         }
 
-        // FIXME: DUPLICATE VERTICES IN CLUSTERS (-> Problem is size of k)
         // TODO: PRINT SEED FOR DEBUGGING
 
         // Assign the GeoPoint to the closest cluster
@@ -770,7 +779,7 @@ std::set<Vertex<GeoPoint*> *> TSP::clusterPrim(Graph<GeoPoint*> * g) {
     for(Vertex<GeoPoint*>* v : g->getVertexSet()){
         v->setDist(std::numeric_limits<double>::infinity());
     }
-    std::cout << "\nprim\n";
+    std::cout << "\nprim: ";
 
     // Find first vertex of MST
     Vertex<GeoPoint*>* r = nullptr;
