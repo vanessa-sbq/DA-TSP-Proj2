@@ -316,6 +316,10 @@ void TSP::parsingEdges(std::ifstream &in) {
         if (!geoPointSource->addEdge(geoPointDestination, std::stod(distance))) {
             std::cerr << "Error in parsingEdges, problem while adding an edge to the graph\n";
         }
+
+        if (!geoPointDestination->addEdge(geoPointSource, std::stod(distance))) {
+            std::cerr << "Error in parsingEdges, problem while adding an edge to the graph\n";
+        }
     } // else ignore the header and process the rest of the data.
 
     while (std::getline(in, line)) {
