@@ -144,6 +144,8 @@ void TSP::parsingGeoPointsAndEdges(std::ifstream &in) {
             this->vertexGeoMap[stoi(origin)] = tspNetwork.addVertex(geoPointSource);
         if(this->vertexGeoMap.find(stoi(destination))==this->vertexGeoMap.end())
             this->vertexGeoMap[stoi(destination)] = tspNetwork.addVertex(geoPointDestination);
+
+
     }
 
     in.clear();
@@ -169,20 +171,28 @@ void TSP::parsingGeoPointsAndEdges(std::ifstream &in) {
         Vertex<GeoPoint*>* geoPointSource = vertexGeoMap[stoi(origin)] ;
         Vertex<GeoPoint*>* geoPointTarget = vertexGeoMap[stoi(destination)] ;
 
+
         if (geoPointSource == nullptr || geoPointTarget == nullptr) {
             std::cerr << "Error in parsingGeoPointsAndEdges, problem with finding vertex in geoMap.\n";
             continue;
         }
 
-        if (!geoPointSource->addEdge(geoPointTarget, std::stod(distance))) {
+        auto e1 = geoPointSource->addEdge(geoPointTarget, std::stod(distance));
+
+        if (e1 == nullptr) {
             std::cerr << "Problem while adding an edge to the graph\n";
             continue;
         }
 
-        if (!geoPointTarget->addEdge(geoPointSource, std::stod(distance))) {
+        auto e2 = geoPointTarget->addEdge(geoPointSource, std::stod(distance));
+
+        if (e2 == nullptr) {
             std::cerr << "Problem while adding an edge to the graph\n";
             continue;
         }
+
+        e1->setReverse(e2);
+        e2->setReverse(e1);
 
     }
 }
@@ -362,6 +372,8 @@ std::vector<Vertex<T> *> TSP::prim(Graph<T> * g) {
     MutablePriorityQueue<Vertex<T>> q;
     for(Vertex<T>* v : g->getVertexSet()){
         v->setDist(std::numeric_limits<double>::infinity());
+        v->setPath(nullptr);
+        v->setVisited(false);
     }
     Vertex<T>* r = g->getVertexSet().front();
     r->setDist(0);
@@ -372,11 +384,20 @@ std::vector<Vertex<T> *> TSP::prim(Graph<T> * g) {
         u->setVisited(true);
         for(Edge<T> *e : u->getAdj()){
             Vertex<T>* v = e->getDest();
-            if(!v->isVisited() && e->getWeight() < v->getDist()){
-                v->setDist(e->getWeight());
-                v->setPath(e);
-                q.insert(v);
-                q.decreaseKey(v);
+
+            if(!v->isVisited()){
+                auto oldDist = v->getDist();
+
+                if(e->getWeight() < oldDist){
+                    v->setDist(e->getWeight());
+                    v->setPath(e);
+
+                    if(oldDist == std::numeric_limits<double>::infinity()){
+                        q.insert(v);
+                    } else {
+                        q.decreaseKey(v);
+                    }
+                }
             }
         }
     }
@@ -401,17 +422,26 @@ double TSP::spanningTreeCost(const std::vector<Vertex<T> *> &res){
 }
 
 template <class T>
-void TSP::preOrderWalk(Vertex<T>* root, std::vector<Vertex<T>*> &visitOrder){
-    if(root == nullptr) return;
+void TSP::preOrderWalk(Vertex<T>* root, std::vector<Vertex<T>*> &visitOrder) {
+    if (root == nullptr) return;
     visitOrder.push_back(root);
     root->setVisited(true);
-    for(Edge<T>* edge : root->getAdj()){
-        if(!edge->getDest()->isVisited()){
+    for (Edge<T>* edge : root->getAdj()) {
+        Vertex<T>* w = edge->getDest();
+        if (!w->isVisited()) {
             preOrderWalk(edge->getDest(), visitOrder);
+        } else {
+            // Find the corresponding edge in the MST
+            for (Edge<T>* e : w->getAdj()) {
+                if (root->getInfo() == e->getDest()->getInfo()) {
+                    // Set the path and distance values based on the MST edge
+                    root->setPath(e);
+                    root->setDist(e->getWeight());
+                    break;
+                }
+            }
         }
     }
-
-
 }
 
 bool TSP::isAdjacent(Vertex<GeoPoint *> *&v1, Vertex<GeoPoint *> *&v2) {
@@ -449,10 +479,6 @@ bool TSP::isAdjacent(Vertex<GeoPoint *> *&v1, Vertex<GeoPoint *> *&v2) {
 
 // T2.2
 double TSP::triangularApproximation(){
-    for(Vertex<GeoPoint*>* v : tspNetwork.getVertexSet()){
-        //std::cout << v->getInfo()->getLabel() << std::endl;
-        v->setVisited(false);
-    }
 
     std::vector<Vertex<GeoPoint*>*> MST = prim(&tspNetwork);
 /*
@@ -460,7 +486,7 @@ double TSP::triangularApproximation(){
     for(const auto v : MST) {
         ss << v->getInfo()->getId() << "->";
         if ( v->getPath() != nullptr ) {
-            ss << v->getPath()->getOrig()->getInfo()->getId();
+            ss << v->getPath()->getDest()->getInfo()->getId();
         }
 
 
@@ -468,7 +494,6 @@ double TSP::triangularApproximation(){
     }
     std::cout << "MST  " <<ss.str() << std::endl;
 */
-
     for(Vertex<GeoPoint*>* v : MST){
         v->setVisited(false);
     }
