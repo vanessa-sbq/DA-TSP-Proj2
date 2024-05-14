@@ -61,8 +61,7 @@ private:
     std::set<Vertex<GeoPoint*> *> clusterPrim(Graph<GeoPoint*> * g);
     void preOrderCluster(Vertex<GeoPoint*>* root, std::vector<Vertex<GeoPoint*>*>& preorder);
     double getWeightBetween(Vertex<GeoPoint*>* v1, Vertex<GeoPoint*>* v2);
-    void greedyConnectClusters(std::vector<std::set<int>> clusters, std::vector<int> centroids);
-    void connectClusters(std::vector<std::set<int>>& clusters, int currentClusterId, int nearestClusterId);
+    //void connectFinalTour(std::vector<std::set<int>>& clusters); // FIXME
 
     bool isAdjacent(Vertex<GeoPoint *> *&v1, Vertex<GeoPoint *> *&v2);
 };
