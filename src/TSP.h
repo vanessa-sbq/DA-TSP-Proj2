@@ -6,6 +6,7 @@
 #include <sstream>
 #include <unordered_map>
 #include <unordered_set>
+#include <set>
 
 #include "Graph.h"
 #include "GeoPoint.h"
@@ -36,6 +37,7 @@ private:
 
     std::unordered_map<int, GeoPoint*> geoMap; // Contains all geo points
     std::unordered_map<int, Vertex<GeoPoint*>*> vertexGeoMap; // Contains all vertexes that represent geo points
+    std::unordered_map<int, std::set<GeoPoint*>> edgesGeoPoint; //contais the edges of vertex id = int
     void parseEdgesFromMemory(char* data, size_t size);
     void loadFileUsingMMap(const std::string& filename);
 
@@ -44,12 +46,11 @@ private:
     void parsingEdges(std::ifstream &in);
 
     //TSP 2
-    template <class T>
-    std::vector<Vertex<T> *> prim(Graph<T> * g);
+    std::vector<Vertex<GeoPoint*>*> prim(Graph<GeoPoint*> * g, std::vector<Vertex<GeoPoint*>*> &visitOrder);
     template <class T>
     double spanningTreeCost(const std::vector<Vertex<T> *> &res);
-    template <class T>
-    void preOrderWalk(Vertex<T>* root, std::vector<Vertex<T>*> &visitOrder);
+
+    void preOrderWalk(Vertex<GeoPoint*>* root, std::vector<Vertex<GeoPoint*>*> &visitOrder);
 
     bool isAdjacent(Vertex<GeoPoint *> *&v1, Vertex<GeoPoint *> *&v2);
 };
