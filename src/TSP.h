@@ -24,7 +24,7 @@ public:
     // TODO
 
     // T2.2
-    double triangularApproximation();
+    double triangularApproximation(std::stringstream &sd);
 
     // T2.3
     // TODO

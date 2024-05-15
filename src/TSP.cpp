@@ -502,7 +502,7 @@ bool TSP::isAdjacent(Vertex<GeoPoint *> *&v1, Vertex<GeoPoint *> *&v2) {
 }
 
 // T2.2
-double TSP::triangularApproximation(){
+double TSP::triangularApproximation(std::stringstream &sd){
     std::vector<Vertex<GeoPoint*>*> visitOrder;
     std::vector<Vertex<GeoPoint*>*> MST = prim(&tspNetwork, visitOrder);
 /*
@@ -559,7 +559,7 @@ double TSP::triangularApproximation(){
                     }
                 }
             }else {
-                newDist = calculateHaversineDistance({v->getInfo()->getLatitude(),v->getInfo()->getLongitude()},{visitOrder[i+1]->getInfo()->getLatitude(),visitOrder[i+1]->getInfo()->getLongitude()});
+                newDist = 1000 * calculateHaversineDistance({v->getInfo()->getLatitude(),v->getInfo()->getLongitude()},{visitOrder[i+1]->getInfo()->getLatitude(),visitOrder[i+1]->getInfo()->getLongitude()});
             }
             v->setDist(newDist);
             tour.push_back(v);
@@ -573,17 +573,13 @@ double TSP::triangularApproximation(){
 
     // Add the root vertex again to complete the tour
     tour.push_back(root);
-/*
-    std::stringstream sd;
+
+
     for(const auto v : tour) {
-        sd << v->getInfo()->getId() << "<-";
-        if ( v->getPath() != nullptr ) {
-            sd << v->getPath()->getDest()->getInfo()->getId();
-        }
-        sd << "|";
+        sd <<"[" << v->getInfo()->getId() <<"]" << "->";
+
     }
-    std::cout << "TOUR >> " <<sd.str() << std::endl;
-*/
+
     // Step 4: Calculate the total distance of the tour
     double totalCost = 0.0;
     for(size_t i = 0; i < tour.size() - 1; ++i){
