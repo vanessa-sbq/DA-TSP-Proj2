@@ -666,7 +666,6 @@ double TSP::otherHeuristic(){
         std::cout << "\n";
     }*/
 
-
     // 1. Create clusters, using K-means Clustering
     int k = 1; // FIXME: Change value of k
     std::vector<std::set<int>> clusters;
@@ -682,13 +681,8 @@ double TSP::otherHeuristic(){
             v->setVisited(true);
         }
         for (int clusterV : clusters[i]){
-            GeoPoint* gp = geoMap.at(clusterV);
-            for (auto v : tspNetwork.getVertexSet()){ // FIXME: findVertex() not working for some reason
-                if (v->getInfo()->getId() == gp->getId()) {
-                    v->setVisited(false);
-                    break;
-                }
-            }
+            Vertex<GeoPoint*>* v = vertexGeoMap.at(clusterV);
+            v->setVisited(false);
         }
         std::set<Vertex<GeoPoint*> *> clusterMST = clusterPrim(&tspNetwork); // Apply prim ONLY on not visited vertices (vertices that are in the cluster)
 
@@ -729,12 +723,10 @@ double TSP::otherHeuristic(){
         }
         std::vector<Vertex<GeoPoint*>*> preOrder;
         preOrder.clear();
-        std::cout << "\nCluster " << i << " pre-order walk: ";
+        std::cout << "Cluster " << i << " pre-order walk: "; // TODO: Remove?
         preOrderCluster(debugRoot, preOrder);
         clusterPreorders.push_back(preOrder);
         preOrder.push_back(debugRoot);
-
-        std::cout << "\n";
 
         // Calculate the total distance of the tour
         double totalCost = 0.0;
@@ -742,15 +734,9 @@ double TSP::otherHeuristic(){
             totalCost += getWeightBetween(preOrder[i-1], preOrder[i]);
         }
 
-        std::cout << "MST " << i << " has a total cost of " << totalCost << "\n";
-
+        std::cout << "-> Total cost: " << totalCost << "\n\n"; // TODO: Remove?
     }
 
-    // FIXME
-    //std::cout << "Cluster connections:\n";
-    //connectFinalTour(clusters);
-
-    std::cout << "All Preorder walks together: \n";
     std::vector<Vertex<GeoPoint*>*> finalTour;
     for (int i = 0; i < clusterPreorders.size(); i++){
         for (auto b : clusterPreorders[i]){
@@ -758,7 +744,7 @@ double TSP::otherHeuristic(){
         }
     }
 
-    std::cout << "Final tour: \n";
+    std::cout << "Final tour: ";
     for (auto a : finalTour){
         std::cout << a->getInfo()->getId() << " ";
     }
@@ -766,14 +752,12 @@ double TSP::otherHeuristic(){
     double totalCost = 0.0;
     for (size_t i = 1; i < finalTour.size(); i++){
         if (i == finalTour.size() - 1){
-            //std::cout << "Weight between " << finalTour[i]->getInfo()->getId() << " and " << finalTour[0]->getInfo()->getId() << " is " << getWeightBetween(finalTour[i], finalTour[0]) << "\n";
             totalCost += getWeightBetween(finalTour[i], finalTour[0]); // Close the tour
         }
         totalCost += getWeightBetween(finalTour[i-1], finalTour[i]);
-        //std::cout << "Weight between " << finalTour[i-1]->getInfo()->getId() << " and " << finalTour[i]->getInfo()->getId() << " is " << getWeightBetween(finalTour[i-1], finalTour[i]) << "\n";
     }
 
-    std::cout << "Total Cost: " << totalCost;
+    std::cout << "\nTotal cost: " << totalCost << "\n";
 
     // 3. Connect the clusters:
     //    - Compute the MST of the cluster centroids
@@ -797,7 +781,7 @@ void TSP::createClusters(std::vector<std::set<int>>& clusters, std::vector<int>&
     std::unordered_set<int> chosenIds; // To ensure that the same point isn't chosen twice
 
     // Initialize centroids randomly (without choosing the same one twice)
-    std::cout << "--------- Centroids and clusters --------\n";
+    std::cout << "--------- Centroids and Clusters --------\n";  // TODO: Remove?
     srand((unsigned)time(0)); // "Randomize" seed
     for (int i = 0; i < k; i++) {
         GeoPoint* randomGP;
@@ -806,14 +790,11 @@ void TSP::createClusters(std::vector<std::set<int>>& clusters, std::vector<int>&
         } while (chosenIds.count(randomGP->getId()) > 0); // Check if GeoPoint has been chosen before
         centroids[i] = randomGP->getId();
         chosenIds.insert(randomGP->getId());
-        std::cout << "centroid: " << centroids[i] << "\n"; // TODO: Remove (DEBUG)
+        std::cout << "Centroid: " << centroids[i] << "\n"; // TODO: Remove?
     }
 
     clusters.resize(k);
-
-    for (int i = 0; i < k; i++){
-        clusters[i].insert(centroids[i]); // Add centroids to clusters
-    }
+    for (int i = 0; i < k; i++) clusters[i].insert(centroids[i]); // Add centroids to clusters
 
     // Assign GeoPoints to clusters based on proximity to centroids
     for (auto& pair : geoMap) {
@@ -840,8 +821,6 @@ void TSP::createClusters(std::vector<std::set<int>>& clusters, std::vector<int>&
             }
         }
 
-        // TODO: PRINT SEED FOR DEBUGGING
-
         // Assign the GeoPoint to the closest cluster
         clusters[closestCentroidIdx].insert(point->getId());
     }
@@ -850,19 +829,12 @@ void TSP::createClusters(std::vector<std::set<int>>& clusters, std::vector<int>&
     for (int i = 0; i < k; i++){
         std::set<int> cluster = clusters[i];
         for (int id : cluster){
-            GeoPoint* gp = geoMap.at(id);
-
-            //Vertex<GeoPoint*>* v = tspNetwork.findVertex(gp); // FIXME: findVertex not working for some reason (used for loop instead)
-            for (auto v : tspNetwork.getVertexSet()){
-                if (v->getInfo()->getId() == gp->getId()) {
-                    v->setIndegree(i);
-                    break;
-                }
-            }
+            Vertex<GeoPoint*>* v = vertexGeoMap.at(id);
+            v->setIndegree(i);
         }
     }
 
-    // TODO: Remove (DEBUG)
+    // TODO: Remove?
     for (int i = 0; i < k; i++){
         std::cout << "\nCluster " << i << ": ";
         std::set<int> cluster = clusters[i];
@@ -870,7 +842,7 @@ void TSP::createClusters(std::vector<std::set<int>>& clusters, std::vector<int>&
             std::cout << id << ", ";
         }
     }
-    std::cout << "\n-----------------------------------------\n";
+    std::cout << "\n-----------------------------------------\n"; // TODO: Remove?
 }
 
 /**
