@@ -481,6 +481,21 @@ bool TSP::makeGraphConnected() {
     return isFullyConnected;
 }
 
+bool TSP::makeGraphConnectedWithHaversine() {
+    bool isFullyConnected = true;
+    for (Vertex<GeoPoint*>* vertexA : tspNetwork.getVertexSet()) {
+        for (Vertex<GeoPoint*>* vertexB : tspNetwork.getVertexSet()) {
+            double abDist = calculateHaversineDistance(std::make_pair(vertexA->getInfo()->getLatitude(), vertexA->getInfo()->getLongitude()), std::make_pair(vertexB->getInfo()->getLatitude(), vertexB->getInfo()->getLongitude()));
+            Edge<GeoPoint*>* e = tspNetwork.addEdgeChecked(vertexA, vertexB, abDist);
+            if (e != nullptr) {
+                isFullyConnected = false;
+                edgesToRemove.push_back(*e);
+            }
+        }
+    }
+    return isFullyConnected;
+}
+
 void TSP::cleanUpGraph() {
     for (Edge<GeoPoint*> edge : edgesToRemove) {
         tspNetwork.removeEdge(edge.getOrig()->getInfo(), edge.getDest()->getInfo());
@@ -750,17 +765,6 @@ double TSP::triangularApproximation(){
 double TSP::otherHeuristic(){
     double res = 0; // TSP approximate solution tour length
 
-    // TODO: Add missing edges!!!
-
-    /*std::cout << "EDGES DEBUG: \n";
-    for (auto a : tspNetwork.getVertexSet()){
-        std::cout << "Edges from " << a->getInfo()->getId() << ": ";
-        for (auto e : a->getAdj()){
-            std::cout << e->getDest()->getInfo()->getId() << " ";
-        }
-        std::cout << "\n";
-    }*/
-
     // 1. Create clusters, using K-means Clustering
     int k = 1; // FIXME: Change value of k
     std::vector<std::set<int>> clusters;
@@ -800,9 +804,6 @@ double TSP::otherHeuristic(){
             return 0;
         }
 
-        ///------------- DEBUG ---------------///
-        ///-----------------------------------///
-
         for (auto a : clusterMST){
             if (a->getPath() != nullptr){
                 a->getPath()->setSelected(true);
@@ -818,7 +819,7 @@ double TSP::otherHeuristic(){
         }
         std::vector<Vertex<GeoPoint*>*> preOrder;
         preOrder.clear();
-        std::cout << "Cluster " << i << " pre-order walk: "; // TODO: Remove?
+        std::cout << "Cluster " << i << " pre-order walk: ";
         preOrderCluster(debugRoot, preOrder);
         clusterPreorders.push_back(preOrder);
         preOrder.push_back(debugRoot);
@@ -829,9 +830,10 @@ double TSP::otherHeuristic(){
             totalCost += getWeightBetween(preOrder[i-1], preOrder[i]);
         }
 
-        std::cout << "-> Total cost: " << totalCost << "\n\n"; // TODO: Remove?
+        std::cout << "-> Total cost: " << totalCost << "\n\n";
     }
 
+    // 3. Connect the clusters
     std::vector<Vertex<GeoPoint*>*> finalTour;
     for (int i = 0; i < clusterPreorders.size(); i++){
         for (auto b : clusterPreorders[i]){
@@ -852,7 +854,7 @@ double TSP::otherHeuristic(){
         totalCost += getWeightBetween(finalTour[i-1], finalTour[i]);
     }
 
-    std::cout << "\nTotal cost: " << totalCost << "\n";
+    std::cout << "\n\n=> Total cost: " << totalCost;
 
     // 3. Connect the clusters:
     //    - Compute the MST of the cluster centroids
@@ -904,7 +906,7 @@ void TSP::createClusters(std::vector<std::set<int>>& clusters, std::vector<int>&
         // Find the closest centroid
         for (int i = 0; i < k; ++i) {
             GeoPoint* centroid = geoMap.at(centroids[i]);
-            double distance = calculateHaversineDistance(std::make_pair(point->getLatitude(), point->getLongitude()), std::make_pair(centroid->getLatitude(), centroid->getLongitude())); // TODO: Implement computeDistance
+            double distance = calculateHaversineDistance(std::make_pair(point->getLatitude(), point->getLongitude()), std::make_pair(centroid->getLatitude(), centroid->getLongitude()));
             if (distance < minDistance) {
                 minDistance = distance;
                 closestCentroidIdx = i;
@@ -970,16 +972,34 @@ std::set<Vertex<GeoPoint*> *> TSP::clusterPrim(Graph<GeoPoint*> * g) {
     while(!q.empty()){
         Vertex<GeoPoint*>* u = q.extractMin();
         u->setVisited(true);
-        for(Edge<GeoPoint*> *e : u->getAdj()){
-            Vertex<GeoPoint*>* v = e->getDest();
-            if(!v->isVisited() && e->getWeight() < v->getDist()){
-                v->setDist(e->getWeight());
-                v->setPath(e);
-                resMST.insert(v);
-                q.insert(v);
-                q.decreaseKey(v);
+        //if (isToyGraph){ // Assume the graph is connected
+            for(Edge<GeoPoint*> *e : u->getAdj()){
+                Vertex<GeoPoint*>* v = e->getDest();
+                if(!v->isVisited() && e->getWeight() < v->getDist()){
+                    v->setDist(e->getWeight());
+                    v->setPath(e);
+                    resMST.insert(v);
+                    q.insert(v);
+                    q.decreaseKey(v);
+                }
             }
-        }
+        /*} else{ // Add missing connections
+            for (auto v : tspNetwork.getVertexSet()){
+                double uvDist = calculateHaversineDistance(std::make_pair(u->getInfo()->getLatitude(), u->getInfo()->getLongitude()), std::make_pair(v->getInfo()->getLatitude(), v->getInfo()->getLongitude()));
+                if(!v->isVisited() && uvDist < v->getDist()){
+                    v->setDist(uvDist);
+                    Edge<GeoPoint*>* findEdge = edgeFromCurVertexToNextVertex(u, v);
+                    if (findEdge == nullptr){ // Edge needs to be added
+                        findEdge = u->addEdge(v, uvDist);
+                        edgesToRemove.push_back(*findEdge); // Track the edges for the cleanup
+                    }
+                    v->setPath(findEdge);
+                    resMST.insert(v);
+                    q.insert(v);
+                    q.decreaseKey(v);
+                }
+            }
+        }*/
     }
     return resMST;
 }

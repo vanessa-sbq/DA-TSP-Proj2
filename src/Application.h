@@ -127,6 +127,7 @@ public:
 
                 break;
             case 2:
+                isToyGraph = true;
                 clearScreen();
                 std::cout << "Toy Graphs:\n";
                 std::cout << "1. Shipping\n";
@@ -219,6 +220,8 @@ private:
     std::string env; // System environment variable
     std::string edgePath = ""; // Path for edges.csv
     std::string nodePath = ""; // Path for nodes.csv
+
+    bool isToyGraph = false; // Used for adding missing edges
     bool edgeFileSeparatedFromNodeFile = false;
 };
 

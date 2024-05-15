@@ -40,6 +40,7 @@ public:
     void setDist(double dist);
     void setPath(Edge<T> *path);
     Edge<T> * addEdge(Vertex<T> *dest, double w);
+    Edge<T> * addEdgeChecked(Vertex<T> *d, double w);
     bool removeEdge(T in);
     void removeOutgoingEdges();
 
@@ -117,6 +118,7 @@ public:
      * Returns true if successful, and false if the source or destination vertex does not exist.
      */
     bool addEdge(const T &sourc, const T &dest, double w);
+    Edge<T>* addEdgeChecked(Vertex<T>* sourcVertex, Vertex<T>* destVertex, double w);
     bool removeEdge(const T &source, const T &dest);
     bool addBidirectionalEdge(const T &sourc, const T &dest, double w);
 
@@ -157,6 +159,23 @@ Vertex<T>::Vertex(T in): info(in) {}
  */
 template <class T>
 Edge<T> * Vertex<T>::addEdge(Vertex<T> *d, double w) {
+    auto newEdge = new Edge<T>(this, d, w);
+    adj.push_back(newEdge);
+    d->incoming.push_back(newEdge);
+    return newEdge;
+}
+
+template <class T>
+Edge<T> * Vertex<T>::addEdgeChecked(Vertex<T> *d, double w) {
+    if (this == d) return nullptr; // Don't add edge to itself
+
+    // Check if edge already exists
+    for (Edge<T>* edge : adj) {
+        if (*edge->getDest()->getInfo() == *d->getInfo()) {
+            return nullptr;
+        }
+    }
+
     auto newEdge = new Edge<T>(this, d, w);
     adj.push_back(newEdge);
     d->incoming.push_back(newEdge);
@@ -422,6 +441,13 @@ bool Graph<T>::addEdge(const T &sourc, const T &dest, double w) {
         return false;
     v1->addEdge(v2, w);
     return true;
+}
+
+template <class T>
+Edge<T>* Graph<T>::addEdgeChecked(Vertex<T>* sourcVertex, Vertex<T>* destVertex, double w){
+    if (sourcVertex == nullptr || destVertex == nullptr)
+        return nullptr;
+    return sourcVertex->addEdgeChecked(destVertex, w);
 }
 
 /*

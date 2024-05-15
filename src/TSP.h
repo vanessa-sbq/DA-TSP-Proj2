@@ -15,6 +15,10 @@
 
 class TSP {
 public:
+    void setIsToyGraph(bool isToyGraph){
+        this->isToyGraph = isToyGraph;
+    }
+
     // Data parsing
     void parseData(std::string nodesFilePath, std::string edgesFilePath, bool bothFilesProvided);
 
@@ -24,6 +28,7 @@ public:
     // T2.1
     std::pair<double, std::vector<Vertex<GeoPoint*>*>> tspBTSetup();
     bool makeGraphConnected();
+    bool makeGraphConnectedWithHaversine();
     void cleanUpGraph();
 
     // T2.2
@@ -40,6 +45,7 @@ private:
 
     std::unordered_map<int, GeoPoint*> geoMap; // Contains all geo points
     std::unordered_map<int, Vertex<GeoPoint*>*> vertexGeoMap; // Contains all vertexes that represent geo points
+    bool isToyGraph = false;
     void parseEdgesFromMemory(char* data, size_t size);
     void loadFileUsingMMap(const std::string& filename);
 
