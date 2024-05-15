@@ -123,10 +123,45 @@ void Application::showGoBackMenu(int functionNumber, const std::string& function
 void Application::backtrackingAlgorithmTSP(){
     clearScreen();
 
-    //Code here
+    std::string response;
+    std::cout << "This function needs the graph to be fully connected.\n"
+              << "Is this graph fully connected ?\n"
+              << "Yes - y/Y | " << "No - n/N | " << "Don't know - ?\n";
+    std::cout << "Input: ";
+    std::cin >> response;
 
-    std::cout << "\nFinal result is: " <<  this->tsp.tspBTSetup() << "\n";
+    if (std::regex_match(response, std::regex("[y]",std::regex_constants::icase))) {
+        std::cout << "\nAssuming graph is fully connected\n";
+    } else {
+        std::cout << "\nAssuming graph is not fully connected\n" << "Checking and adding edges if needed.\n"
+                  << "** Note: The time complexity of this function will not be considered for metrics **\n";
+        std::string output = tsp.makeGraphConnected() ? "\nGraph was already fully connected.\n" : "\nGraph was not fully connected.\n";
+        std::cout << output;
+    }
 
+    clearScreen();
+
+    auto start = std::chrono::high_resolution_clock::now();
+    std::pair<double, std::vector<Vertex<GeoPoint*>*>> result = tsp.tspBTSetup();
+    auto stop = std::chrono::high_resolution_clock::now();
+
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+
+    std::cout << "\nNow executing cleanup.\n**Note: The time complexity of this function will not be considered for metrics.**\n";
+    tsp.cleanUpGraph();
+    std::cout << "\nBacktracking took " << duration.count() << " ms.\n";
+
+    if (result.second.empty()) {
+        std::cout << "No path was found\n";
+    } else {
+        std::cout << "The optimal path is: ";
+
+        for (const Vertex<GeoPoint*>* geoPointVertex : result.second) {
+            std::cout << geoPointVertex->getInfo()->getId() << " -> ";
+        }
+        std::cout << result.second.at(0)->getInfo()->getId() << "\n";
+        std::cout << "And the final result is: " << result.first << "\n";
+    }
     showGoBackMenu(1,"Execute backtracking algorithm for TSP."); // At the end make a call to goBackMenu()
 }
 

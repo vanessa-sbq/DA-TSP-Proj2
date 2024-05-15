@@ -22,7 +22,9 @@ public:
     void dataGoBoom();
 
     // T2.1
-    double tspBTSetup();
+    std::pair<double, std::vector<Vertex<GeoPoint*>*>> tspBTSetup();
+    bool makeGraphConnected();
+    void cleanUpGraph();
 
     // T2.2
     double triangularApproximation();
@@ -47,6 +49,7 @@ private:
 
     // TSP 1
     void tspRec(unsigned int numVertexes, unsigned int currentVertex, double curBestMin, std::vector<Vertex<GeoPoint*>*>& curPath, double& min, std::vector<Vertex<GeoPoint*>*>& bestPath);
+    std::vector<Edge<GeoPoint*>> edgesToRemove;
 
         //TSP 2
     template <class T>

@@ -8,8 +8,12 @@
 #include <utility>
 #include <vector>
 #include <cstdlib>
+#include <chrono>
+#include <regex>
 
 #include "TSP.h"
+#include "Graph.h"
+#include "GeoPoint.h"
 
 #define DATASET_PATHS "../dataset/"
 
