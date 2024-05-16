@@ -783,10 +783,11 @@ double TSP::otherHeuristic(){
     double res = 0; // TSP approximate solution tour length
 
     // 1. Create clusters, using K-means Clustering
-    int k = 20; // For a big graph // FIXME: Graph with 25 nodes might not be fitting
-    if (isToyGraph){
+    int k = 20; // For a big graph
+    if (isToyGraph || isExtraGraph){
         k = 1; // No need for clustering
     }
+
     std::vector<std::set<int>> clusters;
     std::vector<int> centroids(k);
     std::vector<std::vector<Vertex<GeoPoint*>*>> clusterPreorders;
@@ -879,6 +880,7 @@ double TSP::otherHeuristic(){
     // 3. Connect the clusters:
     //    - Compute the MST of the cluster centroids
     //greedyConnectClusters(clusters, centroids);
+    // FIXME
 
     // 4. Locally optimize the initial TSP solution:
     //    - Apply 2-opt optimizations inside each cluster
@@ -898,7 +900,7 @@ void TSP::createClusters(std::vector<std::set<int>>& clusters, std::vector<int>&
     std::unordered_set<int> chosenIds; // To ensure that the same point isn't chosen twice
 
     // Initialize centroids randomly (without choosing the same one twice)
-    std::cout << "--------- Centroids and Clusters --------\n";  // TODO: Remove?
+    std::cout << "--------- Centroids and Clusters --------\n";
     srand((unsigned)time(0)); // "Randomize" seed
     for (int i = 0; i < k; i++) {
         GeoPoint* randomGP;
@@ -907,7 +909,7 @@ void TSP::createClusters(std::vector<std::set<int>>& clusters, std::vector<int>&
         } while (chosenIds.count(randomGP->getId()) > 0); // Check if GeoPoint has been chosen before
         centroids[i] = randomGP->getId();
         chosenIds.insert(randomGP->getId());
-        std::cout << "Centroid: " << centroids[i] << "\n"; // TODO: Remove?
+        std::cout << "Centroid: " << centroids[i] << "\n";
     }
 
     clusters.resize(k);
@@ -951,7 +953,6 @@ void TSP::createClusters(std::vector<std::set<int>>& clusters, std::vector<int>&
         }
     }
 
-    // TODO: Remove?
     for (int i = 0; i < k; i++){
         std::cout << "\nCluster " << i << ": ";
         std::set<int> cluster = clusters[i];
@@ -959,7 +960,7 @@ void TSP::createClusters(std::vector<std::set<int>>& clusters, std::vector<int>&
             std::cout << id << ", ";
         }
     }
-    std::cout << "\n-----------------------------------------\n"; // TODO: Remove?
+    std::cout << "\n-----------------------------------------\n";
 }
 
 /**
@@ -992,34 +993,16 @@ std::set<Vertex<GeoPoint*> *> TSP::clusterPrim(Graph<GeoPoint*> * g) {
     while(!q.empty()){
         Vertex<GeoPoint*>* u = q.extractMin();
         u->setVisited(true);
-        //if (isToyGraph){ // Assume the graph is connected
-            for(Edge<GeoPoint*> *e : u->getAdj()){
-                Vertex<GeoPoint*>* v = e->getDest();
-                if(!v->isVisited() && e->getWeight() < v->getDist()){
-                    v->setDist(e->getWeight());
-                    v->setPath(e);
-                    resMST.insert(v);
-                    q.insert(v);
-                    q.decreaseKey(v);
-                }
+        for(Edge<GeoPoint*> *e : u->getAdj()){
+            Vertex<GeoPoint*>* v = e->getDest();
+            if(!v->isVisited() && e->getWeight() < v->getDist()){
+                v->setDist(e->getWeight());
+                v->setPath(e);
+                resMST.insert(v);
+                q.insert(v);
+                q.decreaseKey(v);
             }
-        /*} else{ // Add missing connections
-            for (auto v : tspNetwork.getVertexSet()){
-                double uvDist = calculateHaversineDistance(std::make_pair(u->getInfo()->getLatitude(), u->getInfo()->getLongitude()), std::make_pair(v->getInfo()->getLatitude(), v->getInfo()->getLongitude()));
-                if(!v->isVisited() && uvDist < v->getDist()){
-                    v->setDist(uvDist);
-                    Edge<GeoPoint*>* findEdge = edgeFromCurVertexToNextVertex(u, v);
-                    if (findEdge == nullptr){ // Edge needs to be added
-                        findEdge = u->addEdge(v, uvDist);
-                        edgesToRemove.push_back(*findEdge); // Track the edges for the cleanup
-                    }
-                    v->setPath(findEdge);
-                    resMST.insert(v);
-                    q.insert(v);
-                    q.decreaseKey(v);
-                }
-            }
-        }*/
+        }
     }
     return resMST;
 }
@@ -1063,43 +1046,6 @@ double TSP::getWeightBetween(Vertex<GeoPoint*>* v1, Vertex<GeoPoint*>* v2){
     }
     return weight;
 }
-
-/*void TSP::connectFinalTour(std::vector<std::set<int>>& clusters){
-    int numClusters = clusters.size(); // Number of clusters
-    std::map<int, int> connect; // Map of connections to make
-
-    for (int i = 0; i < numClusters; i++){
-        for (int j = i + 1; j < numClusters; j++){  // All cluster combinations
-            std::cout << "Comparing cluster " << i << " and " << j << "\n";
-            double minConnection = INT_MAX;
-            int connectionV1 = 0;
-            int connectionV2 = 0;
-
-            for (int v1 : clusters[i]){ // Cluster 1
-                for (int v2 : clusters[j]){ // Cluster 2
-                    // Check if v1 or v2 already in map
-                    // FIXME:
-
-                    Edge<GeoPoint*>* edge = edgeFromCurVertexToNextVertex(vertexGeoMap.at(v1), vertexGeoMap.at(v2));
-                    std::cout << v1 << " - " << v2 << ", weight: " << edge->getWeight() << "\n";
-                    if (edge->getWeight() < minConnection){
-                        minConnection = edge->getWeight();
-                        connectionV1 = v1;
-                        connectionV2 = v2;
-                    }
-                }
-            }
-            // Add connection to map
-            std::cout << "minConnection: " << connectionV1 << " - " << connectionV2 << ", weight: " << minConnection << "\n";
-            connect[connectionV1] = connectionV2;
-        }
-    }
-
-    // DEBUG
-    for (std::pair<int,int> i : connect){
-        std::cout << i.first << " - " << i.second << "\n";
-    }
-}*/
 
 // T2.4
 // TODO
