@@ -1043,7 +1043,7 @@ double TSP::getWeightBetween(Vertex<GeoPoint*>* v1, Vertex<GeoPoint*>* v2){
             return e->getWeight();
         }
     }
-    return weight;
+    return calculateHaversineDistance(std::make_pair(v1->getInfo()->getLatitude(), v1->getInfo()->getLongitude()), std::make_pair(v2->getInfo()->getLatitude(), v2->getInfo()->getLongitude()));
 }
 
 // T2.4
