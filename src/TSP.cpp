@@ -773,10 +773,9 @@ double TSP::triangularApproximation(){
 
 
 // T2.3
-// TODO: Time Complexity
 /**
  * @brief Optimized version of the Triangular Approximation Heuristic, analyzing only one cluster at a time instead of the whole network
- * @details Time Complexity: O()
+ * @details Time Complexity: O(k * ((V + E) * log(V))), where k is the number of clusters and ((V + E) * log) is the complexity of Prim's algorithm for a cluster
  * @return Total distance
  */
 double TSP::otherHeuristic(){
