@@ -397,7 +397,7 @@ void tspRec(std::vector<std::vector<double>> dists, unsigned int n, unsigned int
     }
 
     for (int i = 1; i < n; i++) { // Iterate through every node in the graph
-        if (curDist + dists[curPath[curI]][i] < minDist) { // Check if the current distance plus the distance to the node i is less than the minimum distance found.
+        if (curDist + (dists [curPath[curI - 1]] [curPath[curI]] ) < minDist) { // Check if the current distance plus the distance to the node i is less than the minimum distance found.
             bool newNode = true; // Set the current node as a possible new node to visit.
             for (int j = 1; j < curI; j++) { // The number of nodes that we need to check for possibly being in the tsp path already are the nodes from the starting node until the current node
                 if (curPath[j] == i) { // Verifica se o número "i" que estou a testar já está no caminho do tsp.
