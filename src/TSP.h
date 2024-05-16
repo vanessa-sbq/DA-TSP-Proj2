@@ -6,6 +6,8 @@
 #include <sstream>
 #include <unordered_map>
 #include <unordered_set>
+#include <vector>
+#include <set>
 
 #include "Graph.h"
 #include "GeoPoint.h"
@@ -13,6 +15,10 @@
 
 class TSP {
 public:
+    void setIsToyGraph(bool isToyGraph){
+        this->isToyGraph = isToyGraph;
+    }
+
     // Data parsing
     void parseData(std::string nodesFilePath, std::string edgesFilePath, bool bothFilesProvided);
 
@@ -22,13 +28,14 @@ public:
     // T2.1
     std::pair<double, std::vector<Vertex<GeoPoint*>*>> tspBTSetup();
     bool makeGraphConnected();
+    bool makeGraphConnectedWithHaversine();
     void cleanUpGraph();
 
     // T2.2
     double triangularApproximation();
 
     // T2.3
-    // TODO
+    double otherHeuristic();
 
     // T2.4
     // TODO
@@ -38,6 +45,9 @@ private:
 
     std::unordered_map<int, GeoPoint*> geoMap; // Contains all geo points
     std::unordered_map<int, Vertex<GeoPoint*>*> vertexGeoMap; // Contains all vertexes that represent geo points
+    bool isToyGraph = false;
+    bool isExtraGraph = false;
+    int numNodesFromExtra = 25; // Number of nodes used if extra graphs selected
     void parseEdgesFromMemory(char* data, size_t size);
     void loadFileUsingMMap(const std::string& filename);
 
@@ -56,6 +66,13 @@ private:
     double spanningTreeCost(const std::vector<Vertex<T> *> &res);
     template <class T>
     void preOrderWalk(Vertex<T>* root, std::vector<Vertex<T>*> &visitOrder);
+
+    // T2.3
+    void createClusters(std::vector<std::set<int>>& clusters, std::vector<int>& centroids, int k);
+    std::set<Vertex<GeoPoint*> *> clusterPrim(Graph<GeoPoint*> * g);
+    void preOrderCluster(Vertex<GeoPoint*>* root, std::vector<Vertex<GeoPoint*>*>& preorder);
+    double getWeightBetween(Vertex<GeoPoint*>* v1, Vertex<GeoPoint*>* v2);
+    //void connectFinalTour(std::vector<std::set<int>>& clusters); // FIXME
 
     bool isAdjacent(Vertex<GeoPoint *> *&v1, Vertex<GeoPoint *> *&v2);
 };

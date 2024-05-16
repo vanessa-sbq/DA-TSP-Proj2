@@ -178,7 +178,43 @@ void Application::triangularApproximationTSP(){
 void Application::optimizedTSP(){
     clearScreen();
 
-    //Code here
+    std::string response;
+    bool connectingNeeded = false;
+
+    if (isToyGraph){
+        tsp.setIsToyGraph(true);
+    }
+
+    if (nodePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_NODES || nodePath == DATASET_PATHS TOY_GRAPH_STADIUMS || nodePath == DATASET_PATHS TOY_GRAPH_TOURISM){
+        std::cout << "\nThe graph is connected.\nExecuting optimized algorithm...";
+    }
+    else {
+        connectingNeeded = true;
+        std::cout << "This function needs the graph to be fully connected.\n";
+        std::cout << "Connecting the graph...";
+        if (isToyGraph){
+            std::string output = tsp.makeGraphConnected() ? "\nGraph was already fully connected.\n" : "\nGraph was not fully connected.\n";
+            std::cout << output;
+        }
+        else{
+            std::string output = tsp.makeGraphConnectedWithHaversine() ? "\nGraph was already fully connected.\n" : "\nGraph was not fully connected.\n";
+            std::cout << output;
+        }
+    }
+
+    clearScreen();
+
+    auto start = std::chrono::high_resolution_clock::now();
+    tsp.otherHeuristic();
+    auto stop = std::chrono::high_resolution_clock::now();
+
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+    std::cout << "\n=> Optimized TSP algorithm took " << duration.count() << " ms.\n";
+    if (connectingNeeded){
+        std::cout << "** Note: The time complexity of connecting the graph is not considered for metrics **\n";
+        std::cout << "\nNow executing cleanup.\n**Note: The time complexity of this function will not be considered for metrics.**\n";
+        tsp.cleanUpGraph();
+    }
 
     showGoBackMenu(3, "Execute optimized TSP."); // At the end make a call to goBackMenu()
 }

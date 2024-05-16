@@ -11,6 +11,7 @@ private:
     double latitude;
 
 public:
+    GeoPoint(); // Default constructor
     GeoPoint(int id, std::string label, double longitude, double latitude);
     int getId();
     void setId(int id);
@@ -20,6 +21,10 @@ public:
     void setLongitude(double longitude);
     double getLatitude();
     void setLatitude(double latitude);
+
+    bool operator==(const GeoPoint& other) const {
+        return (id == other.id);
+    }
 };
 
 

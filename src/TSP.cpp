@@ -10,6 +10,9 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include "TSP.h"
+#include "Application.h"
+#include <set>
+#include <map>
 
 /* Data parsing begin */
 
@@ -66,8 +69,22 @@ double calculateHaversineDistance(const std::pair<double, double> p1, const std:
 void TSP::parseData(std::string nodesFilePath, std::string edgesFilePath, bool bothFilesProvided) {
     std::ifstream in;
 
-    if (bothFilesProvided) {
+    if (edgesFilePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_25_EDGES) numNodesFromExtra = 25;
+    else if (edgesFilePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_50_EDGES) numNodesFromExtra = 50;
+    else if (edgesFilePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_75_EDGES) numNodesFromExtra = 75;
+    else if (edgesFilePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_100_EDGES) numNodesFromExtra = 100;
+    else if (edgesFilePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_200_EDGES) numNodesFromExtra = 200;
+    else if (edgesFilePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_300_EDGES) numNodesFromExtra = 300;
+    else if (edgesFilePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_400_EDGES) numNodesFromExtra = 400;
+    else if (edgesFilePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_500_EDGES) numNodesFromExtra = 500;
+    else if (edgesFilePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_600_EDGES) numNodesFromExtra = 600;
+    else if (edgesFilePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_700_EDGES) numNodesFromExtra = 700;
+    else if (edgesFilePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_800_EDGES) numNodesFromExtra = 800;
+    else if (edgesFilePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_900_EDGES) numNodesFromExtra = 900;
 
+    if (nodesFilePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_NODES) isExtraGraph = true;
+
+    if (bothFilesProvided) {
         in.open(nodesFilePath);
         if (!in.is_open()) {
             std::cout << "Unable to open nodes csv.\n";
@@ -83,9 +100,6 @@ void TSP::parseData(std::string nodesFilePath, std::string edgesFilePath, bool b
         }
         parsingEdges(in);
         in.close();
-
-
-
     } else {
         in.open(nodesFilePath);
         if (!in.is_open()) {
@@ -95,7 +109,6 @@ void TSP::parseData(std::string nodesFilePath, std::string edgesFilePath, bool b
         parsingGeoPointsAndEdges(in);
         in.close();
     }
-
 }
 
 /**
@@ -194,6 +207,7 @@ void TSP::parsingGeoPointsAndEdges(std::ifstream &in) {
 void TSP::parsingGeoPoints(std::ifstream &in) {
     std::string line;
     getline(in, line); // Header
+    int nodeCounter = 0; // For Extra Fully Connected Graphs
     while (getline(in, line)) {
         std::istringstream s(line);
         std::string id, longitude, latitude;
@@ -213,6 +227,11 @@ void TSP::parsingGeoPoints(std::ifstream &in) {
         }
 
         this->vertexGeoMap[stoi(id)] = vertex;
+
+        nodeCounter++;
+        if ((nodeCounter == numNodesFromExtra) && isExtraGraph){
+            return;
+        }
     }
 }
 
@@ -313,6 +332,10 @@ void TSP::parsingEdges(std::ifstream &in) {
         }
 
         if (!geoPointSource->addEdge(geoPointDestination, std::stod(distance))) {
+            std::cerr << "Error in parsingEdges, problem while adding an edge to the graph\n";
+        }
+
+        if (!geoPointDestination->addEdge(geoPointSource, std::stod(distance))) {
             std::cerr << "Error in parsingEdges, problem while adding an edge to the graph\n";
         }
     } // else ignore the header and process the rest of the data.
@@ -469,6 +492,21 @@ bool TSP::makeGraphConnected() {
                 isFullyConnected = false;
                 edgeResult = vertexA->addEdge(vertexB, INFINITY);
                 edgesToRemove.push_back(*edgeResult);
+            }
+        }
+    }
+    return isFullyConnected;
+}
+
+bool TSP::makeGraphConnectedWithHaversine() { // FIXME: Too slow
+    bool isFullyConnected = true;
+    for (Vertex<GeoPoint*>* vertexA : tspNetwork.getVertexSet()) {
+        for (Vertex<GeoPoint*>* vertexB : tspNetwork.getVertexSet()) {
+            double abDist = calculateHaversineDistance(std::make_pair(vertexA->getInfo()->getLatitude(), vertexA->getInfo()->getLongitude()), std::make_pair(vertexB->getInfo()->getLatitude(), vertexB->getInfo()->getLongitude()));
+            Edge<GeoPoint*>* e = tspNetwork.addEdgeChecked(vertexA, vertexB, abDist);
+            if (e != nullptr) {
+                isFullyConnected = false;
+                edgesToRemove.push_back(*e);
             }
         }
     }
@@ -735,7 +773,278 @@ double TSP::triangularApproximation(){
 
 
 // T2.3
-// TODO
+/**
+ * @brief Optimized version of the Triangular Approximation Heuristic, analyzing only one cluster at a time instead of the whole network
+ * @details Time Complexity: O(k * ((V + E) * log(V))), where k is the number of clusters and ((V + E) * log) is the complexity of Prim's algorithm for a cluster
+ * @return Total distance
+ */
+double TSP::otherHeuristic(){
+    double res = 0; // TSP approximate solution tour length
+
+    // 1. Create clusters, using K-means Clustering
+    int k = 20; // For a big graph
+    if (isToyGraph || isExtraGraph){
+        k = 1; // No need for clustering
+    }
+
+    std::vector<std::set<int>> clusters;
+    std::vector<int> centroids(k);
+    std::vector<std::vector<Vertex<GeoPoint*>*>> clusterPreorders;
+    createClusters(clusters, centroids, k);
+
+    // 2. Compute the TSP for each cluster, using Prim's algorithm
+    //    - Compute the MST
+    //    - Choose the preorder traversal as the tour
+    for (int i = 0; i < k; i++){  // MST for each cluster
+        for (Vertex<GeoPoint*>* v : tspNetwork.getVertexSet()){
+            v->setVisited(true);
+        }
+        for (int clusterV : clusters[i]){
+            Vertex<GeoPoint*>* v = vertexGeoMap.at(clusterV);
+            v->setVisited(false);
+        }
+        std::set<Vertex<GeoPoint*> *> clusterMST = clusterPrim(&tspNetwork); // Apply prim ONLY on not visited vertices (vertices that are in the cluster)
+
+        // Select only the cluster
+        for(Vertex<GeoPoint*>* v : clusterMST){
+            v->setVisited(false);
+        }
+
+        // Perform a pre-order walk of each MST to create the visit order
+        int centroidId = centroids[i];
+        Vertex<GeoPoint*>* root = nullptr; // Select a node from the MST
+        for (auto v : tspNetwork.getVertexSet()){
+            if (v->getInfo()->getId() == centroidId) {
+                root = v;
+                break;
+            }
+        }
+        if (root == nullptr){
+            std::cout << "Centroid is null\n";
+            return 0;
+        }
+
+        for (auto a : clusterMST){
+            if (a->getPath() != nullptr){
+                a->getPath()->setSelected(true);
+            }
+        }
+
+        Vertex<GeoPoint*>* debugRoot = nullptr;
+        for (auto a : clusterMST){
+            if (a->getPath() == nullptr){
+                debugRoot = a;
+                break;
+            }
+        }
+        std::vector<Vertex<GeoPoint*>*> preOrder;
+        preOrder.clear();
+        std::cout << "Cluster " << i << " pre-order walk: ";
+        preOrderCluster(debugRoot, preOrder);
+        clusterPreorders.push_back(preOrder);
+        preOrder.push_back(debugRoot);
+
+        // Calculate the total distance of the tour
+        double totalCost = 0.0;
+        for (size_t i = 1; i < preOrder.size(); i++){
+            totalCost += getWeightBetween(preOrder[i-1], preOrder[i]);
+        }
+
+        std::cout << "-> Total cost: " << totalCost << "\n\n";
+    }
+
+    // 3. Connect the clusters
+    std::vector<Vertex<GeoPoint*>*> finalTour;
+    for (int i = 0; i < clusterPreorders.size(); i++){
+        for (auto b : clusterPreorders[i]){
+            finalTour.push_back(b);
+        }
+    }
+
+    std::cout << "Final tour: ";
+    for (auto a : finalTour){
+        std::cout << a->getInfo()->getId() << " ";
+    }
+
+    double totalCost = 0.0;
+    for (size_t i = 1; i < finalTour.size(); i++){
+        if (i == finalTour.size() - 1){
+            totalCost += getWeightBetween(finalTour[i], finalTour[0]); // Close the tour
+        }
+        totalCost += getWeightBetween(finalTour[i-1], finalTour[i]);
+    }
+
+    std::cout << "\n\n=> Total cost: " << totalCost;
+
+    // 3. Connect the clusters:
+    //    - Compute the MST of the cluster centroids
+    //greedyConnectClusters(clusters, centroids);
+    // FIXME
+
+    // 4. Locally optimize the initial TSP solution:
+    //    - Apply 2-opt optimizations inside each cluster
+    //    - Repeat until no further improvements can be made
+    // TODO
+
+    return res;
+}
+
+/**
+ * @brief Creates clusters of GeoPoints based on k and relative distance (K-means Clustering)
+ * @details Time Complexity: O(V * k), where V is the number of vertices in the graph and k is the number of clusters
+ * @param clusters vector of clusters to be filled
+ * @param k number of clusters to be created
+ */
+void TSP::createClusters(std::vector<std::set<int>>& clusters, std::vector<int>& centroids, int k){
+    std::unordered_set<int> chosenIds; // To ensure that the same point isn't chosen twice
+
+    // Initialize centroids randomly (without choosing the same one twice)
+    std::cout << "--------- Centroids and Clusters --------\n";
+    srand((unsigned)time(0)); // "Randomize" seed
+    for (int i = 0; i < k; i++) {
+        GeoPoint* randomGP;
+        do {
+            randomGP = geoMap.at(rand() % geoMap.size());
+        } while (chosenIds.count(randomGP->getId()) > 0); // Check if GeoPoint has been chosen before
+        centroids[i] = randomGP->getId();
+        chosenIds.insert(randomGP->getId());
+        std::cout << "Centroid: " << centroids[i] << "\n";
+    }
+
+    clusters.resize(k);
+    for (int i = 0; i < k; i++) clusters[i].insert(centroids[i]); // Add centroids to clusters
+
+    // Assign GeoPoints to clusters based on proximity to centroids
+    for (auto& pair : geoMap) {
+        GeoPoint* point = pair.second;
+
+        // Skip if the current GeoPoint is a centroid
+        if (std::find(centroids.begin(), centroids.end(), point->getId()) != centroids.end()) continue;
+
+        double minDistance = INFINITY;
+        int closestCentroidIdx = -1;
+
+        // Find the closest centroid
+        for (int i = 0; i < k; ++i) {
+            GeoPoint* centroid = geoMap.at(centroids[i]);
+            double distance = calculateHaversineDistance(std::make_pair(point->getLatitude(), point->getLongitude()), std::make_pair(centroid->getLatitude(), centroid->getLongitude()));
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestCentroidIdx = i;
+            }
+            else if (distance == minDistance) { // Select random centroid in case of a tie
+                if (rand() % 2 == 0) {
+                    closestCentroidIdx = i;
+                }
+            }
+        }
+
+        // Assign the GeoPoint to the closest cluster
+        clusters[closestCentroidIdx].insert(point->getId());
+    }
+
+    // Associate each vertex to a cluster
+    for (int i = 0; i < k; i++){
+        std::set<int> cluster = clusters[i];
+        for (int id : cluster){
+            Vertex<GeoPoint*>* v = vertexGeoMap.at(id);
+            v->setIndegree(i);
+        }
+    }
+
+    for (int i = 0; i < k; i++){
+        std::cout << "\nCluster " << i << ": ";
+        std::set<int> cluster = clusters[i];
+        for (int id : cluster){
+            std::cout << id << ", ";
+        }
+    }
+    std::cout << "\n-----------------------------------------\n";
+}
+
+/**
+ * @brief Executes Prim's algorithm on a part of the graph (cluster), depending on which vertices are visited
+ * @details Time Complexity: O((V + E) * log(V)), where V is the number of vertices in the cluster and E is the number of edges in the cluster
+ * @return A set containing the MST of the cluster
+ */
+std::set<Vertex<GeoPoint*> *> TSP::clusterPrim(Graph<GeoPoint*> * g) {
+    std::set<Vertex<GeoPoint*> *> resMST;
+    resMST.clear();
+    MutablePriorityQueue<Vertex<GeoPoint*>> q;
+    for(Vertex<GeoPoint*>* v : g->getVertexSet()){
+        v->setDist(std::numeric_limits<double>::infinity());
+    }
+
+    // Find first vertex of MST
+    Vertex<GeoPoint*>* r = nullptr;
+    for(Vertex<GeoPoint*>* v : g->getVertexSet()){
+        if (!v->isVisited()) {
+            r = v; // Choose vertex from cluster
+            break;
+        }
+    }
+    if (r == nullptr) return resMST; // Empty cluster
+
+    r->setDist(0);
+    r->setPath(nullptr);
+    q.insert(r);
+    resMST.insert(r);
+    while(!q.empty()){
+        Vertex<GeoPoint*>* u = q.extractMin();
+        u->setVisited(true);
+        for(Edge<GeoPoint*> *e : u->getAdj()){
+            Vertex<GeoPoint*>* v = e->getDest();
+            if(!v->isVisited() && e->getWeight() < v->getDist()){
+                v->setDist(e->getWeight());
+                v->setPath(e);
+                resMST.insert(v);
+                q.insert(v);
+                q.decreaseKey(v);
+            }
+        }
+    }
+    return resMST;
+}
+
+/**
+ * @brief Does a pre-order traversal on an MST
+ * @details Time Complexity: O(VE), where V is the number of vertices in the MST and E is the number of edges of each vertex
+ * @param root root node of the pre-order traversal
+ * @param preorder vector that contains the solution (vertices in preorder)
+ */
+void TSP::preOrderCluster(Vertex<GeoPoint*>* root, std::vector<Vertex<GeoPoint*>*>& preorder){
+    if (root == nullptr) return;
+
+    // Print the current node's data
+    std::cout << root->getInfo()->getId() << " ";
+    preorder.push_back(root);
+
+    // Recursively traverse the left subtree
+    for (auto e : root->getAdj()){
+        if (e->isSelected()) {
+            e->setSelected(false);
+            e->getDest()->setPath(e);
+            preOrderCluster(e->getDest(), preorder);
+        }
+    }
+}
+
+/**
+ * @brief Computes the weight of an edge between two vertices
+ * @details Time Complexity: O(E), where E is the number of outgoing edges of v1
+ * @param v1 Origin vertex
+ * @param v2 Destination vertex
+ * @return weight between v1 and v2
+ */
+double TSP::getWeightBetween(Vertex<GeoPoint*>* v1, Vertex<GeoPoint*>* v2){
+    double weight = 0;
+    for (auto e : v1->getAdj()){
+        if (e->getDest()->getInfo()->getId() == v2->getInfo()->getId()){
+            return e->getWeight();
+        }
+    }
+    return calculateHaversineDistance(std::make_pair(v1->getInfo()->getLatitude(), v1->getInfo()->getLongitude()), std::make_pair(v2->getInfo()->getLatitude(), v2->getInfo()->getLongitude()));
+}
 
 // T2.4
 // TODO
