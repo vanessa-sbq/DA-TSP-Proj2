@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include "TSP.h"
+#include "Application.h"
 #include <set>
 #include <map>
 
@@ -68,8 +69,22 @@ double calculateHaversineDistance(const std::pair<double, double> p1, const std:
 void TSP::parseData(std::string nodesFilePath, std::string edgesFilePath, bool bothFilesProvided) {
     std::ifstream in;
 
-    if (bothFilesProvided) {
+    if (edgesFilePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_25_EDGES) numNodesFromExtra = 25;
+    else if (edgesFilePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_50_EDGES) numNodesFromExtra = 50;
+    else if (edgesFilePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_75_EDGES) numNodesFromExtra = 75;
+    else if (edgesFilePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_100_EDGES) numNodesFromExtra = 100;
+    else if (edgesFilePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_200_EDGES) numNodesFromExtra = 200;
+    else if (edgesFilePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_300_EDGES) numNodesFromExtra = 300;
+    else if (edgesFilePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_400_EDGES) numNodesFromExtra = 400;
+    else if (edgesFilePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_500_EDGES) numNodesFromExtra = 500;
+    else if (edgesFilePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_600_EDGES) numNodesFromExtra = 600;
+    else if (edgesFilePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_700_EDGES) numNodesFromExtra = 700;
+    else if (edgesFilePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_800_EDGES) numNodesFromExtra = 800;
+    else if (edgesFilePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_900_EDGES) numNodesFromExtra = 900;
 
+    if (nodesFilePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_NODES) isExtraGraph = true;
+
+    if (bothFilesProvided) {
         in.open(nodesFilePath);
         if (!in.is_open()) {
             std::cout << "Unable to open nodes csv.\n";
@@ -85,9 +100,6 @@ void TSP::parseData(std::string nodesFilePath, std::string edgesFilePath, bool b
         }
         parsingEdges(in);
         in.close();
-
-
-
     } else {
         in.open(nodesFilePath);
         if (!in.is_open()) {
@@ -97,7 +109,6 @@ void TSP::parseData(std::string nodesFilePath, std::string edgesFilePath, bool b
         parsingGeoPointsAndEdges(in);
         in.close();
     }
-
 }
 
 /**
@@ -196,6 +207,7 @@ void TSP::parsingGeoPointsAndEdges(std::ifstream &in) {
 void TSP::parsingGeoPoints(std::ifstream &in) {
     std::string line;
     getline(in, line); // Header
+    int nodeCounter = 0; // For Extra Fully Connected Graphs
     while (getline(in, line)) {
         std::istringstream s(line);
         std::string id, longitude, latitude;
@@ -215,6 +227,12 @@ void TSP::parsingGeoPoints(std::ifstream &in) {
         }
 
         this->vertexGeoMap[stoi(id)] = vertex;
+
+        std::cout << "Vertex " << vertex->getInfo()->getId() << "\n";
+        nodeCounter++;
+        if ((nodeCounter == numNodesFromExtra) && isExtraGraph){
+            return;
+        }
     }
 }
 
@@ -481,7 +499,7 @@ bool TSP::makeGraphConnected() {
     return isFullyConnected;
 }
 
-bool TSP::makeGraphConnectedWithHaversine() {
+bool TSP::makeGraphConnectedWithHaversine() { // FIXME: Too slow
     bool isFullyConnected = true;
     for (Vertex<GeoPoint*>* vertexA : tspNetwork.getVertexSet()) {
         for (Vertex<GeoPoint*>* vertexB : tspNetwork.getVertexSet()) {
@@ -766,7 +784,10 @@ double TSP::otherHeuristic(){
     double res = 0; // TSP approximate solution tour length
 
     // 1. Create clusters, using K-means Clustering
-    int k = 1; // FIXME: Change value of k
+    int k = 20; // For a big graph // FIXME: Graph with 25 nodes might not be fitting
+    if (isToyGraph){
+        k = 1; // No need for clustering
+    }
     std::vector<std::set<int>> clusters;
     std::vector<int> centroids(k);
     std::vector<std::vector<Vertex<GeoPoint*>*>> clusterPreorders;

@@ -46,6 +46,8 @@ private:
     std::unordered_map<int, GeoPoint*> geoMap; // Contains all geo points
     std::unordered_map<int, Vertex<GeoPoint*>*> vertexGeoMap; // Contains all vertexes that represent geo points
     bool isToyGraph = false;
+    bool isExtraGraph = false;
+    int numNodesFromExtra = 25; // Number of nodes used if extra graphs selected
     void parseEdgesFromMemory(char* data, size_t size);
     void loadFileUsingMMap(const std::string& filename);
 
