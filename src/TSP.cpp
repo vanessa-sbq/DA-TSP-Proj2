@@ -228,7 +228,6 @@ void TSP::parsingGeoPoints(std::ifstream &in) {
 
         this->vertexGeoMap[stoi(id)] = vertex;
 
-        std::cout << "Vertex " << vertex->getInfo()->getId() << "\n";
         nodeCounter++;
         if ((nodeCounter == numNodesFromExtra) && isExtraGraph){
             return;

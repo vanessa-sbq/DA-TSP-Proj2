@@ -179,21 +179,24 @@ void Application::optimizedTSP(){
     clearScreen();
 
     std::string response;
-    std::cout << "This function needs the graph to be fully connected.\n"
-              << "Is this graph fully connected ?\n"
-              << "Yes - y/Y | " << "No - n/N | " << "Don't know - ?\n";
-    std::cout << "Input: ";
-    std::cin >> response;
     bool connectingNeeded = false;
 
-    if (!std::regex_match(response, std::regex("[y]",std::regex_constants::icase))) {
+    if (isToyGraph){
+        tsp.setIsToyGraph(true);
+    }
+
+    if (nodePath == DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_NODES || nodePath == DATASET_PATHS TOY_GRAPH_STADIUMS || nodePath == DATASET_PATHS TOY_GRAPH_TOURISM){
+        std::cout << "\nThe graph is connected.\nExecuting optimized algorithm...";
+    }
+    else {
         connectingNeeded = true;
+        std::cout << "This function needs the graph to be fully connected.\n";
+        std::cout << "Connecting the graph...";
         if (isToyGraph){
-            std::cout << "TOY GRAPH"; // TODO: REMOVE
-            tsp.setIsToyGraph(true);
             std::string output = tsp.makeGraphConnected() ? "\nGraph was already fully connected.\n" : "\nGraph was not fully connected.\n";
             std::cout << output;
-        } else{
+        }
+        else{
             std::string output = tsp.makeGraphConnectedWithHaversine() ? "\nGraph was already fully connected.\n" : "\nGraph was not fully connected.\n";
             std::cout << output;
         }
@@ -209,11 +212,9 @@ void Application::optimizedTSP(){
     std::cout << "\n=> Optimized TSP algorithm took " << duration.count() << " ms.\n";
     if (connectingNeeded){
         std::cout << "** Note: The time complexity of connecting the graph is not considered for metrics **\n";
+        std::cout << "\nNow executing cleanup.\n**Note: The time complexity of this function will not be considered for metrics.**\n";
+        tsp.cleanUpGraph();
     }
-
-    std::cout << "\nNow executing cleanup.\n**Note: The time complexity of this function will not be considered for metrics.**\n";
-    tsp.cleanUpGraph();
-    std::cout << "\nBacktracking took " << duration.count() << " ms.\n";
 
     showGoBackMenu(3, "Execute optimized TSP."); // At the end make a call to goBackMenu()
 }
