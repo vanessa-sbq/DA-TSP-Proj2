@@ -337,7 +337,7 @@ void Application::triangularApproximationTSP(){
     }
     // Print the total distance
 
-    std::cout << std::endl << "Total distance: " << totalDistance << std::endl;
+    std::cout << std::endl << "Total distance: " << totalDistance << " meters" << std::endl;
 
 
     showGoBackMenu(2, "Execute triangle approximation heuristic for TSP."); // At the end make a call to goBackMenu()
@@ -355,7 +355,7 @@ void Application::optimizedTSP(){
 // T2.4
 void Application::realWorldTSP(){
     clearScreen();
-    //Code here
+    tsp.nearestNeighbour(0);
 
     showGoBackMenu(4, "Execute TSP in the Real World."); // At the end make a call to goBackMenu()
 }

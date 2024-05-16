@@ -373,6 +373,17 @@ void TSP::parsingEdges(std::ifstream &in) {
 // T2.1
 // TODO
 
+/**
+ * @brief Computes the Minimum Spanning Tree (MST) of a graph using Prim's algorithm.
+ *
+ * This function computes the MST of the given graph `g` using Prim's algorithm.
+ * It returns the vertices of the MST in the order they are visited.
+ * It has time complexity of O(E*log(V))
+ *
+ * @param g A pointer to the graph on which Prim's algorithm is to be executed.
+ * @param visitOrder A reference to a vector that will store the order in which vertices are visited.
+ * @return A vector of vertices that are part of the MST.
+ */
 
 std::vector<Vertex<GeoPoint*>*> TSP::prim(Graph<GeoPoint*> * g,std::vector<Vertex<GeoPoint*>*> &visitOrder) {
     MutablePriorityQueue<Vertex<GeoPoint*>> q;
@@ -418,90 +429,41 @@ std::vector<Vertex<GeoPoint*>*> TSP::prim(Graph<GeoPoint*> * g,std::vector<Verte
     return res;
 }
 
-template <class T>
-double TSP::spanningTreeCost(const std::vector<Vertex<T> *> &res){
-    double ret = 0;
-    for(const Vertex<T> *v: res){
-        if(v->getPath() == nullptr) continue;
-        const Vertex<T> *u = v->getPath()->getOrig();
-        for(const auto e: u->getAdj()){
-            if(e->getDest()->getInfo() == v->getInfo()){
-                ret += e->getWeight();
-                break;
-            }
-        }
-    }
-    return ret;
-}
-
-
-void TSP::preOrderWalk(Vertex<GeoPoint*>* root, std::vector<Vertex<GeoPoint*>*> &visitOrder) {
-    if (root == nullptr) return;
-    visitOrder.push_back(root);
-    root->setVisited(true);
-    for (Edge<GeoPoint*>* edge : root->getAdj()) {
-        Vertex<GeoPoint*>* w = edge->getDest();
-        std::cout << w->getInfo()->getId() << std::endl;
-        if (!w->isVisited()) {
-            //std::cout << w->getInfo()->getId() << std::endl;
-            preOrderWalk(edge->getDest(), visitOrder);
-        }
-        /*
-        else {
-            // Find the corresponding edge in the MST
-
-                for (Edge<GeoPoint*> *e: w->getAdj()) {
-                    if (w->getInfo() == e->getDest()->getInfo()) {
-                        // Set the path and distance values based on the MST edge
-                        w->setPath(e);
-                        w->setDist(e->getWeight());
-                        break;
-                    }
-                }
-        }else {
-            w->setDist(calculateHaversineDistance({root->getInfo()->getLatitude(),root->getInfo()->getLongitude()},{w->getInfo()->getLatitude(),w->getInfo()->getLongitude()}));
-        }
-         */
-    }
-}
-
+/**
+ * @brief Checks if two vertices are adjacent in the graph.
+ *
+ * This function checks if there is an edge between the vertices `v1` and `v2`.
+ * It has time complexity of O(E), being E the edges of vertex v1
+ *
+ * @param v1 A reference to a pointer to the first vertex.
+ * @param v2 A reference to a pointer to the second vertex.
+ * @return true if `v1` and `v2` are adjacent, false otherwise.
+ */
 bool TSP::isAdjacent(Vertex<GeoPoint *> *&v1, Vertex<GeoPoint *> *&v2) {
-/*    // Get the source vertex
-    auto s = v1;
-    if (s == nullptr) {
-        return false;
-    }
-
-    // Perform the actual BFS using a queue
-    std::queue<Vertex<GeoPoint*> *> q;
-    q.push(s);
-    s->setVisited(true);
-    while (!q.empty()) {
-        auto v = q.front();
-        q.pop();
-        if(v->getInfo()->getId() == v2->getInfo()->getId()) return true;
-            for (auto & e : v->getAdj()) {
-                auto w = e->getDest();
-                if ( ! w->isVisited()) {
-                    q.push(w);
-                    w->setVisited(true);
-                }
-            }
-        }
-        return false;
-        */
-
     for(auto v : v1->getAdj()){
         if(v->getDest()->getInfo()->getId() == v2->getInfo()->getId()){
             return true;
         }
     }
     return false;
-
-    //FIND ANOTHER WAY TO DO THIS
 }
 
+
+
 // T2.2
+
+/**
+ * @brief Computes an approximate solution to the TSP using a triangular approximation.
+ *
+ * This function computes an approximate solution to the Traveling Salesman Problem (TSP) using
+ * a minimum spanning tree (MST) and a pre-order traversal of the MST. The solution might not be
+ * optimal but provides a feasible route even in non-fully connected graphs.
+ *
+ * It has time complexity O(E*log(V)), bounded by Prim's Algorithm Complexity
+ *
+ * @param sd A stringstream to store the sequence of visited vertices.
+ * @return The total cost of the tour.
+ */
 double TSP::triangularApproximation(std::stringstream &sd){
     std::vector<Vertex<GeoPoint*>*> visitOrder;
     std::vector<Vertex<GeoPoint*>*> MST = prim(&tspNetwork, visitOrder);
@@ -610,5 +572,98 @@ double TSP::triangularApproximation(std::stringstream &sd){
 // TODO
 
 // T2.4
+/**
+ * @brief Computes a tour using the nearest neighbor heuristic with backtracking, ensuring all vertices are visited.
+ *
+ * This function attempts to find a tour starting from the given vertex using the nearest neighbor
+ * heuristic. If no direct unvisited neighbor is found, it backtracks and tries alternative paths.
+ *
+ * @param start The starting vertex ID.
+ * @return The total cost of the tour (currently a placeholder value).
+ */
+double TSP::nearestNeighbour(int start) {
+    Vertex<GeoPoint*>* startVertex = this->vertexGeoMap[start];
+    int n = this->tspNetwork.getNumVertex();
+
+    for(auto v : this->tspNetwork.getVertexSet()){
+        v->setVisited(false);
+        v->setProcesssing(false);
+        for(auto e : v->getAdj()){
+            e->setSelected(false);
+        }
+    }
+
+    std::vector<Vertex<GeoPoint*>*> tour;
+    tour.push_back(startVertex);
+    startVertex->setVisited(true);
+
+    std::stack<Vertex<GeoPoint*>*> backtrackStack;
+    backtrackStack.push(startVertex);
+
+    while (tour.size() < n) {
+        auto currentVertex = backtrackStack.top();
+        double minDist = std::numeric_limits<double>::infinity();
+        Vertex<GeoPoint*>* nextVertex = nullptr;
+        Edge<GeoPoint*>* auxedge;
+
+        // Find the nearest unvisited neighbor
+        std::cout << "Vertex " << currentVertex->getInfo()->getId() << " to ";
+        for (auto edge : currentVertex->getAdj()) {
+            if (!edge->getDest()->isVisited() && !edge->isSelected()) {
+                std::cout << edge->getDest()->getInfo()->getId() << ",";
+                double dist = edge->getWeight();
+                if (dist < minDist) {
+                    minDist = dist;
+                    nextVertex = edge->getDest();
+                    auxedge = edge;
+                }
+            }
+        }
+        std::cout << std::endl;
+
+        if (nextVertex) {
+            tour.push_back(nextVertex);
+            nextVertex->setVisited(true);
+            auxedge->setSelected(false);
+            backtrackStack.push(nextVertex);
+        } else {
+            // No unvisited neighbors found, backtrack to the previous vertex
+            backtrackStack.pop();
+            tour.pop_back();
+            currentVertex->setVisited(true);
+            if (backtrackStack.empty()) {
+                // No path found, all backtracking options exhausted
+                std::cerr << "Error: No complete tour found. Some vertices may be unreachable." << std::endl;
+                return -1.0; // Return an error value or handle the incomplete tour case
+            }
+        }
+    }
+
+    // Complete the tour by returning to the start vertex
+    tour.push_back(startVertex);
+
+    std::cout << tour.size() << std::endl;
+
+    // Output the tour for debugging purposes
+    for (auto v : tour) {
+        std::cout << v->getInfo()->getId() << "->";
+    }
+    std::cout << "Start" << std::endl;
+
+    // Calculate and return the total distance of the tour
+    double totalCost = 0.0;
+    for (size_t i = 0; i < tour.size() - 1; ++i) {
+        for (auto edge : tour[i]->getAdj()) {
+            if (edge->getDest() == tour[i + 1]) {
+                totalCost += edge->getWeight();
+                break;
+            }
+        }
+    }
+
+    return totalCost;
+}
+
+
 // TODO
 

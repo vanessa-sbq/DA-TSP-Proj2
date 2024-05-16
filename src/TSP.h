@@ -11,6 +11,7 @@
 #include "Graph.h"
 #include "GeoPoint.h"
 #include "MutablePriorityQueue.h"
+#include <stack>
 
 class TSP {
 public:
@@ -30,6 +31,7 @@ public:
     // TODO
 
     // T2.4
+    double nearestNeighbour(int start);
     // TODO
 
 private:
@@ -47,11 +49,6 @@ private:
 
     //TSP 2
     std::vector<Vertex<GeoPoint*>*> prim(Graph<GeoPoint*> * g, std::vector<Vertex<GeoPoint*>*> &visitOrder);
-    template <class T>
-    double spanningTreeCost(const std::vector<Vertex<T> *> &res);
-
-    void preOrderWalk(Vertex<GeoPoint*>* root, std::vector<Vertex<GeoPoint*>*> &visitOrder);
-
     bool isAdjacent(Vertex<GeoPoint *> *&v1, Vertex<GeoPoint *> *&v2);
 };
 
