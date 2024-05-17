@@ -575,7 +575,9 @@ bool TSP::isAdjacent(Vertex<GeoPoint *> *&v1, Vertex<GeoPoint *> *&v2) {
 double TSP::triangularApproximation(std::stringstream &sd){
     std::vector<Vertex<GeoPoint*>*> visitOrder;
     std::vector<Vertex<GeoPoint*>*> MST = prim(&tspNetwork, visitOrder);
-/*
+    visitOrder.clear();
+
+    /*
     std::stringstream ss;
     for(const auto v : MST) {
         ss << v->getInfo()->getId() << "->";
@@ -588,6 +590,20 @@ double TSP::triangularApproximation(std::stringstream &sd){
     }
     std::cout << "MST  " <<ss.str() << std::endl;
 */
+    for (auto a : MST){
+        if (a->getPath() != nullptr){
+            a->getPath()->setSelected(true);
+        }
+    }
+
+    Vertex<GeoPoint*>* debugRoot = nullptr;
+    for (auto a : MST){
+        if (a->getPath() == nullptr){
+            debugRoot = a;
+            break;
+        }
+    }
+
     for(Vertex<GeoPoint*>* v : MST){
         v->setVisited(false);
     }
@@ -595,7 +611,7 @@ double TSP::triangularApproximation(std::stringstream &sd){
     // Step 2: Perform a pre-order walk of the MST to create the visit order
     Vertex<GeoPoint*>* root = MST.front();
     //std::vector<Vertex<GeoPoint*>*> visitOrder;
-    //preOrderWalk(root, visitOrder);
+    preOrderCluster(root, visitOrder);
 /*
     std::stringstream sr;
 
@@ -939,7 +955,8 @@ void TSP::preOrderCluster(Vertex<GeoPoint*>* root, std::vector<Vertex<GeoPoint*>
     if (root == nullptr) return;
 
     // Print the current node's data
-    std::cout << root->getInfo()->getId() << " ";
+
+    //std::cout << root->getInfo()->getId() << " ";
     preorder.push_back(root);
 
     // Recursively traverse the left subtree

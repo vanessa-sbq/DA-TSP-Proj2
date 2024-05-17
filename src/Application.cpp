@@ -204,7 +204,7 @@ void displayRuntimeData(const RuntimeData& runtimeData) {
     for (const auto& entry : runtimeData.begin()->second) {
         size_t width = entry.first.length();
         for (const auto& outerEntry : runtimeData) {
-            size_t dataWidth = std::to_string(outerEntry.second.at(entry.first)).length();
+            size_t dataWidth = 8;
             if (dataWidth > width) {
                 width = dataWidth;
             }
@@ -276,12 +276,24 @@ void Application::showRuntime() {
     auto start = std::chrono::high_resolution_clock::now();
     auto end = std::chrono::high_resolution_clock::now();
     std::stringstream s;
+    std::vector<GeoPoint*> res;
+    double count = 0.0;
+    std::vector<GeoPoint*> bestres;
+    double best = 0.0;
 
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
     switch (std::stoi(opti)) {
         case 1:
-            backtrackingAlgorithmTSP(); // T2.1
-            std::cout << 1;
+            start = std::chrono::high_resolution_clock::now();
+            tsp.tspBTSetup();
+            end = std::chrono::high_resolution_clock::now();
+
+            duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+
+            // T2.2
+            std::cout <<"It takes " <<duration.count() << " miliseconds" <<std::endl;
+            recordRuntime("4.1",duration.count());
             break;
         case 2:
             start = std::chrono::high_resolution_clock::now();
@@ -296,11 +308,27 @@ void Application::showRuntime() {
             recordRuntime("4.2",duration.count());
             break;
         case 3:
-            optimizedTSP(); // T2.3
-            std::cout << 3;
+            start = std::chrono::high_resolution_clock::now();
+            optimizedTSP();
+            end = std::chrono::high_resolution_clock::now();
+
+            duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+            // T2.2
+            std::cout <<"It takes " <<duration.count() << " miliseconds" <<std::endl;
+            recordRuntime("4.3",duration.count());
             break;
         case 4:
-            realWorldTSP(); // T2.4
+            start = std::chrono::high_resolution_clock::now();
+            tsp.nnRecursion(0,-1,res, count,bestres,best);
+            end = std::chrono::high_resolution_clock::now();
+
+            duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+
+            // T2.2
+            std::cout <<"It takes " <<duration.count() << " miliseconds" <<std::endl;
+            recordRuntime("4.4",duration.count());
             break;
         case 5:
             //dataGoBoom();
@@ -380,7 +408,7 @@ void Application::triangularApproximationTSP(){
 
     std::cout << std::endl << "Total distance: " << totalDistance << " meters" << std::endl;
 
-
+    tsp.cleanUpGraph();
 
     showGoBackMenu(2, "Execute triangle approximation heuristic for TSP."); // At the end make a call to goBackMenu()
 }
@@ -451,14 +479,27 @@ void Application::realWorldTSP(){
     std::vector<GeoPoint*> bestres;
     double best = 0.0;
     clearScreen();
-    if(tsp.nnRecursion(stoi(opti),-1,res, count,bestres,best)) std::cout <<"RIGHT";
+    if(tsp.nnRecursion(stoi(opti),-1,res, count,bestres,best));
 
 
 
-    std::cout << std::endl << "Count "<< count;
-    std::cout << " BEST size -> " << bestres.size() << std::endl;
-    std::cout << "BEST COUNT -> " << best << std::endl;
-
+    if(bestres.size() == res.size()){
+        std::cout << std::endl <<std::endl << "The graph has a TSP answer with cost:  "<< count;
+        if(!this->isBigGraph){
+            std::cout << std::endl << "and Path:  ";
+            for(auto v : res){
+                std::cout << v->getId() << ",";
+            }
+        }
+    } else {
+        std::cout << std::endl <<std::endl << "The graph DOES NOT have a TSP answer!, but its best answer is with cost:  "<< best;
+        if(!this->isBigGraph){
+            std::cout << std::endl << "and Path:  ";
+            for(auto v : bestres){
+                std::cout << v->getId() << ",";
+            }
+        }
+    }
     tsp.cleanUpGraph();
 
     showGoBackMenu(4, "Execute TSP in the Real World."); // At the end make a call to goBackMenu()
