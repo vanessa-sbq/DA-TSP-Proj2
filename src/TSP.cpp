@@ -668,7 +668,7 @@ double TSP::nearestNeighbour(int start) {
     return totalCost;
 }
 /*
-bool TSP::Duda(int here, int id, std::vector<GeoPoint *> &path) {
+bool TSP::nnRecursion(int here, int id, std::vector<GeoPoint *> &path) {
     Vertex<GeoPoint*>* startVertex = this->vertexGeoMap[here];
     startVertex->setVisited(true);
 
