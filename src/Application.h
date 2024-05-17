@@ -50,17 +50,27 @@ class Application {
 public:
     Application(std::string env) {
         this->env = std::move(env);
+        restartConstructor:
         clearScreen();
 
+        std::string choiceString;
         int choice;
-
         std::cout << "Select a graph:\n";
         std::cout << "1. Extra Fully Connected Graphs\n";
         std::cout << "2. Toy Graphs\n";
         std::cout << "3. Real World Graphs\n";
         std::cout << "Enter your choice: ";
-        std::cin >> choice;
+        std::cin >> choiceString;
 
+        try {
+             choice = std::stoi(choiceString);
+        } catch (std::invalid_argument& argument) {
+            std::cout << "\n* Error while parsing option, please input a valid numeric option. *\n";
+            delay(2000);
+            goto restartConstructor;
+        }
+
+        std::string stringGraphChoice;
         int graphChoice;
 
         switch(choice) {
@@ -69,19 +79,27 @@ public:
                 this->nodePath = DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_NODES;
                 this->edgeFileSeparatedFromNodeFile = true;
                 std::cout << "Extra Fully Connected Graphs:\n";
-                std::cout << "1. 25 Edges\n";
-                std::cout << "2. 50 Edges\n";
-                std::cout << "3. 75 Edges\n";
-                std::cout << "4. 100 Edges\n";
-                std::cout << "5. 200 Edges\n";
-                std::cout << "6. 300 Edges\n";
-                std::cout << "7. 400 Edges\n";
-                std::cout << "8. 500 Edges\n";
-                std::cout << "9. 600 Edges\n";
-                std::cout << "10. 700 Edges\n";
-                std::cout << "11. 800 Edges\n";
-                std::cout << "12. 900 Edges\n\nInput: ";
-                std::cin >> graphChoice;
+                std::cout << "1. 25 Nodes\n";
+                std::cout << "2. 50 Nodes\n";
+                std::cout << "3. 75 Nodes\n";
+                std::cout << "4. 100 Nodes\n";
+                std::cout << "5. 200 Nodes\n";
+                std::cout << "6. 300 Nodes\n";
+                std::cout << "7. 400 Nodes\n";
+                std::cout << "8. 500 Nodes\n";
+                std::cout << "9. 600 Nodes\n";
+                std::cout << "10. 700 Nodes\n";
+                std::cout << "11. 800 Nodes\n";
+                std::cout << "12. 900 Nodes\n\nInput: ";
+                std::cin >> stringGraphChoice;
+
+                try {
+                    graphChoice = std::stoi(stringGraphChoice);
+                } catch (std::invalid_argument& argument) {
+                    std::cout << "\n* Error while parsing option, please input a valid numeric option. *\n";
+                    delay(2000);
+                    goto restartConstructor;
+                }
 
                 switch (graphChoice) {
                     case 1:
@@ -121,6 +139,7 @@ public:
                         this->edgePath = DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_900_EDGES;
                         break;
                     default:
+                        delay(3000);
                         std::cout << "Unrecognized option, defaulting to graph with 25 edges.\n";
                         this->edgePath = DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_25_EDGES;
                 }
@@ -133,7 +152,15 @@ public:
                 std::cout << "1. Shipping\n";
                 std::cout << "2. Stadiums\n";
                 std::cout << "3. Tourism\n\nInput: ";
-                std::cin >> graphChoice;
+                std::cin >> stringGraphChoice;
+
+                try {
+                    graphChoice = std::stoi(stringGraphChoice);
+                } catch (std::invalid_argument& argument) {
+                    std::cout << "\n* Error while parsing option, please input a valid numeric option. *\n";
+                    delay(2000);
+                    goto restartConstructor;
+                }
 
                 switch (graphChoice) {
                     case 1:
@@ -146,6 +173,7 @@ public:
                         this->nodePath = DATASET_PATHS TOY_GRAPH_TOURISM;
                         break;
                     default:
+                        delay(3000);
                         std::cout << "Unrecognized option, defaulting to shipping graph.\n";
                         this->nodePath = DATASET_PATHS TOY_GRAPH_SHIPPING;
                 }
@@ -157,7 +185,15 @@ public:
                 std::cout << "1. Graph 1\n";
                 std::cout << "2. Graph 2\n";
                 std::cout << "3. Graph 3\n\nInput: ";
-                std::cin >> graphChoice;
+                std::cin >> stringGraphChoice;
+
+                try {
+                    graphChoice = std::stoi(stringGraphChoice);
+                } catch (std::invalid_argument& argument) {
+                    std::cout << "\n* Error while parsing option, please input a valid numeric option. *\n";
+                    delay(2000);
+                    goto restartConstructor;
+                }
 
                 switch (graphChoice) {
                     case 1:
@@ -173,12 +209,14 @@ public:
                         this->nodePath = DATASET_PATHS REAL_WORLD_GRAPH_3_NODES;
                         break;
                     default:
+                        delay(3000);
                         std::cout << "Unrecognized option, defaulting to first real world graph.\n";
                         this->edgePath = DATASET_PATHS REAL_WORLD_GRAPH_1_EDGES;
                         this->nodePath = DATASET_PATHS REAL_WORLD_GRAPH_1_NODES;
                 }
                 break;
             default:
+                delay(3000);
                 std::cout << "Unrecognized option, defaulting to extra fully connected graph with 25 edges.\n";
                 this->edgeFileSeparatedFromNodeFile = true;
                 this->edgePath = DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_25_EDGES;

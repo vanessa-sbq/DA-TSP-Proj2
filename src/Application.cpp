@@ -25,6 +25,10 @@ void Application::run(int processedKey) {
             realWorldTSP(); // T2.4
             break;
         case 5:
+            throw std::invalid_argument(std::to_string(-2));
+            //something that crashes program
+            break;
+        case 6:
             //dataGoBoom();
             std::cout << "Thank you very much and Bye-Bye.\n";
             break;
@@ -59,7 +63,7 @@ void Application::delay(long sleepMS) {
 int Application::processKey(const std::string& option) {
     try {
         int intOPT = std::stoi(option);
-        if (intOPT <= 0 || option.size() > 1 || intOPT > 5) throw std::invalid_argument("NegativeNumber");
+        if (intOPT <= 0 || option.size() > 1 || intOPT > 6) throw std::invalid_argument("NegativeNumber");
         return intOPT;
     } catch (std::invalid_argument& argument) {
         std::cout << "\n* Error while parsing option, please input a valid numeric option. *\n";
@@ -78,7 +82,8 @@ std::string Application::showMainMenu() {
               << "2 - Execute triangle approximation heuristic for TSP.\n"
               << "3 - Execute optimized TSP.\n"
               << "4 - Execute TSP in the Real World.\n"
-              << "5 - Exit.\n";
+              << "5 - Choose a different graph.\n"
+              << "6 - Exit.\n";
 
     std::cout << "Input: ";
     std::cin >> opti;
@@ -86,6 +91,9 @@ std::string Application::showMainMenu() {
     return opti;
 }
 
+/**
+ * @brief Shows the "Go back Menu" after each function
+ */
 void Application::showGoBackMenu(int functionNumber, const std::string& functionName) {
     L1:
     std::cout << "\nPress enter to continue";
@@ -205,7 +213,7 @@ void Application::optimizedTSP(){
     clearScreen();
 
     auto start = std::chrono::high_resolution_clock::now();
-    tsp.otherHeuristic();
+    tsp.otherHeuristic(false, -1);
     auto stop = std::chrono::high_resolution_clock::now();
 
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
@@ -221,8 +229,30 @@ void Application::optimizedTSP(){
 
 // T2.4
 void Application::realWorldTSP(){
+restartRealWorldTSP:
     clearScreen();
     //Code here
+
+    std::string response;
+    std::cout << "Please specify the node id where you would like to start.\n";
+    std::cout << "Input: ";
+    std::cin >> response;
+
+    int vertexID;
+    try {
+        vertexID = std::stoi(response);
+    } catch (std::invalid_argument& argument) {
+        std::cout << "\n* Error while parsing option, please input a valid numeric option. *\n";
+        delay(2000);
+        goto restartRealWorldTSP;
+    }
+
+    auto start = std::chrono::high_resolution_clock::now();
+    tsp.otherHeuristic(true, vertexID);
+    auto stop = std::chrono::high_resolution_clock::now();
+
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+    std::cout << "\n=> Optimized TSP algorithm took " << duration.count() << " ms.\n";
 
     showGoBackMenu(4, "Execute TSP in the Real World."); // At the end make a call to goBackMenu()
 }

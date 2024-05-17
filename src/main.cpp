@@ -17,10 +17,14 @@ int main() {
         env = "unix";
     }
 
+    chooseDifferentGraph:
     Application app = Application(env);
     int nextRun = -1;
 
     goBack:
+    if (nextRun == -2 ){
+        goto chooseDifferentGraph;
+    }
     try {
         app.run(nextRun);
     } catch (std::invalid_argument &invalid_argument) {

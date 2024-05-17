@@ -35,7 +35,7 @@ public:
     double triangularApproximation();
 
     // T2.3
-    double otherHeuristic();
+    double otherHeuristic(bool useProvidedNode, int vertexID);
 
     // T2.4
     // TODO
@@ -48,8 +48,8 @@ private:
     bool isToyGraph = false;
     bool isExtraGraph = false;
     int numNodesFromExtra = 25; // Number of nodes used if extra graphs selected
-    void parseEdgesFromMemory(char* data, size_t size);
-    void loadFileUsingMMap(const std::string& filename);
+    //void parseEdgesFromMemory(char* data, size_t size);
+    //void loadFileUsingMMap(const std::string& filename);
 
     void parsingGeoPointsAndEdges(std::ifstream &in);
     void parsingGeoPoints(std::ifstream &in);
@@ -59,7 +59,7 @@ private:
     void tspRec(unsigned int numVertexes, unsigned int currentVertex, double curBestMin, std::vector<Vertex<GeoPoint*>*>& curPath, double& min, std::vector<Vertex<GeoPoint*>*>& bestPath);
     std::vector<Edge<GeoPoint*>> edgesToRemove;
 
-        //TSP 2
+    //TSP 2
     template <class T>
     std::vector<Vertex<T> *> prim(Graph<T> * g);
     template <class T>
@@ -68,7 +68,7 @@ private:
     void preOrderWalk(Vertex<T>* root, std::vector<Vertex<T>*> &visitOrder);
 
     // T2.3
-    void createClusters(std::vector<std::set<int>>& clusters, std::vector<int>& centroids, int k);
+    void createClusters(std::vector<std::set<int>>& clusters, std::vector<int>& centroids, int k, bool useProvidedNode, Vertex<GeoPoint*>* rootVertex);
     std::set<Vertex<GeoPoint*> *> clusterPrim(Graph<GeoPoint*> * g);
     void preOrderCluster(Vertex<GeoPoint*>* root, std::vector<Vertex<GeoPoint*>*>& preorder);
     double getWeightBetween(Vertex<GeoPoint*>* v1, Vertex<GeoPoint*>* v2);

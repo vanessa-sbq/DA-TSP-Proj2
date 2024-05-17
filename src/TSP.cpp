@@ -5,7 +5,6 @@
 #include <vector>
 #include <cmath>
 #include <unordered_map>
-//#include <sys/mman.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/stat.h>
@@ -19,7 +18,6 @@
 /**
  * @brief Helper function for data parsing
  * @details Helps check if a given csv contains headers.
- *
  * @return -1 if there are no matching headers
  * @return n > 0 where n is the number of headers
  * */
@@ -41,7 +39,12 @@ int countHeaders(const std::string& header) {
     return count;
 }
 
-
+/**
+ * @brief Calculates the distance between two locations based on the Haversine formula
+ * @param p1 First location
+ * @param p2 Second location
+ * @return Returns a double representing the distance between p1 and p2
+ */
 double calculateHaversineDistance(const std::pair<double, double> p1, const std::pair<double, double> p2) {
     double distanceLatitudes = (p2.first - p1.first) * M_PI / 180.0;
     double distanceLongitudes = (p2.second - p1.second) * M_PI / 180.0;
@@ -112,7 +115,8 @@ void TSP::parseData(std::string nodesFilePath, std::string edgesFilePath, bool b
 }
 
 /**
- * @brief Function that helps parsing the nodes|edges that are inside the csv.
+ * @brief Function that helps parsing the nodes/edges that are inside the csv.
+ * @details Time Complexity: O(V + E), where V is the number of nodes and E the number of edges to be parsed
  * @details This functions expects the following order:
  *
  *              "origin, destination, distance" or "origin, destination, distance, label origin, label destination"
@@ -202,6 +206,7 @@ void TSP::parsingGeoPointsAndEdges(std::ifstream &in) {
 
 /**
  * @brief Function that helps parsing the nodes that are inside the csv.
+ * @details Time Complexity: O(V), where V is the number of nodes to be parsed
  * @details This functions expects the following order: id, longitude, latitude.
  * */
 void TSP::parsingGeoPoints(std::ifstream &in) {
@@ -235,69 +240,9 @@ void TSP::parsingGeoPoints(std::ifstream &in) {
     }
 }
 
-void TSP::parseEdgesFromMemory(char* data, size_t size) {
-    /*std::istringstream in(std::string(data, size));
-    std::string line;
-
-    // Skip the header
-    std::getline(in, line);
-
-    // Process the rest of the data
-    while (std::getline(in, line)) {
-        std::cout << "line: " << line << std::endl;
-        std::istringstream s(line);
-        std::string origin, destination, distance;
-
-        if (!(std::getline(s, origin, ',') && std::getline(s, destination, ',') && std::getline(s, distance, '\r'))) {
-            std::cerr << "Error in parsingEdges, invalid line in the CSV file: " << line << std::endl;
-            continue;
-        }
-
-        Vertex<GeoPoint*>* geoPointSource = vertexGeoMap.at(std::stoi(origin));
-        Vertex<GeoPoint*>* geoPointDestination = vertexGeoMap.at(std::stoi(destination));
-
-        if (geoPointSource == nullptr || geoPointDestination == nullptr) {
-            std::cerr << "Error in parsingEdges, problem with finding vertex in maps.\n";
-            continue;
-        }
-
-        if (!geoPointSource->addEdge(geoPointDestination, std::stod(distance))) {
-            std::cerr << "Error in parsingEdges, problem while adding an edge to the graph\n";
-            continue;
-        }
-    }*/
-}
-
-void TSP::loadFileUsingMMap(const std::string& filename) {
-    /*int fd = open(filename.c_str(), O_RDONLY);
-    if (fd == -1) {
-        std::cerr << "Error opening file." << std::endl;
-        return;
-    }
-
-    struct stat st;
-    if (fstat(fd, &st) == -1) {
-        std::cerr << "Error getting file size." << std::endl;
-        close(fd);
-        return;
-    }
-
-    char* data = static_cast<char*>(mmap(NULL, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0));
-    if (data == MAP_FAILED) {
-        std::cerr << "Error mapping file to memory." << std::endl;
-        close(fd);
-        return;
-    }
-
-    // Parse the data from memory
-    parseEdgesFromMemory(data, st.st_size);
-
-    munmap(data, st.st_size);
-    close(fd);*/
-}
-
 /**
  * @brief Function that helps parsing the edges that are inside the csv.
+ * @details Time Complexity: O(E), where E is the number of edges to be parsed
  * @details This functions expects the following order: origin, destination, haversine_distance.
  * */
 void TSP::parsingEdges(std::ifstream &in) {
@@ -371,19 +316,9 @@ void TSP::parsingEdges(std::ifstream &in) {
 
 /* Data parsing end */
 
-bool allNodesVisited(std::unordered_map<int, Vertex<GeoPoint*>*>& geoPoints) {
-    for (const auto& geoPoint : geoPoints) {
-       if (!geoPoint.second->isVisited()) {
-           return false;
-       }
-    }
-    return true;
-}
-
-// T2.1
-
 /**
  * @brief Helper function.
+ * @details Time Complexity: O(E), where E is the number of adjacent edges of the current vertex
  * @details Given two vertexes, the one we are now, and the one we want to go to the function returns nullptr if it fails
  * to find the desired edge and returns the edge that connects the two vertexes in case it finds it.
  **/
@@ -401,87 +336,11 @@ Edge<GeoPoint*>* edgeFromCurVertexToNextVertex(Vertex<GeoPoint*>* currentVertex,
     return nullptr;
 }
 
-void tspRec(std::vector<std::vector<double>> dists, unsigned int n, unsigned int curI, double curDist, unsigned int curPath[], double& minDist) {
-
-    // How to check the distance between two nodes ?
-
-    // Solution: Use dists[][] -> first "argument" is the node we are currently in and second "argument" is the node we want to go to.
-
-    if (curI == n) { // Checks if we already have iterated through every node of the graph
-        curDist += dists[curPath[n-1]][curPath[0]]; // Adds the distance of going from the last node to the starting node
-        if (curDist < minDist) { // Since we reached the bottom we wll now check if this newly found tsp path has a distance that is smaller than the one before.
-            minDist = curDist; // Set the minimum distance to the current minimum.
-            if (minDist == 354.2)
-            for (int i = 0; i < n; i++) {
-                std::cout << curPath[i] << " -> ";
-            }
-        }
-        return;
-    }
-
-    for (int i = 1; i < n; i++) { // Iterate through every node in the graph
-        if (curDist + (dists [curPath[curI - 1]] [curPath[curI]] ) < minDist) { // Check if the current distance plus the distance to the node i is less than the minimum distance found.
-            bool newNode = true; // Set the current node as a possible new node to visit.
-            for (int j = 1; j < curI; j++) { // The number of nodes that we need to check for possibly being in the tsp path already are the nodes from the starting node until the current node
-                if (curPath[j] == i) { // Verifica se o número "i" que estou a testar já está no caminho do tsp.
-                    newNode = false;
-                    break;
-                }
-            }
-
-            if (newNode) { // If we haven't checked this node yet then let's do it now.
-                curPath[curI] = i; // Add the current node to the current path. (We are in node curI, and we are going to node i)
-                tspRec(dists, n, curI + 1, curDist + (dists [curPath[curI - 1]] [curPath[curI]] ), curPath, minDist); // Let's go to the next node.
-            }
-        }
-    }
-
-
-}
-
-double tspBT(std::vector<std::vector<double>> dists, unsigned int n) {
-
-    double minValue = INFINITY;
-    unsigned int curPath[10000];
-
-    for (int i = 0; i < n; i++) {
-        curPath[i] = false;
-    }
-
-    curPath[0] = 0;
-
-    tspRec(dists, n, 1, 0.0, curPath, minValue);
-
-
-    return minValue;
-}
-
-
-std::vector<std::vector<double>> convertFromGraphToMatrixGraph(Graph<GeoPoint*> tsp, std::unordered_map<int, Vertex<GeoPoint*>*> vertexGeoMap){
-    std::vector<std::vector<double>> matrixGraph;
-    std::vector<double> distancesFromNodeI;
-
-    for (Vertex<GeoPoint*>* geoPoint: tsp.getVertexSet()) {
-        distancesFromNodeI.push_back(0.0);
-    }
-
-    for (Vertex<GeoPoint*>* geoPoint: tsp.getVertexSet()) {
-        matrixGraph.push_back(distancesFromNodeI);
-    }
-
-    for (int i = 0; i < vertexGeoMap.size(); i++) {
-        Vertex<GeoPoint*>* geoPoint = vertexGeoMap[i];
-
-        for (Edge<GeoPoint*>* adj : geoPoint->getAdj()) {
-            Vertex<GeoPoint*>* geoPointDest = adj->getDest();
-            matrixGraph[i][geoPointDest->getInfo()->getId()] = adj->getWeight();
-        }
-    }
-
-    return matrixGraph;
-}
-
-
+/**
+ * @brief Makes the graph connected, and sets non-existing edges to infinite distance (Should only be used on Toy Graphs)
+ * @details Time Complexity: O(V * V * E), where V is the number of vertices in the graph and E is the number of adjacent edges of each vertex
+ * @return Returns a bool telling if the graph was already connected or not
+ */
 bool TSP::makeGraphConnected() {
     bool isFullyConnected = true;
     for (Vertex<GeoPoint*>*& vertexA : tspNetwork.getVertexSet()) {
@@ -498,6 +357,11 @@ bool TSP::makeGraphConnected() {
     return isFullyConnected;
 }
 
+/**
+ * @brief Makes the graph connected using the haversine distance formula(Should only be used on graphs with real world data)
+ * @details Time Complexity: O(V * V * E), where V is the number of vertices in the graph and E is the number of adjacent edges of each vertex
+ * @return Returns a bool telling if the graph was already connected or not
+ */
 bool TSP::makeGraphConnectedWithHaversine() { // FIXME: Too slow
     bool isFullyConnected = true;
     for (Vertex<GeoPoint*>* vertexA : tspNetwork.getVertexSet()) {
@@ -513,6 +377,10 @@ bool TSP::makeGraphConnectedWithHaversine() { // FIXME: Too slow
     return isFullyConnected;
 }
 
+/**
+ * @brief Cleans up the graph after making it connected
+ * @details Time Complexity: O(K * E), where K is the number of edges to remove and E is the number of adjacent edges of the origin vertex
+ */
 void TSP::cleanUpGraph() {
     for (Edge<GeoPoint*> edge : edgesToRemove) {
         tspNetwork.removeEdge(edge.getOrig()->getInfo(), edge.getDest()->getInfo());
@@ -520,10 +388,19 @@ void TSP::cleanUpGraph() {
     edgesToRemove.clear();
 }
 
+// T2.1
+/**
+ * @brief Backtracking and Bounding algorithm to solve the TSP for small graphs
+ * @details Time Complexity: O(K^N), where K is the number of times the function calls itself
+ * @param n number of nodes in the graph
+ * @param curI current index
+ * @param curDist current distance
+ * @param curPath current path
+ * @param minDist minimum distance
+ * @param path vector that contains the paths
+ */
 void TSP::tspRec(unsigned int n, unsigned int curI, double curDist, std::vector<Vertex<GeoPoint*>*>& curPath, double& minDist, std::vector<Vertex<GeoPoint*>*>& path) {
-
     if (curI == n) {
-        std::cout << "Here\n";
         curDist += edgeFromCurVertexToNextVertex(curPath[n - 1], curPath[0])->getWeight();
         if (curDist < minDist) {
             minDist = curDist;
@@ -536,9 +413,7 @@ void TSP::tspRec(unsigned int n, unsigned int curI, double curDist, std::vector<
     }
 
     for (int i = 1; i < n; i++) {
-        auto nextEdge = edgeFromCurVertexToNextVertex(curPath.at(curI), vertexGeoMap[i]);
-
-        if (curDist + nextEdge->getWeight() < minDist) {
+        if (curDist + edgeFromCurVertexToNextVertex(curPath.at(curI - 1), curPath.at(curI))->getWeight() < minDist) {
             bool newNode = true;
             for (int j = 1; j < curI; j++) {
                 if (curPath.at(j)->getInfo()->getId() == i) {
@@ -557,12 +432,17 @@ void TSP::tspRec(unsigned int n, unsigned int curI, double curDist, std::vector<
     }
 }
 
+/**
+ * @brief Set up function for the backtracking and bounding algorithm
+ * @details Time Complexity: O(K^N), because it calls the backtracking and bounding algorithm
+ * @return Returns the minimum distance of the circuit and the corresponding circuit
+ */
 std::pair<double, std::vector<Vertex<GeoPoint*>*>> TSP::tspBTSetup() {
     std::vector<Vertex<GeoPoint*>*> path;
     std::vector<Vertex<GeoPoint*>*> curPath;
 
     double minDistance = INFINITY;
-    /*
+
     for (Vertex<GeoPoint*>*& geoPointVertex : tspNetwork.getVertexSet()) {
         geoPointVertex->setPath(nullptr);
         Edge<GeoPoint*> addedEdge = *geoPointVertex->addEdge(geoPointVertex, 0.0);
@@ -573,22 +453,6 @@ std::pair<double, std::vector<Vertex<GeoPoint*>*>> TSP::tspBTSetup() {
     curPath[0] = vertexGeoMap[0];
 
     tspRec(vertexGeoMap.size(), 1, 0, curPath, minDistance, path);
-    */
-
-    std::vector<std::vector<double>> matrixGraph = convertFromGraphToMatrixGraph(this->tspNetwork, this->vertexGeoMap);
-
-    std::cout << "here";
-
-    for (std::vector<double> a : matrixGraph) {
-        for (double b : a) {
-            std::cout << b << ",";
-        }
-        std::cout << "\n";
-    }
-
-
-
-    std::cout << "AAAA " << tspBT(matrixGraph, matrixGraph.size()) << "\n";
 
     return {minDistance, path};
 }
@@ -772,13 +636,26 @@ double TSP::triangularApproximation(){
 
 
 
-// T2.3
+// T2.3 and T2.4
 /**
  * @brief Optimized version of the Triangular Approximation Heuristic, analyzing only one cluster at a time instead of the whole network
  * @details Time Complexity: O(k * ((V + E) * log(V))), where k is the number of clusters and ((V + E) * log) is the complexity of Prim's algorithm for a cluster
  * @return Total distance
  */
-double TSP::otherHeuristic(){
+double TSP::otherHeuristic(bool useProvidedNode, int vertexID){
+
+    Vertex<GeoPoint*>* rootVertex = nullptr;
+
+    if (useProvidedNode) {
+
+        try {
+            rootVertex = vertexGeoMap.at(vertexID);
+        } catch (std::out_of_range& ofr) {
+            return -1;
+        }
+
+    }
+
     double res = 0; // TSP approximate solution tour length
 
     // 1. Create clusters, using K-means Clustering
@@ -790,7 +667,7 @@ double TSP::otherHeuristic(){
     std::vector<std::set<int>> clusters;
     std::vector<int> centroids(k);
     std::vector<std::vector<Vertex<GeoPoint*>*>> clusterPreorders;
-    createClusters(clusters, centroids, k);
+    createClusters(clusters, centroids, k, useProvidedNode, rootVertex);
 
     // 2. Compute the TSP for each cluster, using Prim's algorithm
     //    - Compute the MST
@@ -810,7 +687,7 @@ double TSP::otherHeuristic(){
             v->setVisited(false);
         }
 
-        // Perform a pre-order walk of each MST to create the visit order
+        // Perform a pre-order traversal of each MST to create the visit order
         int centroidId = centroids[i];
         Vertex<GeoPoint*>* root = nullptr; // Select a node from the MST
         for (auto v : tspNetwork.getVertexSet()){
@@ -842,7 +719,7 @@ double TSP::otherHeuristic(){
         std::cout << "Cluster " << i << " pre-order walk: ";
         preOrderCluster(debugRoot, preOrder);
         clusterPreorders.push_back(preOrder);
-        preOrder.push_back(debugRoot);
+        /*preOrder.push_back(debugRoot); //FIXME: Should be removed?
 
         // Calculate the total distance of the tour
         double totalCost = 0.0;
@@ -850,7 +727,7 @@ double TSP::otherHeuristic(){
             totalCost += getWeightBetween(preOrder[i-1], preOrder[i]);
         }
 
-        std::cout << "-> Total cost: " << totalCost << "\n\n";
+        std::cout << "-> Total cost: " << totalCost << "\n\n";*/
     }
 
     // 3. Connect the clusters
@@ -875,6 +752,7 @@ double TSP::otherHeuristic(){
     }
 
     std::cout << "\n\n=> Total cost: " << totalCost;
+    res = totalCost;
 
     // 3. Connect the clusters:
     //    - Compute the MST of the cluster centroids
@@ -895,7 +773,7 @@ double TSP::otherHeuristic(){
  * @param clusters vector of clusters to be filled
  * @param k number of clusters to be created
  */
-void TSP::createClusters(std::vector<std::set<int>>& clusters, std::vector<int>& centroids, int k){
+void TSP::createClusters(std::vector<std::set<int>>& clusters, std::vector<int>& centroids, int k, bool useProvidedNode, Vertex<GeoPoint*>* rootVertex){
     std::unordered_set<int> chosenIds; // To ensure that the same point isn't chosen twice
 
     // Initialize centroids randomly (without choosing the same one twice)
@@ -909,6 +787,18 @@ void TSP::createClusters(std::vector<std::set<int>>& clusters, std::vector<int>&
         centroids[i] = randomGP->getId();
         chosenIds.insert(randomGP->getId());
         std::cout << "Centroid: " << centroids[i] << "\n";
+    }
+
+    if (useProvidedNode) {
+        bool found = false;
+        for (int i = 0; i < k; i++) {
+            if (centroids[i] == rootVertex->getInfo()->getId()) {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) centroids[0] = rootVertex->getInfo()->getId();
     }
 
     clusters.resize(k);
