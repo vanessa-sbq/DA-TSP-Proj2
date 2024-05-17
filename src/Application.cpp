@@ -324,21 +324,11 @@ void Application::showRuntime() {
 void Application::backtrackingAlgorithmTSP(){
     clearScreen();
 
-    std::string response;
-    std::cout << "This function needs the graph to be fully connected.\n"
-              << "Is this graph fully connected ?\n"
-              << "Yes - y/Y | " << "No - n/N | " << "Don't know - ?\n";
-    std::cout << "Input: ";
-    std::cin >> response;
+    std::cout << "Checking if the graph is fully connected.\n" << "** Note: The time complexity of this function will not be considered for metrics **\n";
 
-    if (std::regex_match(response, std::regex("[y]",std::regex_constants::icase))) {
-        std::cout << "\nAssuming graph is fully connected\n";
-    } else {
-        std::cout << "\nAssuming graph is not fully connected\n" << "Checking and adding edges if needed.\n"
-                  << "** Note: The time complexity of this function will not be considered for metrics **\n";
-        std::string output = tsp.makeGraphConnected() ? "\nGraph was already fully connected.\n" : "\nGraph was not fully connected.\n";
-        std::cout << output;
-    }
+    std::string output = tsp.makeGraphConnected() ? "\nGraph was already fully connected.\n" : "\nGraph was not fully connected.\n";
+
+    std::cout << output;
 
     clearScreen();
 
