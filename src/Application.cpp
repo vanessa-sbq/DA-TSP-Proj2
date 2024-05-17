@@ -334,10 +334,18 @@ void Application::triangularApproximationTSP(){
         // Print the tour description
         std::cout << "Tour:" << std::endl;
         std::cout << tourDescription.str();
+        if(this->graphChoosen == 14) {
+            double ratio = totalDistance / 341.5;
+            std::cout << std::endl << "Ratio (TA distance/Optimal): " << ratio << std::endl;
+        }else if(this->graphChoosen == 15){
+            double ratio = totalDistance / 2600.0;
+            std::cout << std::endl << "Ratio (TA distance/Optimal): " << ratio << std::endl;
+        }
     }
     // Print the total distance
 
     std::cout << std::endl << "Total distance: " << totalDistance << " meters" << std::endl;
+
 
 
     showGoBackMenu(2, "Execute triangle approximation heuristic for TSP."); // At the end make a call to goBackMenu()
@@ -355,8 +363,32 @@ void Application::optimizedTSP(){
 // T2.4
 void Application::realWorldTSP(){
     clearScreen();
-    //tsp.nearestNeighbour(0);
+
+
+    std::string opti;
+    std::cout << "\nType the vertex id that you want to start the tour: ";
+    std::cin >> opti;
+    std::cout << "\n";
+
+    clearScreen();
+
+
+    std::cout << "Loading......";
+
+
     std::vector<GeoPoint*> res;
-    if(tsp.nnRecursion(0,-1,res)) std::cout <<"RIGHT";
+    double count = 0.0;
+    std::vector<GeoPoint*> bestres;
+    double best = 0.0;
+    clearScreen();
+    if(tsp.nnRecursion(stoi(opti),-1,res, count,bestres,best)) std::cout <<"RIGHT";
+
+
+
+    std::cout << std::endl << "Count "<< count;
+    std::cout << " BEST size -> " << bestres.size() << std::endl;
+    std::cout << "BEST COUNT -> " << best << std::endl;
+
+
     showGoBackMenu(4, "Execute TSP in the Real World."); // At the end make a call to goBackMenu()
 }

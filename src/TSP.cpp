@@ -544,7 +544,7 @@ double TSP::triangularApproximation(std::stringstream &sd){
 
     // Step 4: Calculate the total distance of the tour
     double totalCost = 0.0;
-    for(size_t i = 0; i < tour.size() - 1; ++i){
+    for(size_t i = 0; i < tour.size() - 1; i++){
         /*
         if (!isAdjacent(tour[i],tour[i+1])) {
             // Calculate distance using Haversine function if nodes are not directly connected
@@ -553,6 +553,7 @@ double TSP::triangularApproximation(std::stringstream &sd){
         }
 */
    //else{
+        //std::cout << tour[i]->getInfo()->getId() << std::endl;
         totalCost += tour[i]->getDist();
         //}
     }
@@ -564,7 +565,7 @@ double TSP::triangularApproximation(std::stringstream &sd){
         }
     }
 
-    std::cout << tour.size();
+    //std::cout<<std::endl << tour.size();
     return totalCost;
 }
 
@@ -667,12 +668,24 @@ double TSP::nearestNeighbour(int start) {
 
     return totalCost;
 }
-/*
-bool TSP::nnRecursion(int here, int id, std::vector<GeoPoint *> &path) {
+*/
+bool TSP::nnRecursion(int here, int id, std::vector<GeoPoint *> &path, double& count, std::vector<GeoPoint*> &bestPath, double &bestCount) {
     Vertex<GeoPoint*>* startVertex = this->vertexGeoMap[here];
     startVertex->setVisited(true);
 
+
+
     path.push_back(startVertex->getInfo());
+
+    if(path.size() > bestPath.size()){
+        bestPath = path;
+        bestCount = count;
+    }
+
+    if(this->recursionTimes == 0){
+        std::cout << "size -> " << path.size() << std::endl;
+        return true;
+    }
 
     if(path.size() == this->vertexGeoMap.size() + 1){
         std::cout << "size -> " << path.size() << std::endl;
@@ -684,7 +697,7 @@ bool TSP::nnRecursion(int here, int id, std::vector<GeoPoint *> &path) {
         std::cout << i->getId() << ", ";
     }
     std::cout << std::endl;
-
+*/
     for(auto e : startVertex->getAdj()){
         if(e->getDest()->isVisited()){
             if(path.size()==this->vertexGeoMap.size() && e->getDest()->getInfo()->getId() == 0) continue;
@@ -710,10 +723,12 @@ bool TSP::nnRecursion(int here, int id, std::vector<GeoPoint *> &path) {
         if(!minEdge) break;
 
         //this->vertexGeoMap[minEdge->getDest()->getInfo()->getId()]->setPath(new Edge<GeoPoint*>(startVertex,this->vertexGeoMap[minEdge->getDest()->getInfo()->getId()],min));
-
-        if(Duda(minEdge->getDest()->getInfo()->getId(),here,path)) return true;
+        count += min;
+        this->recursionTimes--;
+        if(nnRecursion(minEdge->getDest()->getInfo()->getId(),here,path,count,bestPath,bestCount)) return true;
 
         this->vertexGeoMap[minEdge->getDest()->getInfo()->getId()]->setVisited(false);
+        count -= min;
         minEdge->setSelected(true);
     }
 
@@ -736,7 +751,7 @@ bool TSP::nnRecursion(int here, int id, std::vector<GeoPoint *> &path) {
 }
 
 
-*/
+
 
 
 

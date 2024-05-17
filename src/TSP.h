@@ -32,11 +32,12 @@ public:
 
     // T2.4
     double nearestNeighbour(int start);
-    bool nnRecursion(int here, int id, std::vector<GeoPoint*> &path);
+    bool nnRecursion(int here, int id, std::vector<GeoPoint*> &path, double &count,std::vector<GeoPoint*> &bestPath, double &bestCount);
     // TODO
 
 private:
     Graph<GeoPoint*> tspNetwork; // Graph
+    int recursionTimes = 100000;
 
     std::unordered_map<int, GeoPoint*> geoMap; // Contains all geo points
     std::unordered_map<int, Vertex<GeoPoint*>*> vertexGeoMap; // Contains all vertexes that represent geo points
