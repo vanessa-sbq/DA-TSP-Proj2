@@ -563,6 +563,8 @@ double TSP::triangularApproximation(std::stringstream &sd){
             break;
         }
     }
+
+    std::cout << tour.size();
     return totalCost;
 }
 
@@ -570,6 +572,7 @@ double TSP::triangularApproximation(std::stringstream &sd){
 
 // T2.3
 // TODO
+
 
 // T2.4
 /**
@@ -581,6 +584,7 @@ double TSP::triangularApproximation(std::stringstream &sd){
  * @param start The starting vertex ID.
  * @return The total cost of the tour (currently a placeholder value).
  */
+ /*
 double TSP::nearestNeighbour(int start) {
     Vertex<GeoPoint*>* startVertex = this->vertexGeoMap[start];
     int n = this->tspNetwork.getNumVertex();
@@ -612,7 +616,7 @@ double TSP::nearestNeighbour(int start) {
             if (!edge->getDest()->isVisited() && !edge->isSelected()) {
                 std::cout << edge->getDest()->getInfo()->getId() << ",";
                 double dist = edge->getWeight();
-                if (dist < minDist) {
+                 if (dist < minDist) {
                     minDist = dist;
                     nextVertex = edge->getDest();
                     auxedge = edge;
@@ -624,13 +628,13 @@ double TSP::nearestNeighbour(int start) {
         if (nextVertex) {
             tour.push_back(nextVertex);
             nextVertex->setVisited(true);
-            auxedge->setSelected(false);
             backtrackStack.push(nextVertex);
         } else {
             // No unvisited neighbors found, backtrack to the previous vertex
             backtrackStack.pop();
             tour.pop_back();
-            currentVertex->setVisited(true);
+            currentVertex->setVisited(false);
+            auxedge->setSelected(true);
             if (backtrackStack.empty()) {
                 // No path found, all backtracking options exhausted
                 std::cerr << "Error: No complete tour found. Some vertices may be unreachable." << std::endl;
@@ -663,6 +667,77 @@ double TSP::nearestNeighbour(int start) {
 
     return totalCost;
 }
+/*
+bool TSP::Duda(int here, int id, std::vector<GeoPoint *> &path) {
+    Vertex<GeoPoint*>* startVertex = this->vertexGeoMap[here];
+    startVertex->setVisited(true);
+
+    path.push_back(startVertex->getInfo());
+
+    if(path.size() == this->vertexGeoMap.size() + 1){
+        std::cout << "size -> " << path.size() << std::endl;
+        return true;
+    }
+/*
+    std::cout << "PATH: ";
+    for(auto& i : path){
+        std::cout << i->getId() << ", ";
+    }
+    std::cout << std::endl;
+
+    for(auto e : startVertex->getAdj()){
+        if(e->getDest()->isVisited()){
+            if(path.size()==this->vertexGeoMap.size() && e->getDest()->getInfo()->getId() == 0) continue;
+            e->setSelected(true);
+        }
+    }
+
+
+    for(auto e : startVertex->getAdj()){
+        double min = INF;
+        Edge<GeoPoint*>* minEdge = nullptr;
+
+        for(auto e2: startVertex->getAdj()){
+            if(!e2->isSelected()){
+                if(e2->getWeight() < min){
+                    min = e2->getWeight();
+                    minEdge = e2;
+                    startVertex->setDist(min);
+                }
+            }
+        }
+
+        if(!minEdge) break;
+
+        //this->vertexGeoMap[minEdge->getDest()->getInfo()->getId()]->setPath(new Edge<GeoPoint*>(startVertex,this->vertexGeoMap[minEdge->getDest()->getInfo()->getId()],min));
+
+        if(Duda(minEdge->getDest()->getInfo()->getId(),here,path)) return true;
+
+        this->vertexGeoMap[minEdge->getDest()->getInfo()->getId()]->setVisited(false);
+        minEdge->setSelected(true);
+    }
+
+    for(auto e : startVertex->getAdj()){
+        e->setSelected(false);
+    }
+
+    if(id != -1){
+        for(auto e : this->vertexGeoMap[id]->getAdj()){
+            if(e->getDest()->getInfo()->getId() == here){
+                e->setSelected(true);
+            }
+        }
+    }
+
+    path.pop_back();
+    startVertex->setVisited(false);
+    return false;
+
+}
+
+
+*/
+
 
 
 // TODO

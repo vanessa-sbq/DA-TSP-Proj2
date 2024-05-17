@@ -32,6 +32,7 @@ public:
 
     // T2.4
     double nearestNeighbour(int start);
+    bool Duda(int here, int id, std::vector<GeoPoint*> &path);
     // TODO
 
 private:

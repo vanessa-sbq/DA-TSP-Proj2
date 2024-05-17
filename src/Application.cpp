@@ -355,7 +355,8 @@ void Application::optimizedTSP(){
 // T2.4
 void Application::realWorldTSP(){
     clearScreen();
-    tsp.nearestNeighbour(0);
-
+    //tsp.nearestNeighbour(0);
+    std::vector<GeoPoint*> res;
+    if(tsp.Duda(0,-1,res)) std::cout <<"RIGHT";
     showGoBackMenu(4, "Execute TSP in the Real World."); // At the end make a call to goBackMenu()
 }
