@@ -403,6 +403,14 @@ void TSP::cleanUpGraph() {
         tspNetwork.removeEdge(edge.getOrig()->getInfo(), edge.getDest()->getInfo());
     }
     edgesToRemove.clear();
+
+    for (Vertex<GeoPoint*>* geoPointVertex : tspNetwork.getVertexSet()) {
+        geoPointVertex->setVisited(false);
+        geoPointVertex->setProcesssing(false);
+        for (Edge<GeoPoint*>* edge : geoPointVertex->getAdj()) {
+            edge->setSelected(false);
+        }
+    }
 }
 
 // T2.1
@@ -842,7 +850,7 @@ void TSP::createClusters(std::vector<std::set<int>>& clusters, std::vector<int>&
         // Find the closest centroid
         for (int i = 0; i < k; ++i) {
             GeoPoint* centroid = geoMap.at(centroids[i]);
-            double distance = calculateHaversineDistance(std::make_pair(point->getLatitude(), point->getLongitude()), std::make_pair(centroid->getLatitude(), centroid->getLongitude()));
+            double distance = 1000 * calculateHaversineDistance(std::make_pair(point->getLatitude(), point->getLongitude()), std::make_pair(centroid->getLatitude(), centroid->getLongitude()));
             if (distance < minDistance) {
                 minDistance = distance;
                 closestCentroidIdx = i;
@@ -957,7 +965,7 @@ double TSP::getWeightBetween(Vertex<GeoPoint*>* v1, Vertex<GeoPoint*>* v2){
             return e->getWeight();
         }
     }
-    return calculateHaversineDistance(std::make_pair(v1->getInfo()->getLatitude(), v1->getInfo()->getLongitude()), std::make_pair(v2->getInfo()->getLatitude(), v2->getInfo()->getLongitude()));
+    return 1000 * calculateHaversineDistance(std::make_pair(v1->getInfo()->getLatitude(), v1->getInfo()->getLongitude()), std::make_pair(v2->getInfo()->getLatitude(), v2->getInfo()->getLongitude()));
 }
 
 
@@ -1058,8 +1066,6 @@ double TSP::nearestNeighbour(int start) {
 bool TSP::nnRecursion(int here, int id, std::vector<GeoPoint *> &path, double& count, std::vector<GeoPoint*> &bestPath, double &bestCount) {
     Vertex<GeoPoint*>* startVertex = this->vertexGeoMap[here];
     startVertex->setVisited(true);
-
-
 
     path.push_back(startVertex->getInfo());
 

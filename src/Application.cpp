@@ -469,6 +469,7 @@ void Application::realWorldTSP(){
     std::cout << " BEST size -> " << bestres.size() << std::endl;
     std::cout << "BEST COUNT -> " << best << std::endl;
 
+    tsp.cleanUpGraph();
 
     showGoBackMenu(4, "Execute TSP in the Real World."); // At the end make a call to goBackMenu()
 }
