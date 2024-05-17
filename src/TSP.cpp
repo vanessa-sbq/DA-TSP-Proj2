@@ -68,7 +68,7 @@ double calculateHaversineDistance(const std::pair<double, double> p1, const std:
  * @param bothFilesProvided If false the first argument will contain the file that incorporates both nodes / edges.
  * If true then first argument will contain the file path for the nodes csv and the second argument will contain the
  * file path for the edges csv.
- **/
+ */
 void TSP::parseData(std::string nodesFilePath, std::string edgesFilePath, bool bothFilesProvided) {
     std::ifstream in;
 
@@ -120,7 +120,7 @@ void TSP::parseData(std::string nodesFilePath, std::string edgesFilePath, bool b
  * @details This functions expects the following order:
  *
  *              "origin, destination, distance" or "origin, destination, distance, label origin, label destination"
- * */
+ */
 void TSP::parsingGeoPointsAndEdges(std::ifstream &in) {
     auto stringToLower = [&](std::string& label){for (char& c : label) c = (char)tolower(c);};
     std::string line;
@@ -391,7 +391,7 @@ void TSP::cleanUpGraph() {
 // T2.1
 /**
  * @brief Backtracking and Bounding algorithm to solve the TSP for small graphs
- * @details Time Complexity: O(K^N), where K is the number of times the function calls itself
+ * @details Time Complexity: O(N!), where N is the number of nodes in the graph
  * @param n number of nodes in the graph
  * @param curI current index
  * @param curDist current distance
@@ -434,7 +434,7 @@ void TSP::tspRec(unsigned int n, unsigned int curI, double curDist, std::vector<
 
 /**
  * @brief Set up function for the backtracking and bounding algorithm
- * @details Time Complexity: O(K^N), because it calls the backtracking and bounding algorithm
+ * @details Time Complexity: O(N!), because it calls the backtracking and bounding recursive function
  * @return Returns the minimum distance of the circuit and the corresponding circuit
  */
 std::pair<double, std::vector<Vertex<GeoPoint*>*>> TSP::tspBTSetup() {
@@ -659,7 +659,7 @@ double TSP::otherHeuristic(bool useProvidedNode, int vertexID){
     double res = 0; // TSP approximate solution tour length
 
     // 1. Create clusters, using K-means Clustering
-    int k = 20; // For a big graph
+    int k = 1; // For a big graph
     if (isToyGraph || isExtraGraph){
         k = 1; // No need for clustering
     }
@@ -753,16 +753,6 @@ double TSP::otherHeuristic(bool useProvidedNode, int vertexID){
 
     std::cout << "\n\n=> Total cost: " << totalCost;
     res = totalCost;
-
-    // 3. Connect the clusters:
-    //    - Compute the MST of the cluster centroids
-    //greedyConnectClusters(clusters, centroids);
-    // FIXME
-
-    // 4. Locally optimize the initial TSP solution:
-    //    - Apply 2-opt optimizations inside each cluster
-    //    - Repeat until no further improvements can be made
-    // TODO
 
     return res;
 }
@@ -927,7 +917,6 @@ void TSP::preOrderCluster(Vertex<GeoPoint*>* root, std::vector<Vertex<GeoPoint*>
  * @return weight between v1 and v2
  */
 double TSP::getWeightBetween(Vertex<GeoPoint*>* v1, Vertex<GeoPoint*>* v2){
-    double weight = 0;
     for (auto e : v1->getAdj()){
         if (e->getDest()->getInfo()->getId() == v2->getInfo()->getId()){
             return e->getWeight();

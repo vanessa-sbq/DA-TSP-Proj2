@@ -205,8 +205,8 @@ void Application::optimizedTSP(){
             std::cout << output;
         }
         else{
-            std::string output = tsp.makeGraphConnectedWithHaversine() ? "\nGraph was already fully connected.\n" : "\nGraph was not fully connected.\n";
-            std::cout << output;
+            //std::string output = tsp.makeGraphConnectedWithHaversine() ? "\nGraph was already fully connected.\n" : "\nGraph was not fully connected.\n";
+            //std::cout << output;
         }
     }
 
@@ -231,7 +231,6 @@ void Application::optimizedTSP(){
 void Application::realWorldTSP(){
 restartRealWorldTSP:
     clearScreen();
-    //Code here
 
     std::string response;
     std::cout << "Please specify the node id where you would like to start.\n";
