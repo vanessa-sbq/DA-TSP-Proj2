@@ -161,6 +161,8 @@ void TSP::parsingGeoPointsAndEdges(std::ifstream &in) {
             this->vertexGeoMap[stoi(origin)] = tspNetwork.addVertex(geoPointSource);
         if(this->vertexGeoMap.find(stoi(destination))==this->vertexGeoMap.end())
             this->vertexGeoMap[stoi(destination)] = tspNetwork.addVertex(geoPointDestination);
+
+
     }
 
     in.clear();
@@ -186,20 +188,31 @@ void TSP::parsingGeoPointsAndEdges(std::ifstream &in) {
         Vertex<GeoPoint*>* geoPointSource = vertexGeoMap[stoi(origin)] ;
         Vertex<GeoPoint*>* geoPointTarget = vertexGeoMap[stoi(destination)] ;
 
+
         if (geoPointSource == nullptr || geoPointTarget == nullptr) {
             std::cerr << "Error in parsingGeoPointsAndEdges, problem with finding vertex in geoMap.\n";
             continue;
         }
 
-        if (!geoPointSource->addEdge(geoPointTarget, std::stod(distance))) {
+        auto e1 = geoPointSource->addEdge(geoPointTarget, std::stod(distance));
+
+        this->edgesGeoPoint[geoPointSource->getInfo()->getId()].insert(geoPointTarget->getInfo());
+        if (e1 == nullptr) {
             std::cerr << "Problem while adding an edge to the graph\n";
             continue;
         }
 
-        if (!geoPointTarget->addEdge(geoPointSource, std::stod(distance))) {
+        auto e2 = geoPointTarget->addEdge(geoPointSource, std::stod(distance));
+
+        this->edgesGeoPoint[geoPointTarget->getInfo()->getId()].insert(geoPointSource->getInfo());
+
+        if (e2 == nullptr) {
             std::cerr << "Problem while adding an edge to the graph\n";
             continue;
         }
+
+        e1->setReverse(e2);
+        e2->setReverse(e1);
 
     }
 }
@@ -280,9 +293,13 @@ void TSP::parsingEdges(std::ifstream &in) {
             std::cerr << "Error in parsingEdges, problem while adding an edge to the graph\n";
         }
 
+        this->edgesGeoPoint[geoPointSource->getInfo()->getId()].insert(geoPointDestination->getInfo());
+
         if (!geoPointDestination->addEdge(geoPointSource, std::stod(distance))) {
             std::cerr << "Error in parsingEdges, problem while adding an edge to the graph\n";
         }
+
+        this->edgesGeoPoint[geoPointDestination->getInfo()->getId()].insert(geoPointSource->getInfo());
     } // else ignore the header and process the rest of the data.
 
     while (std::getline(in, line)) {
@@ -457,110 +474,105 @@ std::pair<double, std::vector<Vertex<GeoPoint*>*>> TSP::tspBTSetup() {
     return {minDistance, path};
 }
 
-template <class T>
-std::vector<Vertex<T> *> TSP::prim(Graph<T> * g) {
-    MutablePriorityQueue<Vertex<T>> q;
-    for(Vertex<T>* v : g->getVertexSet()){
+/**
+ * @brief Computes the Minimum Spanning Tree (MST) of a graph using Prim's algorithm.
+ *
+ * This function computes the MST of the given graph `g` using Prim's algorithm.
+ * It returns the vertices of the MST in the order they are visited.
+ * It has time complexity of O(E*log(V))
+ *
+ * @param g A pointer to the graph on which Prim's algorithm is to be executed.
+ * @param visitOrder A reference to a vector that will store the order in which vertices are visited.
+ * @return A vector of vertices that are part of the MST.
+ */
+std::vector<Vertex<GeoPoint*>*> TSP::prim(Graph<GeoPoint*> * g,std::vector<Vertex<GeoPoint*>*> &visitOrder) {
+    MutablePriorityQueue<Vertex<GeoPoint*>> q;
+    std::vector<Vertex<GeoPoint*>*> res;
+    for(Vertex<GeoPoint*>* v : g->getVertexSet()){
         v->setDist(std::numeric_limits<double>::infinity());
+        v->setPath(nullptr);
+        v->setVisited(false);
     }
-    Vertex<T>* r = g->getVertexSet().front();
+    Vertex<GeoPoint*>* r = g->getVertexSet().front();
     r->setDist(0);
     q.insert(r);
 
+
+
     while(!q.empty()){
-        Vertex<T>* u =  q.extractMin();
+        Vertex<GeoPoint*>* u =  q.extractMin();
         u->setVisited(true);
-        for(Edge<T> *e : u->getAdj()){
-            Vertex<T>* v = e->getDest();
-            if(!v->isVisited() && e->getWeight() < v->getDist()){
-                v->setDist(e->getWeight());
-                v->setPath(e);
-                q.insert(v);
-                q.decreaseKey(v);
-            }
-        }
-    }
+        res.push_back(u);
+        //std::cout << u->getInfo()->getId() << std:: endl;
+        visitOrder.push_back(u);
 
-    return g->getVertexSet();
-}
+        for(Edge<GeoPoint*> *e : u->getAdj()){
+            Vertex<GeoPoint*>* v = e->getDest();
 
-template <class T>
-double TSP::spanningTreeCost(const std::vector<Vertex<T> *> &res){
-    double ret = 0;
-    for(const Vertex<T> *v: res){
-        if(v->getPath() == nullptr) continue;
-        const Vertex<T> *u = v->getPath()->getOrig();
-        for(const auto e: u->getAdj()){
-            if(e->getDest()->getInfo() == v->getInfo()){
-                ret += e->getWeight();
-                break;
-            }
-        }
-    }
-    return ret;
-}
+            if(!v->isVisited()){
+                auto oldDist = v->getDist();
 
-template <class T>
-void TSP::preOrderWalk(Vertex<T>* root, std::vector<Vertex<T>*> &visitOrder){
-    if(root == nullptr) return;
-    visitOrder.push_back(root);
-    root->setVisited(true);
-    for(Edge<T>* edge : root->getAdj()){
-        if(!edge->getDest()->isVisited()){
-            preOrderWalk(edge->getDest(), visitOrder);
-        }
-    }
+                if(e->getWeight() < oldDist){
+                    v->setDist(e->getWeight());
+                    v->setPath(e);
 
-
-}
-
-bool TSP::isAdjacent(Vertex<GeoPoint *> *&v1, Vertex<GeoPoint *> *&v2) {
-/*    // Get the source vertex
-    auto s = v1;
-    if (s == nullptr) {
-        return false;
-    }
-
-    // Perform the actual BFS using a queue
-    std::queue<Vertex<GeoPoint*> *> q;
-    q.push(s);
-    s->setVisited(true);
-    while (!q.empty()) {
-        auto v = q.front();
-        q.pop();
-        if(v->getInfo()->getId() == v2->getInfo()->getId()) return true;
-            for (auto & e : v->getAdj()) {
-                auto w = e->getDest();
-                if ( ! w->isVisited()) {
-                    q.push(w);
-                    w->setVisited(true);
+                    if(oldDist == std::numeric_limits<double>::infinity()){
+                        q.insert(v);
+                    } else {
+                        q.decreaseKey(v);
+                    }
                 }
             }
         }
-        return false;
-        */
-    for(auto v : v1->getAdj()){
-        if(v->getDest()->getInfo()->getId() == v2->getInfo()->getId()) return true;
     }
-    return false;
 
-    //FIND ANOTHER WAY TO DO THIS
+    return res;
 }
 
-// T2.2
-double TSP::triangularApproximation(){
-    for(Vertex<GeoPoint*>* v : tspNetwork.getVertexSet()){
-        //std::cout << v->getInfo()->getLabel() << std::endl;
-        v->setVisited(false);
+/**
+ * @brief Checks if two vertices are adjacent in the graph.
+ *
+ * This function checks if there is an edge between the vertices `v1` and `v2`.
+ * It has time complexity of O(E), being E the edges of vertex v1
+ *
+ * @param v1 A reference to a pointer to the first vertex.
+ * @param v2 A reference to a pointer to the second vertex.
+ * @return true if `v1` and `v2` are adjacent, false otherwise.
+ */
+bool TSP::isAdjacent(Vertex<GeoPoint *> *&v1, Vertex<GeoPoint *> *&v2) {
+    for(auto v : v1->getAdj()){
+        if(v->getDest()->getInfo()->getId() == v2->getInfo()->getId()){
+            return true;
+        }
     }
+    return false;
+}
 
-    std::vector<Vertex<GeoPoint*>*> MST = prim(&tspNetwork);
+
+
+// T2.2
+
+/**
+ * @brief Computes an approximate solution to the TSP using a triangular approximation.
+ *
+ * This function computes an approximate solution to the Traveling Salesman Problem (TSP) using
+ * a minimum spanning tree (MST) and a pre-order traversal of the MST. The solution might not be
+ * optimal but provides a feasible route even in non-fully connected graphs.
+ *
+ * It has time complexity O(E*log(V)), bounded by Prim's Algorithm Complexity
+ *
+ * @param sd A stringstream to store the sequence of visited vertices.
+ * @return The total cost of the tour.
+ */
+double TSP::triangularApproximation(std::stringstream &sd){
+    std::vector<Vertex<GeoPoint*>*> visitOrder;
+    std::vector<Vertex<GeoPoint*>*> MST = prim(&tspNetwork, visitOrder);
 /*
     std::stringstream ss;
     for(const auto v : MST) {
         ss << v->getInfo()->getId() << "->";
         if ( v->getPath() != nullptr ) {
-            ss << v->getPath()->getOrig()->getInfo()->getId();
+            ss << v->getPath()->getDest()->getInfo()->getId();
         }
 
 
@@ -568,61 +580,82 @@ double TSP::triangularApproximation(){
     }
     std::cout << "MST  " <<ss.str() << std::endl;
 */
-
     for(Vertex<GeoPoint*>* v : MST){
         v->setVisited(false);
     }
 
     // Step 2: Perform a pre-order walk of the MST to create the visit order
     Vertex<GeoPoint*>* root = MST.front();
-    std::vector<Vertex<GeoPoint*>*> visitOrder;
-    preOrderWalk(root, visitOrder);
+    //std::vector<Vertex<GeoPoint*>*> visitOrder;
+    //preOrderWalk(root, visitOrder);
 /*
     std::stringstream sr;
+
     for(const auto v : visitOrder) {
         sr << v->getInfo()->getId() << "->";
     }
+
     std::cout << "Visit Order"<< sr.str() << std::endl;
-*/
+    */
     // Step 3: Create the tour H using the visit order
     std::vector<Vertex<GeoPoint*>*> tour;
     std::unordered_set<Vertex<GeoPoint*>*> visited;
     Vertex<GeoPoint*>* auxV;
-    for(Vertex<GeoPoint*>* v : visitOrder){
-        if(visited.find(v) == visited.end()){
-            v->setVisited(false);
-            tour.push_back(v);
+    tour.push_back(visitOrder[0]);
+    for(size_t i = 1; i <= visitOrder.size() - 1; ++i){
+        auto v = visitOrder.at(i);
+
+        if(i == visitOrder.size() - 1){
             auxV = v;
-            visited.insert(v);
+            tour.push_back(v);
+            break;
         }
+
+        if(v->getPath()->getDest()->getInfo()->getId() == v->getInfo()->getId()){
+            double newDist = 0.0;
+            if(isAdjacent(v,visitOrder[i+1])){
+                for(auto e : v->getAdj()){
+                    if(e->getDest()->getInfo()->getId() == visitOrder[i+1]->getInfo()->getId()){
+                        newDist = e->getWeight();
+                        break;
+                    }
+                }
+            }else {
+                newDist = 1000 * calculateHaversineDistance({v->getInfo()->getLatitude(),v->getInfo()->getLongitude()},{visitOrder[i+1]->getInfo()->getLatitude(),visitOrder[i+1]->getInfo()->getLongitude()});
+            }
+            v->setDist(newDist);
+            tour.push_back(v);
+
+        }else{
+            tour.push_back(v);
+
+        }
+
     }
 
     // Add the root vertex again to complete the tour
     tour.push_back(root);
-/*
-    std::stringstream sd;
+
+
     for(const auto v : tour) {
-        sd << v->getInfo()->getId() << "<-";
-        if ( v->getPath() != nullptr ) {
-            sd << v->getPath()->getDest()->getInfo()->getId();
-        }
-        sd << "|";
+        sd <<"[" << v->getInfo()->getId() <<"]" << "->";
+
     }
-    std::cout << "TOUR >> " <<sd.str() << std::endl;
-*/
+
     // Step 4: Calculate the total distance of the tour
     double totalCost = 0.0;
-    for(size_t i = 0; i < tour.size() - 1; ++i){
-
+    for(size_t i = 0; i < tour.size() - 1; i++){
+        /*
         if (!isAdjacent(tour[i],tour[i+1])) {
             // Calculate distance using Haversine function if nodes are not directly connected
             double distance = calculateHaversineDistance({tour[i]->getInfo()->getLatitude(),tour[i]->getInfo()->getLongitude()},{tour[i+1]->getInfo()->getLatitude(),tour[i+1]->getInfo()->getLongitude()});
             totalCost += distance;
         }
-
-    else{
+*/
+   //else{
+        //std::cout << tour[i]->getInfo()->getId() << std::endl;
         totalCost += tour[i]->getDist();
-        }
+        //}
     }
 
     for(auto v : root->getAdj()){
@@ -631,6 +664,8 @@ double TSP::triangularApproximation(){
             break;
         }
     }
+
+    //std::cout<<std::endl << tour.size();
     return totalCost;
 }
 
@@ -925,6 +960,186 @@ double TSP::getWeightBetween(Vertex<GeoPoint*>* v1, Vertex<GeoPoint*>* v2){
     return calculateHaversineDistance(std::make_pair(v1->getInfo()->getLatitude(), v1->getInfo()->getLongitude()), std::make_pair(v2->getInfo()->getLatitude(), v2->getInfo()->getLongitude()));
 }
 
+
 // T2.4
+/**
+ * @brief Computes a tour using the nearest neighbor heuristic with backtracking, ensuring all vertices are visited.
+ *
+ * This function attempts to find a tour starting from the given vertex using the nearest neighbor
+ * heuristic. If no direct unvisited neighbor is found, it backtracks and tries alternative paths.
+ *
+ * @param start The starting vertex ID.
+ * @return The total cost of the tour (currently a placeholder value).
+ */
+ /*
+double TSP::nearestNeighbour(int start) {
+    Vertex<GeoPoint*>* startVertex = this->vertexGeoMap[start];
+    int n = this->tspNetwork.getNumVertex();
+
+    for(auto v : this->tspNetwork.getVertexSet()){
+        v->setVisited(false);
+        v->setProcesssing(false);
+        for(auto e : v->getAdj()){
+            e->setSelected(false);
+        }
+    }
+
+    std::vector<Vertex<GeoPoint*>*> tour;
+    tour.push_back(startVertex);
+    startVertex->setVisited(true);
+
+    std::stack<Vertex<GeoPoint*>*> backtrackStack;
+    backtrackStack.push(startVertex);
+
+    while (tour.size() < n) {
+        auto currentVertex = backtrackStack.top();
+        double minDist = std::numeric_limits<double>::infinity();
+        Vertex<GeoPoint*>* nextVertex = nullptr;
+        Edge<GeoPoint*>* auxedge;
+
+        // Find the nearest unvisited neighbor
+        std::cout << "Vertex " << currentVertex->getInfo()->getId() << " to ";
+        for (auto edge : currentVertex->getAdj()) {
+            if (!edge->getDest()->isVisited() && !edge->isSelected()) {
+                std::cout << edge->getDest()->getInfo()->getId() << ",";
+                double dist = edge->getWeight();
+                 if (dist < minDist) {
+                    minDist = dist;
+                    nextVertex = edge->getDest();
+                    auxedge = edge;
+                }
+            }
+        }
+        std::cout << std::endl;
+
+        if (nextVertex) {
+            tour.push_back(nextVertex);
+            nextVertex->setVisited(true);
+            backtrackStack.push(nextVertex);
+        } else {
+            // No unvisited neighbors found, backtrack to the previous vertex
+            backtrackStack.pop();
+            tour.pop_back();
+            currentVertex->setVisited(false);
+            auxedge->setSelected(true);
+            if (backtrackStack.empty()) {
+                // No path found, all backtracking options exhausted
+                std::cerr << "Error: No complete tour found. Some vertices may be unreachable." << std::endl;
+                return -1.0; // Return an error value or handle the incomplete tour case
+            }
+        }
+    }
+
+    // Complete the tour by returning to the start vertex
+    tour.push_back(startVertex);
+
+    std::cout << tour.size() << std::endl;
+
+    // Output the tour for debugging purposes
+    for (auto v : tour) {
+        std::cout << v->getInfo()->getId() << "->";
+    }
+    std::cout << "Start" << std::endl;
+
+    // Calculate and return the total distance of the tour
+    double totalCost = 0.0;
+    for (size_t i = 0; i < tour.size() - 1; ++i) {
+        for (auto edge : tour[i]->getAdj()) {
+            if (edge->getDest() == tour[i + 1]) {
+                totalCost += edge->getWeight();
+                break;
+            }
+        }
+    }
+
+    return totalCost;
+}
+*/
+bool TSP::nnRecursion(int here, int id, std::vector<GeoPoint *> &path, double& count, std::vector<GeoPoint*> &bestPath, double &bestCount) {
+    Vertex<GeoPoint*>* startVertex = this->vertexGeoMap[here];
+    startVertex->setVisited(true);
+
+
+
+    path.push_back(startVertex->getInfo());
+
+    if(path.size() > bestPath.size()){
+        bestPath = path;
+        bestCount = count;
+    }
+
+    if(this->recursionTimes == 0){
+        std::cout << "size -> " << path.size() << std::endl;
+        return true;
+    }
+
+    if(path.size() == this->vertexGeoMap.size() + 1){
+        std::cout << "size -> " << path.size() << std::endl;
+        return true;
+    }
+/*
+    std::cout << "PATH: ";
+    for(auto& i : path){
+        std::cout << i->getId() << ", ";
+    }
+    std::cout << std::endl;
+*/
+    for(auto e : startVertex->getAdj()){
+        if(e->getDest()->isVisited()){
+            if(path.size()==this->vertexGeoMap.size() && e->getDest()->getInfo()->getId() == 0) continue;
+            e->setSelected(true);
+        }
+    }
+
+
+    for(auto e : startVertex->getAdj()){
+        double min = INF;
+        Edge<GeoPoint*>* minEdge = nullptr;
+
+        for(auto e2: startVertex->getAdj()){
+            if(!e2->isSelected()){
+                if(e2->getWeight() < min){
+                    min = e2->getWeight();
+                    minEdge = e2;
+                    startVertex->setDist(min);
+                }
+            }
+        }
+
+        if(!minEdge) break;
+
+        //this->vertexGeoMap[minEdge->getDest()->getInfo()->getId()]->setPath(new Edge<GeoPoint*>(startVertex,this->vertexGeoMap[minEdge->getDest()->getInfo()->getId()],min));
+        count += min;
+        this->recursionTimes--;
+        if(nnRecursion(minEdge->getDest()->getInfo()->getId(),here,path,count,bestPath,bestCount)) return true;
+
+        this->vertexGeoMap[minEdge->getDest()->getInfo()->getId()]->setVisited(false);
+        count -= min;
+        minEdge->setSelected(true);
+    }
+
+    for(auto e : startVertex->getAdj()){
+        e->setSelected(false);
+    }
+
+    if(id != -1){
+        for(auto e : this->vertexGeoMap[id]->getAdj()){
+            if(e->getDest()->getInfo()->getId() == here){
+                e->setSelected(true);
+            }
+        }
+    }
+
+    path.pop_back();
+    startVertex->setVisited(false);
+    return false;
+
+}
+
+
+
+
+
+
 // TODO
 

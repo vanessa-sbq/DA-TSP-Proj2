@@ -10,6 +10,7 @@
 #include <cstdlib>
 #include <chrono>
 #include <regex>
+#include <iomanip>
 
 #include "TSP.h"
 #include "Graph.h"
@@ -104,44 +105,57 @@ public:
                 switch (graphChoice) {
                     case 1:
                         this->edgePath = DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_25_EDGES;
+                        this->graphChoosen = 1;
                         break;
                     case 2:
                         this->edgePath = DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_50_EDGES;
+                        this->graphChoosen = 2;
                         break;
                     case 3:
                         this->edgePath = DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_75_EDGES;
+                        this->graphChoosen = 3;
                         break;
                     case 4:
                         this->edgePath = DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_100_EDGES;
+                        this->graphChoosen = 4;
                         break;
                     case 5:
                         this->edgePath = DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_200_EDGES;
+                        this->graphChoosen = 5;
                         break;
                     case 6:
                         this->edgePath = DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_300_EDGES;
+                        this->graphChoosen = 6;
                         break;
                     case 7:
                         this->edgePath = DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_400_EDGES;
+                        this->graphChoosen = 7;
                         break;
                     case 8:
                         this->edgePath = DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_500_EDGES;
+                        this->graphChoosen = 8;
                         break;
                     case 9:
                         this->edgePath = DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_600_EDGES;
+                        this->graphChoosen = 9;
                         break;
                     case 10:
                         this->edgePath = DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_700_EDGES;
+                        this->graphChoosen = 10;
                         break;
                     case 11:
                         this->edgePath = DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_800_EDGES;
+                        this->graphChoosen = 11;
                         break;
                     case 12:
                         this->edgePath = DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_900_EDGES;
+                        this->graphChoosen = 12;
                         break;
                     default:
                         delay(3000);
                         std::cout << "Unrecognized option, defaulting to graph with 25 edges.\n";
                         this->edgePath = DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_25_EDGES;
+                        this->graphChoosen = 1;
                 }
 
                 break;
@@ -165,22 +179,27 @@ public:
                 switch (graphChoice) {
                     case 1:
                         this->nodePath = DATASET_PATHS TOY_GRAPH_SHIPPING;
+                        this->graphChoosen = 13;
                         break;
                     case 2:
                         this->nodePath = DATASET_PATHS TOY_GRAPH_STADIUMS;
+                        this->graphChoosen = 14;
                         break;
                     case 3:
                         this->nodePath = DATASET_PATHS TOY_GRAPH_TOURISM;
+                        this->graphChoosen = 15;
                         break;
                     default:
                         delay(3000);
                         std::cout << "Unrecognized option, defaulting to shipping graph.\n";
                         this->nodePath = DATASET_PATHS TOY_GRAPH_SHIPPING;
+                        this->graphChoosen = 13;
                 }
                 break;
             case 3:
                 clearScreen();
                 this->edgeFileSeparatedFromNodeFile = true;
+                this->isBigGraph = true;
                 std::cout << "Real World Graphs:\n";
                 std::cout << "1. Graph 1\n";
                 std::cout << "2. Graph 2\n";
@@ -199,20 +218,24 @@ public:
                     case 1:
                         this->edgePath = DATASET_PATHS REAL_WORLD_GRAPH_1_EDGES;
                         this->nodePath = DATASET_PATHS REAL_WORLD_GRAPH_1_NODES;
+                        this->graphChoosen = 16;
                         break;
                     case 2:
                         this->edgePath = DATASET_PATHS REAL_WORLD_GRAPH_2_EDGES;
                         this->nodePath = DATASET_PATHS REAL_WORLD_GRAPH_2_NODES;
+                        this->graphChoosen = 17;
                         break;
                     case 3:
                         this->edgePath = DATASET_PATHS REAL_WORLD_GRAPH_3_EDGES;
                         this->nodePath = DATASET_PATHS REAL_WORLD_GRAPH_3_NODES;
+                        this->graphChoosen = 18;
                         break;
                     default:
                         delay(3000);
                         std::cout << "Unrecognized option, defaulting to first real world graph.\n";
                         this->edgePath = DATASET_PATHS REAL_WORLD_GRAPH_1_EDGES;
                         this->nodePath = DATASET_PATHS REAL_WORLD_GRAPH_1_NODES;
+                        this->graphChoosen = 16;
                 }
                 break;
             default:
@@ -221,6 +244,7 @@ public:
                 this->edgeFileSeparatedFromNodeFile = true;
                 this->edgePath = DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_25_EDGES;
                 this->nodePath = DATASET_PATHS EXTRA_FULLY_CONNECTED_GRAPHS_NODES;
+                this->graphChoosen = 1;
         }
 
         // DEBUG
@@ -234,6 +258,7 @@ public:
     void clearScreen();
 
     void run(int processedKey);
+    void recordRuntime(const std::string& functionName, int duration);
 
     static void delay(long sleepTime);
 
@@ -242,11 +267,13 @@ public:
 private:
 
     TSP tsp;
+    bool isBigGraph = false;
+    int graphChoosen;
 
     /* Private functions */
     std::string showMainMenu();
     void showGoBackMenu(int option, const std::string& functionName);
-
+    void showRuntime();
     /* TSP functions */
 
     void backtrackingAlgorithmTSP(); // T2.1

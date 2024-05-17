@@ -12,6 +12,7 @@
 #include "Graph.h"
 #include "GeoPoint.h"
 #include "MutablePriorityQueue.h"
+#include <stack>
 
 class TSP {
 public:
@@ -32,24 +33,26 @@ public:
     void cleanUpGraph();
 
     // T2.2
-    double triangularApproximation();
+    double triangularApproximation(std::stringstream &sd);
 
     // T2.3
     double otherHeuristic(bool useProvidedNode, int vertexID);
 
     // T2.4
+    double nearestNeighbour(int start);
+    bool nnRecursion(int here, int id, std::vector<GeoPoint*> &path, double &count,std::vector<GeoPoint*> &bestPath, double &bestCount);
     // TODO
 
 private:
     Graph<GeoPoint*> tspNetwork; // Graph
+    int recursionTimes = 100000;
 
     std::unordered_map<int, GeoPoint*> geoMap; // Contains all geo points
     std::unordered_map<int, Vertex<GeoPoint*>*> vertexGeoMap; // Contains all vertexes that represent geo points
     bool isToyGraph = false;
     bool isExtraGraph = false;
     int numNodesFromExtra = 25; // Number of nodes used if extra graphs selected
-    //void parseEdgesFromMemory(char* data, size_t size);
-    //void loadFileUsingMMap(const std::string& filename);
+    std::unordered_map<int, std::set<GeoPoint*>> edgesGeoPoint; //contais the edges of vertex id = int
 
     void parsingGeoPointsAndEdges(std::ifstream &in);
     void parsingGeoPoints(std::ifstream &in);
@@ -60,6 +63,7 @@ private:
     std::vector<Edge<GeoPoint*>> edgesToRemove;
 
     //TSP 2
+    std::vector<Vertex<GeoPoint*>*> prim(Graph<GeoPoint*> * g, std::vector<Vertex<GeoPoint*>*> &visitOrder);
     template <class T>
     std::vector<Vertex<T> *> prim(Graph<T> * g);
     template <class T>
