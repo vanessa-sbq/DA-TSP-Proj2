@@ -573,9 +573,7 @@ bool TSP::isAdjacent(Vertex<GeoPoint *> *&v1, Vertex<GeoPoint *> *&v2) {
 double TSP::triangularApproximation(std::stringstream &sd){
     std::vector<Vertex<GeoPoint*>*> visitOrder;
     std::vector<Vertex<GeoPoint*>*> MST = prim(&tspNetwork, visitOrder);
-    visitOrder.clear();
-
-    /*
+/*
     std::stringstream ss;
     for(const auto v : MST) {
         ss << v->getInfo()->getId() << "->";
@@ -588,20 +586,6 @@ double TSP::triangularApproximation(std::stringstream &sd){
     }
     std::cout << "MST  " <<ss.str() << std::endl;
 */
-    for (auto a : MST){
-        if (a->getPath() != nullptr){
-            a->getPath()->setSelected(true);
-        }
-    }
-
-    Vertex<GeoPoint*>* debugRoot = nullptr;
-    for (auto a : MST){
-        if (a->getPath() == nullptr){
-            debugRoot = a;
-            break;
-        }
-    }
-
     for(Vertex<GeoPoint*>* v : MST){
         v->setVisited(false);
     }
@@ -609,7 +593,7 @@ double TSP::triangularApproximation(std::stringstream &sd){
     // Step 2: Perform a pre-order walk of the MST to create the visit order
     Vertex<GeoPoint*>* root = MST.front();
     //std::vector<Vertex<GeoPoint*>*> visitOrder;
-    preOrderCluster(root, visitOrder);
+    //preOrderWalk(root, visitOrder);
 /*
     std::stringstream sr;
 
@@ -674,7 +658,7 @@ double TSP::triangularApproximation(std::stringstream &sd){
             totalCost += distance;
         }
 */
-   //else{
+        //else{
         //std::cout << tour[i]->getInfo()->getId() << std::endl;
         totalCost += tour[i]->getDist();
         //}
@@ -716,7 +700,7 @@ double TSP::otherHeuristic(bool useProvidedNode, int vertexID){
     double res = 0; // TSP approximate solution tour length
 
     // 1. Create clusters, using K-means Clustering
-    int k = 1; // For a big graph
+    int k = 20; // For a big graph
     if (isToyGraph || isExtraGraph){
         k = 1; // No need for clustering
     }
@@ -737,7 +721,7 @@ double TSP::otherHeuristic(bool useProvidedNode, int vertexID){
             Vertex<GeoPoint*>* v = vertexGeoMap.at(clusterV);
             v->setVisited(false);
         }
-        std::set<Vertex<GeoPoint*> *> clusterMST = clusterPrim(&tspNetwork); // Apply prim ONLY on not visited vertices (vertices that are in the cluster)
+        std::vector<Vertex<GeoPoint*> *> clusterMST = clusterPrim(&tspNetwork); // Apply prim ONLY on not visited vertices (vertices that are in the cluster)
 
         // Select only the cluster
         for(Vertex<GeoPoint*>* v : clusterMST){
@@ -773,18 +757,8 @@ double TSP::otherHeuristic(bool useProvidedNode, int vertexID){
         }
         std::vector<Vertex<GeoPoint*>*> preOrder;
         preOrder.clear();
-        std::cout << "Cluster " << i << " pre-order walk: ";
         preOrderCluster(debugRoot, preOrder);
         clusterPreorders.push_back(preOrder);
-        /*preOrder.push_back(debugRoot); //FIXME: Should be removed?
-
-        // Calculate the total distance of the tour
-        double totalCost = 0.0;
-        for (size_t i = 1; i < preOrder.size(); i++){
-            totalCost += getWeightBetween(preOrder[i-1], preOrder[i]);
-        }
-
-        std::cout << "-> Total cost: " << totalCost << "\n\n";*/
     }
 
     // 3. Connect the clusters
@@ -795,9 +769,11 @@ double TSP::otherHeuristic(bool useProvidedNode, int vertexID){
         }
     }
 
-    std::cout << "Final tour: ";
-    for (auto a : finalTour){
-        std::cout << a->getInfo()->getId() << " ";
+    if (isToyGraph) { // Only print final tour for small graphs
+        std::cout << "\nFinal tour: ";
+        for (auto a: finalTour) {
+            std::cout << a->getInfo()->getId() << " ";
+        }
     }
 
     double totalCost = 0.0;
@@ -808,7 +784,7 @@ double TSP::otherHeuristic(bool useProvidedNode, int vertexID){
         totalCost += getWeightBetween(finalTour[i-1], finalTour[i]);
     }
 
-    std::cout << "\n\n=> Total cost: " << totalCost;
+    std::cout << "\n=> Total cost: " << totalCost;
     res = totalCost;
 
     return res;
@@ -824,7 +800,7 @@ void TSP::createClusters(std::vector<std::set<int>>& clusters, std::vector<int>&
     std::unordered_set<int> chosenIds; // To ensure that the same point isn't chosen twice
 
     // Initialize centroids randomly (without choosing the same one twice)
-    std::cout << "--------- Centroids and Clusters --------\n";
+    if (!isToyGraph) std::cout << "---------------- Chosen Centroids ----------------\n";
     srand((unsigned)time(0)); // "Randomize" seed
     for (int i = 0; i < k; i++) {
         GeoPoint* randomGP;
@@ -833,7 +809,7 @@ void TSP::createClusters(std::vector<std::set<int>>& clusters, std::vector<int>&
         } while (chosenIds.count(randomGP->getId()) > 0); // Check if GeoPoint has been chosen before
         centroids[i] = randomGP->getId();
         chosenIds.insert(randomGP->getId());
-        std::cout << "Centroid: " << centroids[i] << "\n";
+        if (!isToyGraph) std::cout << "Centroid " << i << ": " << centroids[i] << "\n";
     }
 
     if (useProvidedNode) {
@@ -889,14 +865,7 @@ void TSP::createClusters(std::vector<std::set<int>>& clusters, std::vector<int>&
         }
     }
 
-    for (int i = 0; i < k; i++){
-        std::cout << "\nCluster " << i << ": ";
-        std::set<int> cluster = clusters[i];
-        for (int id : cluster){
-            std::cout << id << ", ";
-        }
-    }
-    std::cout << "\n-----------------------------------------\n";
+    if (!isToyGraph) std::cout << "--------------------------------------------------";
 }
 
 /**
@@ -904,8 +873,9 @@ void TSP::createClusters(std::vector<std::set<int>>& clusters, std::vector<int>&
  * @details Time Complexity: O((V + E) * log(V)), where V is the number of vertices in the cluster and E is the number of edges in the cluster
  * @return A set containing the MST of the cluster
  */
-std::set<Vertex<GeoPoint*> *> TSP::clusterPrim(Graph<GeoPoint*> * g) {
-    std::set<Vertex<GeoPoint*> *> resMST;
+std::vector<Vertex<GeoPoint*> *> TSP::clusterPrim(Graph<GeoPoint*> * g) {
+    std::vector<Vertex<GeoPoint*> *> resMST;
+    std::unordered_map<int, Vertex<GeoPoint*>*> hashmap;
     resMST.clear();
     MutablePriorityQueue<Vertex<GeoPoint*>> q;
     for(Vertex<GeoPoint*>* v : g->getVertexSet()){
@@ -925,21 +895,32 @@ std::set<Vertex<GeoPoint*> *> TSP::clusterPrim(Graph<GeoPoint*> * g) {
     r->setDist(0);
     r->setPath(nullptr);
     q.insert(r);
-    resMST.insert(r);
+    resMST.push_back(r);
+    hashmap[r->getInfo()->getId()];
     while(!q.empty()){
         Vertex<GeoPoint*>* u = q.extractMin();
         u->setVisited(true);
         for(Edge<GeoPoint*> *e : u->getAdj()){
             Vertex<GeoPoint*>* v = e->getDest();
+            auto oldDist = v->getDist();
+
             if(!v->isVisited() && e->getWeight() < v->getDist()){
                 v->setDist(e->getWeight());
                 v->setPath(e);
-                resMST.insert(v);
-                q.insert(v);
-                q.decreaseKey(v);
+                try{
+                    hashmap.at(v->getInfo()->getId());
+                } catch(std::out_of_range& oor) {
+                    resMST.push_back(v);
+                }
+                if(oldDist == std::numeric_limits<double>::infinity()){
+                    q.insert(v);
+                } else {
+                    q.decreaseKey(v);
+                }
             }
         }
     }
+
     return resMST;
 }
 
@@ -952,9 +933,6 @@ std::set<Vertex<GeoPoint*> *> TSP::clusterPrim(Graph<GeoPoint*> * g) {
 void TSP::preOrderCluster(Vertex<GeoPoint*>* root, std::vector<Vertex<GeoPoint*>*>& preorder){
     if (root == nullptr) return;
 
-    // Print the current node's data
-
-    //std::cout << root->getInfo()->getId() << " ";
     preorder.push_back(root);
 
     // Recursively traverse the left subtree
@@ -994,88 +972,88 @@ double TSP::getWeightBetween(Vertex<GeoPoint*>* v1, Vertex<GeoPoint*>* v2){
  * @param start The starting vertex ID.
  * @return The total cost of the tour (currently a placeholder value).
  */
- /*
+/*
 double TSP::nearestNeighbour(int start) {
-    Vertex<GeoPoint*>* startVertex = this->vertexGeoMap[start];
-    int n = this->tspNetwork.getNumVertex();
+   Vertex<GeoPoint*>* startVertex = this->vertexGeoMap[start];
+   int n = this->tspNetwork.getNumVertex();
 
-    for(auto v : this->tspNetwork.getVertexSet()){
-        v->setVisited(false);
-        v->setProcesssing(false);
-        for(auto e : v->getAdj()){
-            e->setSelected(false);
-        }
-    }
+   for(auto v : this->tspNetwork.getVertexSet()){
+       v->setVisited(false);
+       v->setProcesssing(false);
+       for(auto e : v->getAdj()){
+           e->setSelected(false);
+       }
+   }
 
-    std::vector<Vertex<GeoPoint*>*> tour;
-    tour.push_back(startVertex);
-    startVertex->setVisited(true);
+   std::vector<Vertex<GeoPoint*>*> tour;
+   tour.push_back(startVertex);
+   startVertex->setVisited(true);
 
-    std::stack<Vertex<GeoPoint*>*> backtrackStack;
-    backtrackStack.push(startVertex);
+   std::stack<Vertex<GeoPoint*>*> backtrackStack;
+   backtrackStack.push(startVertex);
 
-    while (tour.size() < n) {
-        auto currentVertex = backtrackStack.top();
-        double minDist = std::numeric_limits<double>::infinity();
-        Vertex<GeoPoint*>* nextVertex = nullptr;
-        Edge<GeoPoint*>* auxedge;
+   while (tour.size() < n) {
+       auto currentVertex = backtrackStack.top();
+       double minDist = std::numeric_limits<double>::infinity();
+       Vertex<GeoPoint*>* nextVertex = nullptr;
+       Edge<GeoPoint*>* auxedge;
 
-        // Find the nearest unvisited neighbor
-        std::cout << "Vertex " << currentVertex->getInfo()->getId() << " to ";
-        for (auto edge : currentVertex->getAdj()) {
-            if (!edge->getDest()->isVisited() && !edge->isSelected()) {
-                std::cout << edge->getDest()->getInfo()->getId() << ",";
-                double dist = edge->getWeight();
-                 if (dist < minDist) {
-                    minDist = dist;
-                    nextVertex = edge->getDest();
-                    auxedge = edge;
-                }
-            }
-        }
-        std::cout << std::endl;
+       // Find the nearest unvisited neighbor
+       std::cout << "Vertex " << currentVertex->getInfo()->getId() << " to ";
+       for (auto edge : currentVertex->getAdj()) {
+           if (!edge->getDest()->isVisited() && !edge->isSelected()) {
+               std::cout << edge->getDest()->getInfo()->getId() << ",";
+               double dist = edge->getWeight();
+                if (dist < minDist) {
+                   minDist = dist;
+                   nextVertex = edge->getDest();
+                   auxedge = edge;
+               }
+           }
+       }
+       std::cout << std::endl;
 
-        if (nextVertex) {
-            tour.push_back(nextVertex);
-            nextVertex->setVisited(true);
-            backtrackStack.push(nextVertex);
-        } else {
-            // No unvisited neighbors found, backtrack to the previous vertex
-            backtrackStack.pop();
-            tour.pop_back();
-            currentVertex->setVisited(false);
-            auxedge->setSelected(true);
-            if (backtrackStack.empty()) {
-                // No path found, all backtracking options exhausted
-                std::cerr << "Error: No complete tour found. Some vertices may be unreachable." << std::endl;
-                return -1.0; // Return an error value or handle the incomplete tour case
-            }
-        }
-    }
+       if (nextVertex) {
+           tour.push_back(nextVertex);
+           nextVertex->setVisited(true);
+           backtrackStack.push(nextVertex);
+       } else {
+           // No unvisited neighbors found, backtrack to the previous vertex
+           backtrackStack.pop();
+           tour.pop_back();
+           currentVertex->setVisited(false);
+           auxedge->setSelected(true);
+           if (backtrackStack.empty()) {
+               // No path found, all backtracking options exhausted
+               std::cerr << "Error: No complete tour found. Some vertices may be unreachable." << std::endl;
+               return -1.0; // Return an error value or handle the incomplete tour case
+           }
+       }
+   }
 
-    // Complete the tour by returning to the start vertex
-    tour.push_back(startVertex);
+   // Complete the tour by returning to the start vertex
+   tour.push_back(startVertex);
 
-    std::cout << tour.size() << std::endl;
+   std::cout << tour.size() << std::endl;
 
-    // Output the tour for debugging purposes
-    for (auto v : tour) {
-        std::cout << v->getInfo()->getId() << "->";
-    }
-    std::cout << "Start" << std::endl;
+   // Output the tour for debugging purposes
+   for (auto v : tour) {
+       std::cout << v->getInfo()->getId() << "->";
+   }
+   std::cout << "Start" << std::endl;
 
-    // Calculate and return the total distance of the tour
-    double totalCost = 0.0;
-    for (size_t i = 0; i < tour.size() - 1; ++i) {
-        for (auto edge : tour[i]->getAdj()) {
-            if (edge->getDest() == tour[i + 1]) {
-                totalCost += edge->getWeight();
-                break;
-            }
-        }
-    }
+   // Calculate and return the total distance of the tour
+   double totalCost = 0.0;
+   for (size_t i = 0; i < tour.size() - 1; ++i) {
+       for (auto edge : tour[i]->getAdj()) {
+           if (edge->getDest() == tour[i + 1]) {
+               totalCost += edge->getWeight();
+               break;
+           }
+       }
+   }
 
-    return totalCost;
+   return totalCost;
 }
 */
 bool TSP::nnRecursion(int here, int id, std::vector<GeoPoint *> &path, double& count, std::vector<GeoPoint*> &bestPath, double &bestCount) {
