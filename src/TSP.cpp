@@ -493,7 +493,7 @@ std::pair<double, std::vector<Vertex<GeoPoint*>*>> TSP::tspBTSetup() {
  * @param visitOrder A reference to a vector that will store the order in which vertices are visited.
  * @return A vector of vertices that are part of the MST.
  */
-std::vector<Vertex<GeoPoint*>*> TSP::prim(Graph<GeoPoint*> * g,std::vector<Vertex<GeoPoint*>*> &visitOrder) {
+std::vector<Vertex<GeoPoint*>*> TSP::prim(Graph<GeoPoint*> * g) {
     MutablePriorityQueue<Vertex<GeoPoint*>> q;
     std::vector<Vertex<GeoPoint*>*> res;
     for(Vertex<GeoPoint*>* v : g->getVertexSet()){
@@ -510,7 +510,6 @@ std::vector<Vertex<GeoPoint*>*> TSP::prim(Graph<GeoPoint*> * g,std::vector<Verte
         u->setVisited(true);
         res.push_back(u);
         //std::cout << u->getInfo()->getId() << std:: endl;
-        visitOrder.push_back(u);
 
         for(Edge<GeoPoint*> *e : u->getAdj()){
             Vertex<GeoPoint*>* v = e->getDest();
@@ -572,7 +571,8 @@ bool TSP::isAdjacent(Vertex<GeoPoint *> *&v1, Vertex<GeoPoint *> *&v2) {
  */
 double TSP::triangularApproximation(std::stringstream &sd){
     std::vector<Vertex<GeoPoint*>*> visitOrder;
-    std::vector<Vertex<GeoPoint*>*> MST = prim(&tspNetwork, visitOrder);
+    std::vector<Vertex<GeoPoint*>*> MST = prim(&tspNetwork);
+
 /*
     std::stringstream ss;
     for(const auto v : MST) {
@@ -586,14 +586,21 @@ double TSP::triangularApproximation(std::stringstream &sd){
     }
     std::cout << "MST  " <<ss.str() << std::endl;
 */
+    for (auto a : MST){
+        if (a->getPath() != nullptr){
+            a->getPath()->setSelected(true);
+        }
+    }
+
+
+
     for(Vertex<GeoPoint*>* v : MST){
         v->setVisited(false);
     }
 
     // Step 2: Perform a pre-order walk of the MST to create the visit order
     Vertex<GeoPoint*>* root = MST.front();
-    //std::vector<Vertex<GeoPoint*>*> visitOrder;
-    //preOrderWalk(root, visitOrder);
+    preOrderCluster(root, visitOrder);
 /*
     std::stringstream sr;
 

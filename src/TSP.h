@@ -63,13 +63,8 @@ private:
     std::vector<Edge<GeoPoint*>> edgesToRemove;
 
     //TSP 2
-    std::vector<Vertex<GeoPoint*>*> prim(Graph<GeoPoint*> * g, std::vector<Vertex<GeoPoint*>*> &visitOrder);
-    template <class T>
-    std::vector<Vertex<T> *> prim(Graph<T> * g);
-    template <class T>
-    double spanningTreeCost(const std::vector<Vertex<T> *> &res);
-    template <class T>
-    void preOrderWalk(Vertex<T>* root, std::vector<Vertex<T>*> &visitOrder);
+    std::vector<Vertex<GeoPoint*>*> prim(Graph<GeoPoint*> * g);
+
 
     // T2.3
     void createClusters(std::vector<std::set<int>>& clusters, std::vector<int>& centroids, int k, bool useProvidedNode, Vertex<GeoPoint*>* rootVertex);
