@@ -505,8 +505,6 @@ std::vector<Vertex<GeoPoint*>*> TSP::prim(Graph<GeoPoint*> * g,std::vector<Verte
     r->setDist(0);
     q.insert(r);
 
-
-
     while(!q.empty()){
         Vertex<GeoPoint*>* u =  q.extractMin();
         u->setVisited(true);

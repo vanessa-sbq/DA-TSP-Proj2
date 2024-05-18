@@ -82,7 +82,7 @@ int Application::processKey(const std::string& option) {
 std::string Application::showMainMenu() {
     std::string opti;
     std::cout << "\nSelect an operation you would like to do:\n\n"
-              << "0 - Calculate Runtime for a function\n"
+              << "0 - Show runtime values\n"
               << "1 - Execute backtracking algorithm for TSP.\n"
               << "2 - Execute triangle approximation heuristic for TSP.\n"
               << "3 - Execute optimized TSP.\n"
@@ -132,13 +132,8 @@ void Application::showGoBackMenu(int functionNumber, const std::string& function
     }
 }
 
-// Data structure to store runtime information
-using RuntimeData = std::unordered_map<int,std::unordered_map<std::string, int>>;
 
-// Function to read data from CSV file and organize it
-RuntimeData readRuntimeData(const std::string& filename) {
-    RuntimeData runtimeData;
-
+void displayRuntimeData() {
     std::cout << "-------------DESCRIPTION--------------------" << std::endl;
     std::cout << "|Extra Fully Connected - 25 nodes --> ID 1 |" << std::endl;
     std::cout << "|Extra Fully Connected - 50 nodes --> ID 2 |" << std::endl;
@@ -161,14 +156,18 @@ RuntimeData readRuntimeData(const std::string& filename) {
     std::cout << "--------------------------------------------" << std::endl;
     std::cout << "The X axis represent the functions, the Y axis\n"
                  "represents the graphs and the (X,Y) value the \n"
-                 "time in miliseconds. Enjoy <3" << std::endl;
+                 "time in milliseconds. Enjoy <3" << std::endl;
     std::cout << "--------------------------------------------" << std::endl;
+
     // Open the CSV file
-    std::ifstream file(filename);
+    std::ifstream file("../dataset/runtime.csv");
     if (!file.is_open()) {
-        std::cerr << "Error: Unable to open " << filename << " for reading.\n";
-        return runtimeData;
+        std::cerr << "Error: Unable to open file for reading.\n";
+        return;
     }
+
+    // Map to store the latest runtime for each (function, graphId) pair
+    std::map<std::pair<std::string, std::string>, std::string> runtimeMap;
 
     // Read each line from the CSV file
     std::string line;
@@ -176,16 +175,8 @@ RuntimeData readRuntimeData(const std::string& filename) {
         std::stringstream ss(line);
         std::string function, graphId, runtime;
         if (std::getline(ss, function, ',') && std::getline(ss, graphId, ',') && std::getline(ss, runtime, ',')) {
-            // Convert runtime to integer
-            try {
-                int runtimeValue = std::stoi(runtime);
-                // Add runtime to the data structure
-                std::unordered_map<std::string, int> functionRun;
-                functionRun[function] = runtimeValue;
-                runtimeData[std::stoi(graphId)] = functionRun;
-            } catch (const std::invalid_argument& e) {
-                std::cerr << "Error: Invalid runtime value \"" << runtime << "\" encountered. Skipping line.\n";
-            }
+            // Update the map with the latest runtime for this (function, graphId) pair
+            runtimeMap[{function, graphId}] = runtime;
         } else {
             std::cerr << "Error: Malformed line in CSV file. Skipping line.\n";
         }
@@ -194,54 +185,12 @@ RuntimeData readRuntimeData(const std::string& filename) {
     // Close the CSV file
     file.close();
 
-    return runtimeData;
-}
-
-// Function to display runtime data
-void displayRuntimeData(const RuntimeData& runtimeData) {
-    // Calculate column widths
-    std::vector<size_t> columnWidths;
-    for (const auto& entry : runtimeData.begin()->second) {
-        size_t width = entry.first.length();
-        for (const auto& outerEntry : runtimeData) {
-            size_t dataWidth = 8;
-            if (dataWidth > width) {
-                width = dataWidth;
-            }
-        }
-        columnWidths.push_back(width);
-    }
-
-// Print header
-    std::cout << "| Graph ID ";
-    size_t index = 0;
-    for (const auto& entry : runtimeData.begin()->second) {
-        std::cout << "| " << std::setw(columnWidths[index]) << entry.first << " ";
-        index++;
-    }
-    std::cout << "|" << std::endl;
-
-// Print separator
-    std::cout << "|----------";
-    for (size_t width : columnWidths) {
-        std::cout << "|";
-        for (size_t i = 0; i < width + 2; ++i) {
-            std::cout << "-";
-        }
-    }
-    std::cout << "|" << std::endl;
-
-// Print data
-    for (const auto& outerEntry : runtimeData) {
-        std::cout << "| " << std::setw(8) << outerEntry.first << " ";
-        index = 0;
-        for (const auto& innerEntry : outerEntry.second) {
-            std::cout << "| " << std::setw(columnWidths[index]) << innerEntry.second << " ";
-            index++;
-        }
-        std::cout << "|" << std::endl;
+    // Print the latest runtime for each (function, graphId) pair
+    for (const auto& entry : runtimeMap) {
+        std::cout << "Function: " << entry.first.first << ", Graph ID: " << entry.first.second << ", Runtime: " << entry.second << " microseconds" << std::endl;
     }
 }
+
 
 void Application::recordRuntime(const std::string& functionName, int duration) {
     // Open the CSV file in append mode
@@ -260,86 +209,7 @@ void Application::recordRuntime(const std::string& functionName, int duration) {
 
 void Application::showRuntime() {
 
-    std::string opti;
-    std::cout << "\nSelect the function runtime you would like to calculate:\n\n"
-              << "1 - Execute backtracking algorithm for TSP.\n"
-              << "2 - Execute triangle approximation heuristic for TSP.\n"
-              << "3 - Execute optimized TSP.\n"
-              << "4 - Execute TSP in the Real World.\n"
-              << "5 - Exit.\n";
-
-    std::cout << "Input: ";
-    std::cin >> opti;
-    std::cout << "\n";
-
-    clearScreen();
-    auto start = std::chrono::high_resolution_clock::now();
-    auto end = std::chrono::high_resolution_clock::now();
-    std::stringstream s;
-    std::vector<GeoPoint*> res;
-    double count = 0.0;
-    std::vector<GeoPoint*> bestres;
-    double best = 0.0;
-
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    switch (std::stoi(opti)) {
-        case 1:
-            start = std::chrono::high_resolution_clock::now();
-            tsp.tspBTSetup();
-            end = std::chrono::high_resolution_clock::now();
-
-            duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-
-
-            // T2.2
-            std::cout <<"It takes " <<duration.count() << " miliseconds" <<std::endl;
-            recordRuntime("4.1",duration.count());
-            break;
-        case 2:
-            start = std::chrono::high_resolution_clock::now();
-            tsp.triangularApproximation(s);
-            end = std::chrono::high_resolution_clock::now();
-
-            duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-
-
-            // T2.2
-            std::cout <<"It takes " <<duration.count() << " miliseconds" <<std::endl;
-            recordRuntime("4.2",duration.count());
-            break;
-        case 3:
-            start = std::chrono::high_resolution_clock::now();
-            optimizedTSP();
-            end = std::chrono::high_resolution_clock::now();
-
-            duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-
-            // T2.2
-            std::cout <<"It takes " <<duration.count() << " miliseconds" <<std::endl;
-            recordRuntime("4.3",duration.count());
-            break;
-        case 4:
-            start = std::chrono::high_resolution_clock::now();
-            tsp.nnRecursion(0,-1,res, count,bestres,best);
-            end = std::chrono::high_resolution_clock::now();
-
-            duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-
-
-            // T2.2
-            std::cout <<"It takes " <<duration.count() << " miliseconds" <<std::endl;
-            recordRuntime("4.4",duration.count());
-            break;
-        case 5:
-            //dataGoBoom();
-            std::cout << "Thank you very much and Bye-Bye.\n";
-            break;
-        default:
-            break;
-    }
-
-    RuntimeData runtimeData = readRuntimeData("../dataset/runtime.csv");
-    displayRuntimeData(runtimeData);
+    displayRuntimeData();
 
     showGoBackMenu(0,"Execute runtime."); // At the end make a call to goBackMenu()
 
@@ -381,6 +251,8 @@ void Application::backtrackingAlgorithmTSP(){
         std::cout << result.second.at(0)->getInfo()->getId() << "\n";
         std::cout << "And the final result is: " << result.first << "\n";
     }
+
+    recordRuntime("4.1",duration.count());
     showGoBackMenu(1,"Execute backtracking algorithm for TSP."); // At the end make a call to goBackMenu()
 }
 
@@ -390,7 +262,12 @@ void Application::triangularApproximationTSP(){
 
     clearScreen();
     std::stringstream tourDescription;
+    auto start = std::chrono::high_resolution_clock::now();
     double totalDistance = tsp.triangularApproximation(tourDescription);
+    auto stop = std::chrono::high_resolution_clock::now();
+
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+
     std::cout << std::endl<<"Triangular Approximation TSP:" << std::endl;
     if(!this->isBigGraph) {
         // Print the tour description
@@ -409,6 +286,8 @@ void Application::triangularApproximationTSP(){
     std::cout << std::endl << "Total distance: " << totalDistance << " meters" << std::endl;
 
     tsp.cleanUpGraph();
+
+    recordRuntime("4.2",duration.count());
 
     showGoBackMenu(2, "Execute triangle approximation heuristic for TSP."); // At the end make a call to goBackMenu()
 }
@@ -454,6 +333,7 @@ void Application::optimizedTSP(){
         std::cout << "\nNow executing cleanup.\n**Note: The time complexity of this function will not be considered for metrics.**\n";
         tsp.cleanUpGraph();
     }
+    recordRuntime("4.3",duration.count());
 
     showGoBackMenu(3, "Execute optimized TSP."); // At the end make a call to goBackMenu()
 }
@@ -479,9 +359,11 @@ void Application::realWorldTSP(){
     std::vector<GeoPoint*> bestres;
     double best = 0.0;
     clearScreen();
+    auto start = std::chrono::high_resolution_clock::now();
     if(tsp.nnRecursion(stoi(opti),-1,res, count,bestres,best));
+    auto stop = std::chrono::high_resolution_clock::now();
 
-
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 
     if(bestres.size() == res.size()){
         std::cout << std::endl <<std::endl << "The graph has a TSP answer with cost:  "<< count;
@@ -501,6 +383,6 @@ void Application::realWorldTSP(){
         }
     }
     tsp.cleanUpGraph();
-
+    recordRuntime("4.4",duration.count());
     showGoBackMenu(4, "Execute TSP in the Real World."); // At the end make a call to goBackMenu()
 }
