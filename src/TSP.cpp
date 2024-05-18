@@ -971,98 +971,27 @@ double TSP::getWeightBetween(Vertex<GeoPoint*>* v1, Vertex<GeoPoint*>* v2){
 
 // T2.4
 /**
- * @brief Computes a tour using the nearest neighbor heuristic with backtracking, ensuring all vertices are visited.
+ * @brief Performs a nearest neighbor recursion for the Travelling Salesman Problem (TSP).
  *
- * This function attempts to find a tour starting from the given vertex using the nearest neighbor
- * heuristic. If no direct unvisited neighbor is found, it backtracks and tries alternative paths.
+ * This function implements the nearest neighbor heuristic to find an approximate solution
+ * to the Travelling Salesman Problem. It recursively explores paths from the current vertex
+ * to its adjacent vertices, selecting the edge with the minimum weight that hasn't been selected yet.
+ * It updates the best path and count of the path length found so far.
+ * The function is boundend by the global variable recursionTimes, that garantees that if a recursion
+ * level has reached 100 thousand levels deep, the recursion must end, even if there's no answer to that
+ * point.
  *
- * @param start The starting vertex ID.
- * @return The total cost of the tour (currently a placeholder value).
+ * The function has average time complexity of O(10^5 * E²), however, in the worst case where E = V²
+ * it has time complexity of O(10^5 * V^4)
+ *
+ * @param here The ID of the current vertex.
+ * @param id The ID of the previous vertex, used to avoid going back to the same vertex immediately.
+ * @param path A reference to the vector storing the current path of GeoPoints.
+ * @param count A reference to the current path length.
+ * @param bestPath A reference to the vector storing the best path of GeoPoints found so far.
+ * @param bestCount A reference to the length of the best path found so far.
+ * @return True if a complete tour is found; otherwise, false.
  */
-/*
-double TSP::nearestNeighbour(int start) {
-   Vertex<GeoPoint*>* startVertex = this->vertexGeoMap[start];
-   int n = this->tspNetwork.getNumVertex();
-
-   for(auto v : this->tspNetwork.getVertexSet()){
-       v->setVisited(false);
-       v->setProcesssing(false);
-       for(auto e : v->getAdj()){
-           e->setSelected(false);
-       }
-   }
-
-   std::vector<Vertex<GeoPoint*>*> tour;
-   tour.push_back(startVertex);
-   startVertex->setVisited(true);
-
-   std::stack<Vertex<GeoPoint*>*> backtrackStack;
-   backtrackStack.push(startVertex);
-
-   while (tour.size() < n) {
-       auto currentVertex = backtrackStack.top();
-       double minDist = std::numeric_limits<double>::infinity();
-       Vertex<GeoPoint*>* nextVertex = nullptr;
-       Edge<GeoPoint*>* auxedge;
-
-       // Find the nearest unvisited neighbor
-       std::cout << "Vertex " << currentVertex->getInfo()->getId() << " to ";
-       for (auto edge : currentVertex->getAdj()) {
-           if (!edge->getDest()->isVisited() && !edge->isSelected()) {
-               std::cout << edge->getDest()->getInfo()->getId() << ",";
-               double dist = edge->getWeight();
-                if (dist < minDist) {
-                   minDist = dist;
-                   nextVertex = edge->getDest();
-                   auxedge = edge;
-               }
-           }
-       }
-       std::cout << std::endl;
-
-       if (nextVertex) {
-           tour.push_back(nextVertex);
-           nextVertex->setVisited(true);
-           backtrackStack.push(nextVertex);
-       } else {
-           // No unvisited neighbors found, backtrack to the previous vertex
-           backtrackStack.pop();
-           tour.pop_back();
-           currentVertex->setVisited(false);
-           auxedge->setSelected(true);
-           if (backtrackStack.empty()) {
-               // No path found, all backtracking options exhausted
-               std::cerr << "Error: No complete tour found. Some vertices may be unreachable." << std::endl;
-               return -1.0; // Return an error value or handle the incomplete tour case
-           }
-       }
-   }
-
-   // Complete the tour by returning to the start vertex
-   tour.push_back(startVertex);
-
-   std::cout << tour.size() << std::endl;
-
-   // Output the tour for debugging purposes
-   for (auto v : tour) {
-       std::cout << v->getInfo()->getId() << "->";
-   }
-   std::cout << "Start" << std::endl;
-
-   // Calculate and return the total distance of the tour
-   double totalCost = 0.0;
-   for (size_t i = 0; i < tour.size() - 1; ++i) {
-       for (auto edge : tour[i]->getAdj()) {
-           if (edge->getDest() == tour[i + 1]) {
-               totalCost += edge->getWeight();
-               break;
-           }
-       }
-   }
-
-   return totalCost;
-}
-*/
 bool TSP::nnRecursion(int here, int id, std::vector<GeoPoint *> &path, double& count, std::vector<GeoPoint*> &bestPath, double &bestCount) {
     Vertex<GeoPoint*>* startVertex = this->vertexGeoMap[here];
     startVertex->setVisited(true);

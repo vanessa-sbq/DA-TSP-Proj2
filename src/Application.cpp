@@ -167,7 +167,7 @@ void displayRuntimeData() {
     }
 
     // Map to store the latest runtime for each (function, graphId) pair
-    std::map<std::pair<std::string, std::string>, std::string> runtimeMap;
+    std::map<std::pair<std::string, int>, std::string> runtimeMap;
 
     // Read each line from the CSV file
     std::string line;
@@ -176,7 +176,7 @@ void displayRuntimeData() {
         std::string function, graphId, runtime;
         if (std::getline(ss, function, ',') && std::getline(ss, graphId, ',') && std::getline(ss, runtime, ',')) {
             // Update the map with the latest runtime for this (function, graphId) pair
-            runtimeMap[{function, graphId}] = runtime;
+            runtimeMap[{function, stoi(graphId)}] = runtime;
         } else {
             std::cerr << "Error: Malformed line in CSV file. Skipping line.\n";
         }

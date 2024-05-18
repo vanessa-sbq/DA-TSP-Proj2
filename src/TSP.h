@@ -39,7 +39,6 @@ public:
     double otherHeuristic(bool useProvidedNode, int vertexID);
 
     // T2.4
-    double nearestNeighbour(int start);
     bool nnRecursion(int here, int id, std::vector<GeoPoint*> &path, double &count,std::vector<GeoPoint*> &bestPath, double &bestCount);
     // TODO
 
