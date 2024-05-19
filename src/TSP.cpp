@@ -354,6 +354,12 @@ Edge<GeoPoint*>* edgeFromCurVertexToNextVertex(Vertex<GeoPoint*>* currentVertex,
     return nullptr;
 }
 
+/**
+ * @brief Helper function.
+ * @details Time Complexity: O(E), where E is the number of adjacent edges of the current vertex
+ * @details Given two vertexes, the one we are now, and the one we want to go to the function returns the distance calculated with the haversine formula
+ * if it fails to find the desired edge and returns the edge that connects the two vertexes in case it finds it.
+ **/
 Edge<GeoPoint*>* edgeFromCurVertexToNextVertexWithHarversine(Vertex<GeoPoint*>* currentVertex, Vertex<GeoPoint*>* nextVertex) {
 
     if (currentVertex == nullptr || nextVertex == nullptr) {
@@ -386,26 +392,6 @@ bool TSP::makeGraphConnected() {
                 isFullyConnected = false;
                 edgeResult = vertexA->addEdge(vertexB, INFINITY);
                 edgesToRemove.push_back(*edgeResult);
-            }
-        }
-    }
-    return isFullyConnected;
-}
-
-/**
- * @brief Makes the graph connected using the haversine distance formula(Should only be used on graphs with real world data)
- * @details Time Complexity: O(V * V * E), where V is the number of vertices in the graph and E is the number of adjacent edges of each vertex
- * @return Returns a bool telling if the graph was already connected or not
- */
-bool TSP::makeGraphConnectedWithHaversine() { // FIXME: Too slow
-    bool isFullyConnected = true;
-    for (Vertex<GeoPoint*>* vertexA : tspNetwork.getVertexSet()) {
-        for (Vertex<GeoPoint*>* vertexB : tspNetwork.getVertexSet()) {
-            double abDist = calculateHaversineDistance(std::make_pair(vertexA->getInfo()->getLatitude(), vertexA->getInfo()->getLongitude()), std::make_pair(vertexB->getInfo()->getLatitude(), vertexB->getInfo()->getLongitude()));
-            Edge<GeoPoint*>* e = tspNetwork.addEdgeChecked(vertexA, vertexB, abDist);
-            if (e != nullptr) {
-                isFullyConnected = false;
-                edgesToRemove.push_back(*e);
             }
         }
     }
@@ -574,7 +560,6 @@ bool TSP::isAdjacent(Vertex<GeoPoint *> *&v1, Vertex<GeoPoint *> *&v2) {
 
 
 // T2.2
-
 /**
  * @brief Computes an approximate solution to the TSP using a triangular approximation.
  *
@@ -695,7 +680,7 @@ double TSP::triangularApproximation(std::stringstream &sd){
 
 
 
-// T2.3 and T2.4
+// T2.3
 /**
  * @brief Optimized version of the Triangular Approximation Heuristic, analyzing only one cluster at a time instead of the whole network
  * @details Time Complexity: O(k * ((V + E) * log(V))), where k is the number of clusters and ((V + E) * log) is the complexity of Prim's algorithm for a cluster
@@ -967,6 +952,7 @@ double TSP::getWeightBetween(Vertex<GeoPoint*>* v1, Vertex<GeoPoint*>* v2){
 }
 
 
+
 // T2.4
 /**
  * @brief Performs a nearest neighbor recursion for the Travelling Salesman Problem (TSP).
@@ -1069,11 +1055,3 @@ bool TSP::nnRecursion(int here, int id, std::vector<GeoPoint *> &path, double& c
     return false;
 
 }
-
-
-
-
-
-
-// TODO
-

@@ -29,7 +29,6 @@ public:
     // T2.1
     std::pair<double, std::vector<Vertex<GeoPoint*>*>> tspBTSetup();
     bool makeGraphConnected();
-    bool makeGraphConnectedWithHaversine();
     void cleanUpGraph();
 
     // T2.2
