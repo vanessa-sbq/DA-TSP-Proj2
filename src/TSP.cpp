@@ -350,7 +350,25 @@ Edge<GeoPoint*>* edgeFromCurVertexToNextVertex(Vertex<GeoPoint*>* currentVertex,
             return edge;
         }
     }
+
     return nullptr;
+}
+
+Edge<GeoPoint*>* edgeFromCurVertexToNextVertexWithHarversine(Vertex<GeoPoint*>* currentVertex, Vertex<GeoPoint*>* nextVertex) {
+
+    if (currentVertex == nullptr || nextVertex == nullptr) {
+        return nullptr;
+    }
+
+    for (auto& edge : currentVertex->getAdj()) {
+        if (edge->getDest() == nextVertex) {
+            return edge;
+        }
+    }
+
+    auto edge = new Edge<GeoPoint*>(currentVertex,nextVertex, calculateHaversineDistance({currentVertex->getInfo()->getLatitude(),currentVertex->getInfo()->getLongitude()},{nextVertex->getInfo()->getLatitude(),nextVertex->getInfo()->getLongitude()}));
+
+    return edge;
 }
 
 /**
@@ -614,7 +632,7 @@ double TSP::triangularApproximation(std::stringstream &sd){
     std::vector<Vertex<GeoPoint*>*> tour;
     std::unordered_set<Vertex<GeoPoint*>*> visited;
     Vertex<GeoPoint*>* auxV;
-    visitOrder[0]->setPath(edgeFromCurVertexToNextVertex(visitOrder.back(), visitOrder[0]));
+    visitOrder[0]->setPath(edgeFromCurVertexToNextVertexWithHarversine(visitOrder.back(), visitOrder[0]));
     for(size_t i = 0; i <= visitOrder.size() - 1; ++i){
         auto v = visitOrder.at(i);
 

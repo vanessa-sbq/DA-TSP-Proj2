@@ -73,6 +73,7 @@ private:
     //void connectFinalTour(std::vector<std::set<int>>& clusters); // FIXME
 
     bool isAdjacent(Vertex<GeoPoint *> *&v1, Vertex<GeoPoint *> *&v2);
+
 };
 
 #endif //PROJ_DA_1_MENU_H
