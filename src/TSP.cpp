@@ -702,17 +702,14 @@ double TSP::triangularApproximation(std::stringstream &sd){
  * @return Total distance
  */
 double TSP::otherHeuristic(bool useProvidedNode, int vertexID){
-
     Vertex<GeoPoint*>* rootVertex = nullptr;
 
     if (useProvidedNode) {
-
         try {
             rootVertex = vertexGeoMap.at(vertexID);
         } catch (std::out_of_range& ofr) {
             return -1;
         }
-
     }
 
     double res = 0; // TSP approximate solution tour length
@@ -748,17 +745,6 @@ double TSP::otherHeuristic(bool useProvidedNode, int vertexID){
 
         // Perform a pre-order traversal of each MST to create the visit order
         int centroidId = centroids[i];
-        Vertex<GeoPoint*>* root = nullptr; // Select a node from the MST
-        for (auto v : tspNetwork.getVertexSet()){
-            if (v->getInfo()->getId() == centroidId) {
-                root = v;
-                break;
-            }
-        }
-        if (root == nullptr){
-            std::cout << "Centroid is null\n";
-            return 0;
-        }
 
         for (auto a : clusterMST){
             if (a->getPath() != nullptr){
@@ -766,16 +752,16 @@ double TSP::otherHeuristic(bool useProvidedNode, int vertexID){
             }
         }
 
-        Vertex<GeoPoint*>* debugRoot = nullptr;
+        Vertex<GeoPoint*>* root = nullptr; // Select a node from the MST
         for (auto a : clusterMST){
             if (a->getPath() == nullptr){
-                debugRoot = a;
+                root = a;
                 break;
             }
         }
         std::vector<Vertex<GeoPoint*>*> preOrder;
         preOrder.clear();
-        preOrderCluster(debugRoot, preOrder);
+        preOrderCluster(root, preOrder);
         clusterPreorders.push_back(preOrder);
     }
 
@@ -792,6 +778,7 @@ double TSP::otherHeuristic(bool useProvidedNode, int vertexID){
         for (auto a: finalTour) {
             std::cout << a->getInfo()->getId() << " ";
         }
+        std::cout << finalTour[0]->getInfo()->getId(); // To close the tour
     }
 
     double totalCost = 0.0;
