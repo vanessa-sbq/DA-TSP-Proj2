@@ -1,0 +1,211 @@
+\doxysection{/\+Users/antonioabilio/\+Desktop/\+DA-\/\+TSP-\/\+Proj2/src/\+Application.h File Reference}
+\hypertarget{_application_8h}{}\label{_application_8h}\index{/Users/antonioabilio/Desktop/DA-\/TSP-\/Proj2/src/Application.h@{/Users/antonioabilio/Desktop/DA-\/TSP-\/Proj2/src/Application.h}}
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$sstream$>$}\newline
+{\ttfamily \#include $<$thread$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$utility$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$cstdlib$>$}\newline
+{\ttfamily \#include $<$chrono$>$}\newline
+{\ttfamily \#include $<$regex$>$}\newline
+{\ttfamily \#include $<$iomanip$>$}\newline
+{\ttfamily \#include $<$map$>$}\newline
+{\ttfamily \#include "{}TSP.\+h"{}}\newline
+{\ttfamily \#include "{}Graph.\+h"{}}\newline
+{\ttfamily \#include "{}Geo\+Point.\+h"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_application}{Application}}
+\begin{DoxyCompactList}\small\item\em Class that manages the menu. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#\mbox{\hyperlink{class_edge}{define}} \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\+\_\+\+PATHS}}~"{}../dataset/"{}
+\item 
+\#\mbox{\hyperlink{class_edge}{define}} \mbox{\hyperlink{_application_8h_af049ab9d2cec1c9e04b6959c81fe45b1}{EXTRA\+\_\+\+FULLY\+\_\+\+CONNECTED\+\_\+\+GRAPHS\+\_\+25\+\_\+\+EDGES}}~"{}Extra\+\_\+\+Fully\+\_\+\+Connected\+\_\+\+Graphs/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges\+\_\+25.\+csv"{}}}
+\item 
+\#\mbox{\hyperlink{class_edge}{define}} \mbox{\hyperlink{_application_8h_a891725f1624df5f88cd7dffb49dc97b0}{EXTRA\+\_\+\+FULLY\+\_\+\+CONNECTED\+\_\+\+GRAPHS\+\_\+50\+\_\+\+EDGES}}~"{}Extra\+\_\+\+Fully\+\_\+\+Connected\+\_\+\+Graphs/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges\+\_\+50.\+csv"{}}}
+\item 
+\#\mbox{\hyperlink{class_edge}{define}} \mbox{\hyperlink{_application_8h_a7734fcb478fe9f40baff9e00b72c1238}{EXTRA\+\_\+\+FULLY\+\_\+\+CONNECTED\+\_\+\+GRAPHS\+\_\+75\+\_\+\+EDGES}}~"{}Extra\+\_\+\+Fully\+\_\+\+Connected\+\_\+\+Graphs/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges\+\_\+75.\+csv"{}}}
+\item 
+\#\mbox{\hyperlink{class_edge}{define}} \mbox{\hyperlink{_application_8h_a2f3fbd6a2352095f39692f14df444375}{EXTRA\+\_\+\+FULLY\+\_\+\+CONNECTED\+\_\+\+GRAPHS\+\_\+100\+\_\+\+EDGES}}~"{}Extra\+\_\+\+Fully\+\_\+\+Connected\+\_\+\+Graphs/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges\+\_\+100.\+csv"{}}}
+\item 
+\#\mbox{\hyperlink{class_edge}{define}} \mbox{\hyperlink{_application_8h_a9e192fc8fa3e551605d8f4944f088ed7}{EXTRA\+\_\+\+FULLY\+\_\+\+CONNECTED\+\_\+\+GRAPHS\+\_\+200\+\_\+\+EDGES}}~"{}Extra\+\_\+\+Fully\+\_\+\+Connected\+\_\+\+Graphs/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges\+\_\+200.\+csv"{}}}
+\item 
+\#\mbox{\hyperlink{class_edge}{define}} \mbox{\hyperlink{_application_8h_a6786b6c22b7119e334c242281269f209}{EXTRA\+\_\+\+FULLY\+\_\+\+CONNECTED\+\_\+\+GRAPHS\+\_\+300\+\_\+\+EDGES}}~"{}Extra\+\_\+\+Fully\+\_\+\+Connected\+\_\+\+Graphs/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges\+\_\+300.\+csv"{}}}
+\item 
+\#\mbox{\hyperlink{class_edge}{define}} \mbox{\hyperlink{_application_8h_a2579a0c58bfe079ce98e48edb3636bd8}{EXTRA\+\_\+\+FULLY\+\_\+\+CONNECTED\+\_\+\+GRAPHS\+\_\+400\+\_\+\+EDGES}}~"{}Extra\+\_\+\+Fully\+\_\+\+Connected\+\_\+\+Graphs/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges\+\_\+400.\+csv"{}}}
+\item 
+\#\mbox{\hyperlink{class_edge}{define}} \mbox{\hyperlink{_application_8h_a01b3044fa2d0b0b721b560ad43a87cff}{EXTRA\+\_\+\+FULLY\+\_\+\+CONNECTED\+\_\+\+GRAPHS\+\_\+500\+\_\+\+EDGES}}~"{}Extra\+\_\+\+Fully\+\_\+\+Connected\+\_\+\+Graphs/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges\+\_\+500.\+csv"{}}}
+\item 
+\#\mbox{\hyperlink{class_edge}{define}} \mbox{\hyperlink{_application_8h_a355a41c2a8d19519d4abb449cfebd186}{EXTRA\+\_\+\+FULLY\+\_\+\+CONNECTED\+\_\+\+GRAPHS\+\_\+600\+\_\+\+EDGES}}~"{}Extra\+\_\+\+Fully\+\_\+\+Connected\+\_\+\+Graphs/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges\+\_\+600.\+csv"{}}}
+\item 
+\#\mbox{\hyperlink{class_edge}{define}} \mbox{\hyperlink{_application_8h_a679e337168c742030d657142f3d61aa5}{EXTRA\+\_\+\+FULLY\+\_\+\+CONNECTED\+\_\+\+GRAPHS\+\_\+700\+\_\+\+EDGES}}~"{}Extra\+\_\+\+Fully\+\_\+\+Connected\+\_\+\+Graphs/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges\+\_\+700.\+csv"{}}}
+\item 
+\#\mbox{\hyperlink{class_edge}{define}} \mbox{\hyperlink{_application_8h_aff2fe81ced371b6d09106522609f6843}{EXTRA\+\_\+\+FULLY\+\_\+\+CONNECTED\+\_\+\+GRAPHS\+\_\+800\+\_\+\+EDGES}}~"{}Extra\+\_\+\+Fully\+\_\+\+Connected\+\_\+\+Graphs/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges\+\_\+800.\+csv"{}}}
+\item 
+\#\mbox{\hyperlink{class_edge}{define}} \mbox{\hyperlink{_application_8h_acdf9d1a043a1a7706a74141cf2458ab4}{EXTRA\+\_\+\+FULLY\+\_\+\+CONNECTED\+\_\+\+GRAPHS\+\_\+900\+\_\+\+EDGES}}~"{}Extra\+\_\+\+Fully\+\_\+\+Connected\+\_\+\+Graphs/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges\+\_\+900.\+csv"{}}}
+\item 
+\#\mbox{\hyperlink{class_edge}{define}} \mbox{\hyperlink{_application_8h_aa759c2d284b1a492dcf748f4c8c50408}{EXTRA\+\_\+\+FULLY\+\_\+\+CONNECTED\+\_\+\+GRAPHS\+\_\+\+NODES}}~"{}Extra\+\_\+\+Fully\+\_\+\+Connected\+\_\+\+Graphs/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{nodes.\+csv"{}}}
+\item 
+\#\mbox{\hyperlink{class_edge}{define}} \mbox{\hyperlink{_application_8h_a7891e40cc5e4ac4906389104858f91e9}{TOY\+\_\+\+GRAPH\+\_\+\+SHIPPING}}~"{}Toy-\/\mbox{\hyperlink{class_edge}{Graphs}}/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{shipping.\+csv"{}}}
+\item 
+\#\mbox{\hyperlink{class_edge}{define}} \mbox{\hyperlink{_application_8h_a643fd8cbd705d81f669ee62ed4e81881}{TOY\+\_\+\+GRAPH\+\_\+\+STADIUMS}}~"{}Toy-\/\mbox{\hyperlink{class_edge}{Graphs}}/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{stadiums.\+csv"{}}}
+\item 
+\#\mbox{\hyperlink{class_edge}{define}} \mbox{\hyperlink{_application_8h_a4448fde23ba724a07ffa9cd0a25edef1}{TOY\+\_\+\+GRAPH\+\_\+\+TOURISM}}~"{}Toy-\/\mbox{\hyperlink{class_edge}{Graphs}}/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{tourism.\+csv"{}}}
+\item 
+\#\mbox{\hyperlink{class_edge}{define}} \mbox{\hyperlink{_application_8h_a30e3cce9bbdea16b78cd06e34ed49dbc}{REAL\+\_\+\+WORLD\+\_\+\+GRAPH\+\_\+1\+\_\+\+EDGES}}~"{}Real-\/\mbox{\hyperlink{class_edge}{world}} \mbox{\hyperlink{class_edge}{Graphs}}/\mbox{\hyperlink{class_edge}{graph1}}/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges.\+csv"{}}}
+\item 
+\#\mbox{\hyperlink{class_edge}{define}} \mbox{\hyperlink{_application_8h_a83f3160bc91492a3b55ebdc1ace4bfcf}{REAL\+\_\+\+WORLD\+\_\+\+GRAPH\+\_\+1\+\_\+\+NODES}}~"{}Real-\/\mbox{\hyperlink{class_edge}{world}} \mbox{\hyperlink{class_edge}{Graphs}}/\mbox{\hyperlink{class_edge}{graph1}}/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{nodes.\+csv"{}}}
+\item 
+\#\mbox{\hyperlink{class_edge}{define}} \mbox{\hyperlink{_application_8h_aecd9cc69fed8b2a9d989992f4d81380a}{REAL\+\_\+\+WORLD\+\_\+\+GRAPH\+\_\+2\+\_\+\+EDGES}}~"{}Real-\/\mbox{\hyperlink{class_edge}{world}} \mbox{\hyperlink{class_edge}{Graphs}}/\mbox{\hyperlink{class_edge}{graph2}}/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges.\+csv"{}}}
+\item 
+\#\mbox{\hyperlink{class_edge}{define}} \mbox{\hyperlink{_application_8h_a17d72df0585dc45d7f6a2e6c6ab9a8be}{REAL\+\_\+\+WORLD\+\_\+\+GRAPH\+\_\+2\+\_\+\+NODES}}~"{}Real-\/\mbox{\hyperlink{class_edge}{world}} \mbox{\hyperlink{class_edge}{Graphs}}/\mbox{\hyperlink{class_edge}{graph2}}/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{nodes.\+csv"{}}}
+\item 
+\#\mbox{\hyperlink{class_edge}{define}} \mbox{\hyperlink{_application_8h_aab66df04ea8314b5d9b27e67c3181296}{REAL\+\_\+\+WORLD\+\_\+\+GRAPH\+\_\+3\+\_\+\+EDGES}}~"{}Real-\/\mbox{\hyperlink{class_edge}{world}} \mbox{\hyperlink{class_edge}{Graphs}}/\mbox{\hyperlink{class_edge}{graph3}}/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges.\+csv"{}}}
+\item 
+\#\mbox{\hyperlink{class_edge}{define}} \mbox{\hyperlink{_application_8h_ae0a13ba2390bf7cb4fdde5872698ef00}{REAL\+\_\+\+WORLD\+\_\+\+GRAPH\+\_\+3\+\_\+\+NODES}}~"{}Real-\/\mbox{\hyperlink{class_edge}{world}} \mbox{\hyperlink{class_edge}{Graphs}}/\mbox{\hyperlink{class_edge}{graph3}}/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{nodes.\+csv"{}}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}\label{_application_8h_a5c89e916668f2473852c0740c4b7cbb2} 
+\index{Application.h@{Application.h}!DATASET\_PATHS@{DATASET\_PATHS}}
+\index{DATASET\_PATHS@{DATASET\_PATHS}!Application.h@{Application.h}}
+\doxysubsubsection{\texorpdfstring{DATASET\_PATHS}{DATASET\_PATHS}}
+{\footnotesize\ttfamily \#\mbox{\hyperlink{class_edge}{define}} DATASET\+\_\+\+PATHS~"{}../dataset/"{}}
+
+\Hypertarget{_application_8h_a2f3fbd6a2352095f39692f14df444375}\label{_application_8h_a2f3fbd6a2352095f39692f14df444375} 
+\index{Application.h@{Application.h}!EXTRA\_FULLY\_CONNECTED\_GRAPHS\_100\_EDGES@{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_100\_EDGES}}
+\index{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_100\_EDGES@{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_100\_EDGES}!Application.h@{Application.h}}
+\doxysubsubsection{\texorpdfstring{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_100\_EDGES}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_100\_EDGES}}
+{\footnotesize\ttfamily \#\mbox{\hyperlink{class_edge}{define}} EXTRA\+\_\+\+FULLY\+\_\+\+CONNECTED\+\_\+\+GRAPHS\+\_\+100\+\_\+\+EDGES~"{}Extra\+\_\+\+Fully\+\_\+\+Connected\+\_\+\+Graphs/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges\+\_\+100.\+csv"{}}}}
+
+\Hypertarget{_application_8h_a9e192fc8fa3e551605d8f4944f088ed7}\label{_application_8h_a9e192fc8fa3e551605d8f4944f088ed7} 
+\index{Application.h@{Application.h}!EXTRA\_FULLY\_CONNECTED\_GRAPHS\_200\_EDGES@{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_200\_EDGES}}
+\index{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_200\_EDGES@{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_200\_EDGES}!Application.h@{Application.h}}
+\doxysubsubsection{\texorpdfstring{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_200\_EDGES}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_200\_EDGES}}
+{\footnotesize\ttfamily \#\mbox{\hyperlink{class_edge}{define}} EXTRA\+\_\+\+FULLY\+\_\+\+CONNECTED\+\_\+\+GRAPHS\+\_\+200\+\_\+\+EDGES~"{}Extra\+\_\+\+Fully\+\_\+\+Connected\+\_\+\+Graphs/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges\+\_\+200.\+csv"{}}}}
+
+\Hypertarget{_application_8h_af049ab9d2cec1c9e04b6959c81fe45b1}\label{_application_8h_af049ab9d2cec1c9e04b6959c81fe45b1} 
+\index{Application.h@{Application.h}!EXTRA\_FULLY\_CONNECTED\_GRAPHS\_25\_EDGES@{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_25\_EDGES}}
+\index{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_25\_EDGES@{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_25\_EDGES}!Application.h@{Application.h}}
+\doxysubsubsection{\texorpdfstring{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_25\_EDGES}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_25\_EDGES}}
+{\footnotesize\ttfamily \#\mbox{\hyperlink{class_edge}{define}} EXTRA\+\_\+\+FULLY\+\_\+\+CONNECTED\+\_\+\+GRAPHS\+\_\+25\+\_\+\+EDGES~"{}Extra\+\_\+\+Fully\+\_\+\+Connected\+\_\+\+Graphs/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges\+\_\+25.\+csv"{}}}}
+
+\Hypertarget{_application_8h_a6786b6c22b7119e334c242281269f209}\label{_application_8h_a6786b6c22b7119e334c242281269f209} 
+\index{Application.h@{Application.h}!EXTRA\_FULLY\_CONNECTED\_GRAPHS\_300\_EDGES@{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_300\_EDGES}}
+\index{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_300\_EDGES@{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_300\_EDGES}!Application.h@{Application.h}}
+\doxysubsubsection{\texorpdfstring{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_300\_EDGES}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_300\_EDGES}}
+{\footnotesize\ttfamily \#\mbox{\hyperlink{class_edge}{define}} EXTRA\+\_\+\+FULLY\+\_\+\+CONNECTED\+\_\+\+GRAPHS\+\_\+300\+\_\+\+EDGES~"{}Extra\+\_\+\+Fully\+\_\+\+Connected\+\_\+\+Graphs/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges\+\_\+300.\+csv"{}}}}
+
+\Hypertarget{_application_8h_a2579a0c58bfe079ce98e48edb3636bd8}\label{_application_8h_a2579a0c58bfe079ce98e48edb3636bd8} 
+\index{Application.h@{Application.h}!EXTRA\_FULLY\_CONNECTED\_GRAPHS\_400\_EDGES@{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_400\_EDGES}}
+\index{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_400\_EDGES@{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_400\_EDGES}!Application.h@{Application.h}}
+\doxysubsubsection{\texorpdfstring{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_400\_EDGES}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_400\_EDGES}}
+{\footnotesize\ttfamily \#\mbox{\hyperlink{class_edge}{define}} EXTRA\+\_\+\+FULLY\+\_\+\+CONNECTED\+\_\+\+GRAPHS\+\_\+400\+\_\+\+EDGES~"{}Extra\+\_\+\+Fully\+\_\+\+Connected\+\_\+\+Graphs/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges\+\_\+400.\+csv"{}}}}
+
+\Hypertarget{_application_8h_a01b3044fa2d0b0b721b560ad43a87cff}\label{_application_8h_a01b3044fa2d0b0b721b560ad43a87cff} 
+\index{Application.h@{Application.h}!EXTRA\_FULLY\_CONNECTED\_GRAPHS\_500\_EDGES@{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_500\_EDGES}}
+\index{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_500\_EDGES@{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_500\_EDGES}!Application.h@{Application.h}}
+\doxysubsubsection{\texorpdfstring{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_500\_EDGES}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_500\_EDGES}}
+{\footnotesize\ttfamily \#\mbox{\hyperlink{class_edge}{define}} EXTRA\+\_\+\+FULLY\+\_\+\+CONNECTED\+\_\+\+GRAPHS\+\_\+500\+\_\+\+EDGES~"{}Extra\+\_\+\+Fully\+\_\+\+Connected\+\_\+\+Graphs/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges\+\_\+500.\+csv"{}}}}
+
+\Hypertarget{_application_8h_a891725f1624df5f88cd7dffb49dc97b0}\label{_application_8h_a891725f1624df5f88cd7dffb49dc97b0} 
+\index{Application.h@{Application.h}!EXTRA\_FULLY\_CONNECTED\_GRAPHS\_50\_EDGES@{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_50\_EDGES}}
+\index{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_50\_EDGES@{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_50\_EDGES}!Application.h@{Application.h}}
+\doxysubsubsection{\texorpdfstring{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_50\_EDGES}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_50\_EDGES}}
+{\footnotesize\ttfamily \#\mbox{\hyperlink{class_edge}{define}} EXTRA\+\_\+\+FULLY\+\_\+\+CONNECTED\+\_\+\+GRAPHS\+\_\+50\+\_\+\+EDGES~"{}Extra\+\_\+\+Fully\+\_\+\+Connected\+\_\+\+Graphs/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges\+\_\+50.\+csv"{}}}}
+
+\Hypertarget{_application_8h_a355a41c2a8d19519d4abb449cfebd186}\label{_application_8h_a355a41c2a8d19519d4abb449cfebd186} 
+\index{Application.h@{Application.h}!EXTRA\_FULLY\_CONNECTED\_GRAPHS\_600\_EDGES@{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_600\_EDGES}}
+\index{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_600\_EDGES@{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_600\_EDGES}!Application.h@{Application.h}}
+\doxysubsubsection{\texorpdfstring{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_600\_EDGES}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_600\_EDGES}}
+{\footnotesize\ttfamily \#\mbox{\hyperlink{class_edge}{define}} EXTRA\+\_\+\+FULLY\+\_\+\+CONNECTED\+\_\+\+GRAPHS\+\_\+600\+\_\+\+EDGES~"{}Extra\+\_\+\+Fully\+\_\+\+Connected\+\_\+\+Graphs/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges\+\_\+600.\+csv"{}}}}
+
+\Hypertarget{_application_8h_a679e337168c742030d657142f3d61aa5}\label{_application_8h_a679e337168c742030d657142f3d61aa5} 
+\index{Application.h@{Application.h}!EXTRA\_FULLY\_CONNECTED\_GRAPHS\_700\_EDGES@{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_700\_EDGES}}
+\index{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_700\_EDGES@{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_700\_EDGES}!Application.h@{Application.h}}
+\doxysubsubsection{\texorpdfstring{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_700\_EDGES}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_700\_EDGES}}
+{\footnotesize\ttfamily \#\mbox{\hyperlink{class_edge}{define}} EXTRA\+\_\+\+FULLY\+\_\+\+CONNECTED\+\_\+\+GRAPHS\+\_\+700\+\_\+\+EDGES~"{}Extra\+\_\+\+Fully\+\_\+\+Connected\+\_\+\+Graphs/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges\+\_\+700.\+csv"{}}}}
+
+\Hypertarget{_application_8h_a7734fcb478fe9f40baff9e00b72c1238}\label{_application_8h_a7734fcb478fe9f40baff9e00b72c1238} 
+\index{Application.h@{Application.h}!EXTRA\_FULLY\_CONNECTED\_GRAPHS\_75\_EDGES@{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_75\_EDGES}}
+\index{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_75\_EDGES@{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_75\_EDGES}!Application.h@{Application.h}}
+\doxysubsubsection{\texorpdfstring{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_75\_EDGES}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_75\_EDGES}}
+{\footnotesize\ttfamily \#\mbox{\hyperlink{class_edge}{define}} EXTRA\+\_\+\+FULLY\+\_\+\+CONNECTED\+\_\+\+GRAPHS\+\_\+75\+\_\+\+EDGES~"{}Extra\+\_\+\+Fully\+\_\+\+Connected\+\_\+\+Graphs/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges\+\_\+75.\+csv"{}}}}
+
+\Hypertarget{_application_8h_aff2fe81ced371b6d09106522609f6843}\label{_application_8h_aff2fe81ced371b6d09106522609f6843} 
+\index{Application.h@{Application.h}!EXTRA\_FULLY\_CONNECTED\_GRAPHS\_800\_EDGES@{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_800\_EDGES}}
+\index{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_800\_EDGES@{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_800\_EDGES}!Application.h@{Application.h}}
+\doxysubsubsection{\texorpdfstring{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_800\_EDGES}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_800\_EDGES}}
+{\footnotesize\ttfamily \#\mbox{\hyperlink{class_edge}{define}} EXTRA\+\_\+\+FULLY\+\_\+\+CONNECTED\+\_\+\+GRAPHS\+\_\+800\+\_\+\+EDGES~"{}Extra\+\_\+\+Fully\+\_\+\+Connected\+\_\+\+Graphs/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges\+\_\+800.\+csv"{}}}}
+
+\Hypertarget{_application_8h_acdf9d1a043a1a7706a74141cf2458ab4}\label{_application_8h_acdf9d1a043a1a7706a74141cf2458ab4} 
+\index{Application.h@{Application.h}!EXTRA\_FULLY\_CONNECTED\_GRAPHS\_900\_EDGES@{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_900\_EDGES}}
+\index{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_900\_EDGES@{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_900\_EDGES}!Application.h@{Application.h}}
+\doxysubsubsection{\texorpdfstring{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_900\_EDGES}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_900\_EDGES}}
+{\footnotesize\ttfamily \#\mbox{\hyperlink{class_edge}{define}} EXTRA\+\_\+\+FULLY\+\_\+\+CONNECTED\+\_\+\+GRAPHS\+\_\+900\+\_\+\+EDGES~"{}Extra\+\_\+\+Fully\+\_\+\+Connected\+\_\+\+Graphs/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges\+\_\+900.\+csv"{}}}}
+
+\Hypertarget{_application_8h_aa759c2d284b1a492dcf748f4c8c50408}\label{_application_8h_aa759c2d284b1a492dcf748f4c8c50408} 
+\index{Application.h@{Application.h}!EXTRA\_FULLY\_CONNECTED\_GRAPHS\_NODES@{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_NODES}}
+\index{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_NODES@{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_NODES}!Application.h@{Application.h}}
+\doxysubsubsection{\texorpdfstring{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_NODES}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_NODES}}
+{\footnotesize\ttfamily \#\mbox{\hyperlink{class_edge}{define}} EXTRA\+\_\+\+FULLY\+\_\+\+CONNECTED\+\_\+\+GRAPHS\+\_\+\+NODES~"{}Extra\+\_\+\+Fully\+\_\+\+Connected\+\_\+\+Graphs/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{nodes.\+csv"{}}}}
+
+\Hypertarget{_application_8h_a30e3cce9bbdea16b78cd06e34ed49dbc}\label{_application_8h_a30e3cce9bbdea16b78cd06e34ed49dbc} 
+\index{Application.h@{Application.h}!REAL\_WORLD\_GRAPH\_1\_EDGES@{REAL\_WORLD\_GRAPH\_1\_EDGES}}
+\index{REAL\_WORLD\_GRAPH\_1\_EDGES@{REAL\_WORLD\_GRAPH\_1\_EDGES}!Application.h@{Application.h}}
+\doxysubsubsection{\texorpdfstring{REAL\_WORLD\_GRAPH\_1\_EDGES}{REAL\_WORLD\_GRAPH\_1\_EDGES}}
+{\footnotesize\ttfamily \#\mbox{\hyperlink{class_edge}{define}} REAL\+\_\+\+WORLD\+\_\+\+GRAPH\+\_\+1\+\_\+\+EDGES~"{}Real-\/\mbox{\hyperlink{class_edge}{world}} \mbox{\hyperlink{class_edge}{Graphs}}/\mbox{\hyperlink{class_edge}{graph1}}/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges.\+csv"{}}}}
+
+\Hypertarget{_application_8h_a83f3160bc91492a3b55ebdc1ace4bfcf}\label{_application_8h_a83f3160bc91492a3b55ebdc1ace4bfcf} 
+\index{Application.h@{Application.h}!REAL\_WORLD\_GRAPH\_1\_NODES@{REAL\_WORLD\_GRAPH\_1\_NODES}}
+\index{REAL\_WORLD\_GRAPH\_1\_NODES@{REAL\_WORLD\_GRAPH\_1\_NODES}!Application.h@{Application.h}}
+\doxysubsubsection{\texorpdfstring{REAL\_WORLD\_GRAPH\_1\_NODES}{REAL\_WORLD\_GRAPH\_1\_NODES}}
+{\footnotesize\ttfamily \#\mbox{\hyperlink{class_edge}{define}} REAL\+\_\+\+WORLD\+\_\+\+GRAPH\+\_\+1\+\_\+\+NODES~"{}Real-\/\mbox{\hyperlink{class_edge}{world}} \mbox{\hyperlink{class_edge}{Graphs}}/\mbox{\hyperlink{class_edge}{graph1}}/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{nodes.\+csv"{}}}}
+
+\Hypertarget{_application_8h_aecd9cc69fed8b2a9d989992f4d81380a}\label{_application_8h_aecd9cc69fed8b2a9d989992f4d81380a} 
+\index{Application.h@{Application.h}!REAL\_WORLD\_GRAPH\_2\_EDGES@{REAL\_WORLD\_GRAPH\_2\_EDGES}}
+\index{REAL\_WORLD\_GRAPH\_2\_EDGES@{REAL\_WORLD\_GRAPH\_2\_EDGES}!Application.h@{Application.h}}
+\doxysubsubsection{\texorpdfstring{REAL\_WORLD\_GRAPH\_2\_EDGES}{REAL\_WORLD\_GRAPH\_2\_EDGES}}
+{\footnotesize\ttfamily \#\mbox{\hyperlink{class_edge}{define}} REAL\+\_\+\+WORLD\+\_\+\+GRAPH\+\_\+2\+\_\+\+EDGES~"{}Real-\/\mbox{\hyperlink{class_edge}{world}} \mbox{\hyperlink{class_edge}{Graphs}}/\mbox{\hyperlink{class_edge}{graph2}}/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges.\+csv"{}}}}
+
+\Hypertarget{_application_8h_a17d72df0585dc45d7f6a2e6c6ab9a8be}\label{_application_8h_a17d72df0585dc45d7f6a2e6c6ab9a8be} 
+\index{Application.h@{Application.h}!REAL\_WORLD\_GRAPH\_2\_NODES@{REAL\_WORLD\_GRAPH\_2\_NODES}}
+\index{REAL\_WORLD\_GRAPH\_2\_NODES@{REAL\_WORLD\_GRAPH\_2\_NODES}!Application.h@{Application.h}}
+\doxysubsubsection{\texorpdfstring{REAL\_WORLD\_GRAPH\_2\_NODES}{REAL\_WORLD\_GRAPH\_2\_NODES}}
+{\footnotesize\ttfamily \#\mbox{\hyperlink{class_edge}{define}} REAL\+\_\+\+WORLD\+\_\+\+GRAPH\+\_\+2\+\_\+\+NODES~"{}Real-\/\mbox{\hyperlink{class_edge}{world}} \mbox{\hyperlink{class_edge}{Graphs}}/\mbox{\hyperlink{class_edge}{graph2}}/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{nodes.\+csv"{}}}}
+
+\Hypertarget{_application_8h_aab66df04ea8314b5d9b27e67c3181296}\label{_application_8h_aab66df04ea8314b5d9b27e67c3181296} 
+\index{Application.h@{Application.h}!REAL\_WORLD\_GRAPH\_3\_EDGES@{REAL\_WORLD\_GRAPH\_3\_EDGES}}
+\index{REAL\_WORLD\_GRAPH\_3\_EDGES@{REAL\_WORLD\_GRAPH\_3\_EDGES}!Application.h@{Application.h}}
+\doxysubsubsection{\texorpdfstring{REAL\_WORLD\_GRAPH\_3\_EDGES}{REAL\_WORLD\_GRAPH\_3\_EDGES}}
+{\footnotesize\ttfamily \#\mbox{\hyperlink{class_edge}{define}} REAL\+\_\+\+WORLD\+\_\+\+GRAPH\+\_\+3\+\_\+\+EDGES~"{}Real-\/\mbox{\hyperlink{class_edge}{world}} \mbox{\hyperlink{class_edge}{Graphs}}/\mbox{\hyperlink{class_edge}{graph3}}/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{edges.\+csv"{}}}}
+
+\Hypertarget{_application_8h_ae0a13ba2390bf7cb4fdde5872698ef00}\label{_application_8h_ae0a13ba2390bf7cb4fdde5872698ef00} 
+\index{Application.h@{Application.h}!REAL\_WORLD\_GRAPH\_3\_NODES@{REAL\_WORLD\_GRAPH\_3\_NODES}}
+\index{REAL\_WORLD\_GRAPH\_3\_NODES@{REAL\_WORLD\_GRAPH\_3\_NODES}!Application.h@{Application.h}}
+\doxysubsubsection{\texorpdfstring{REAL\_WORLD\_GRAPH\_3\_NODES}{REAL\_WORLD\_GRAPH\_3\_NODES}}
+{\footnotesize\ttfamily \#\mbox{\hyperlink{class_edge}{define}} REAL\+\_\+\+WORLD\+\_\+\+GRAPH\+\_\+3\+\_\+\+NODES~"{}Real-\/\mbox{\hyperlink{class_edge}{world}} \mbox{\hyperlink{class_edge}{Graphs}}/\mbox{\hyperlink{class_edge}{graph3}}/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{nodes.\+csv"{}}}}
+
+\Hypertarget{_application_8h_a7891e40cc5e4ac4906389104858f91e9}\label{_application_8h_a7891e40cc5e4ac4906389104858f91e9} 
+\index{Application.h@{Application.h}!TOY\_GRAPH\_SHIPPING@{TOY\_GRAPH\_SHIPPING}}
+\index{TOY\_GRAPH\_SHIPPING@{TOY\_GRAPH\_SHIPPING}!Application.h@{Application.h}}
+\doxysubsubsection{\texorpdfstring{TOY\_GRAPH\_SHIPPING}{TOY\_GRAPH\_SHIPPING}}
+{\footnotesize\ttfamily \#\mbox{\hyperlink{class_edge}{define}} TOY\+\_\+\+GRAPH\+\_\+\+SHIPPING~"{}Toy-\/\mbox{\hyperlink{class_edge}{Graphs}}/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{shipping.\+csv"{}}}}
+
+\Hypertarget{_application_8h_a643fd8cbd705d81f669ee62ed4e81881}\label{_application_8h_a643fd8cbd705d81f669ee62ed4e81881} 
+\index{Application.h@{Application.h}!TOY\_GRAPH\_STADIUMS@{TOY\_GRAPH\_STADIUMS}}
+\index{TOY\_GRAPH\_STADIUMS@{TOY\_GRAPH\_STADIUMS}!Application.h@{Application.h}}
+\doxysubsubsection{\texorpdfstring{TOY\_GRAPH\_STADIUMS}{TOY\_GRAPH\_STADIUMS}}
+{\footnotesize\ttfamily \#\mbox{\hyperlink{class_edge}{define}} TOY\+\_\+\+GRAPH\+\_\+\+STADIUMS~"{}Toy-\/\mbox{\hyperlink{class_edge}{Graphs}}/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{stadiums.\+csv"{}}}}
+
+\Hypertarget{_application_8h_a4448fde23ba724a07ffa9cd0a25edef1}\label{_application_8h_a4448fde23ba724a07ffa9cd0a25edef1} 
+\index{Application.h@{Application.h}!TOY\_GRAPH\_TOURISM@{TOY\_GRAPH\_TOURISM}}
+\index{TOY\_GRAPH\_TOURISM@{TOY\_GRAPH\_TOURISM}!Application.h@{Application.h}}
+\doxysubsubsection{\texorpdfstring{TOY\_GRAPH\_TOURISM}{TOY\_GRAPH\_TOURISM}}
+{\footnotesize\ttfamily \#\mbox{\hyperlink{class_edge}{define}} TOY\+\_\+\+GRAPH\+\_\+\+TOURISM~"{}Toy-\/\mbox{\hyperlink{class_edge}{Graphs}}/\mbox{\hyperlink{class_edge_ab976213419283ed754f42f57b195a288}{tourism.\+csv"{}}}}
+

@@ -1,0 +1,81 @@
+\doxysection{TSP.\+h}
+\hypertarget{_t_s_p_8h_source}{}\label{_t_s_p_8h_source}\index{/Users/antonioabilio/Desktop/DA-\/TSP-\/Proj2/src/TSP.h@{/Users/antonioabilio/Desktop/DA-\/TSP-\/Proj2/src/TSP.h}}
+\mbox{\hyperlink{_t_s_p_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ PROJ\_DA\_1\_MENU\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ PROJ\_DA\_1\_MENU\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <fstream>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <sstream>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <unordered\_set>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <set>}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_graph_8h}{Graph.h}}"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_geo_point_8h}{GeoPoint.h}}"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_mutable_priority_queue_8h}{MutablePriorityQueue.h}}"{}}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <stack>}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_t_s_p}{TSP}}\ \{}
+\DoxyCodeLine{00018\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_t_s_p_a78100470cf2a45cb6aaf8097b0170ac5}{setIsToyGraph}}(\textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_t_s_p_a8ecc55dec57211910e18378e0e0fced8}{isToyGraph}})\{}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ this-\/>isToyGraph\ =\ \mbox{\hyperlink{class_t_s_p_a8ecc55dec57211910e18378e0e0fced8}{isToyGraph}};}
+\DoxyCodeLine{00021\ \ \ \ \ \}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{comment}{//\ Data\ parsing}}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_t_s_p_aa3097a75109f777a1b90ac74c26c9a3b}{parseData}}(std::string\ \mbox{\hyperlink{class_edge}{nodesFilePath}},\ std::string\ \mbox{\hyperlink{class_edge}{edgesFilePath}},\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_edge}{bothFilesProvided}});}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{comment}{//\ Free\ allocated\ space}}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_t_s_p_a0e92f357e672ee5ffeca63dde9afc764}{dataGoBoom}}();}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{comment}{//\ T2.1}}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_t_s_p_a9cde97d885ad25cd1c46e88d688cdb7d}{makeGraphConnected}}();}
+\DoxyCodeLine{00031\ \ \ \ \ std::pair<double,\ std::vector<Vertex<GeoPoint*>*>>\ \mbox{\hyperlink{class_t_s_p_adf7ed4984edf8f3743372ae35e254f67}{tspBTSetup}}(\textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_edge}{ignoreBound}});}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_t_s_p_a550727387aeb56f0ce7eb55294c50809}{cleanUpGraph}}();}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{comment}{//\ T2.2}}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{class_t_s_p_a62e17df6802c6bcc506b8e5e5bc1d6b3}{triangularApproximation}}(std::stringstream\ \&\mbox{\hyperlink{class_edge}{sd}});}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{comment}{//\ T2.3}}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{class_t_s_p_a05391f65069f15e4d5b34a7c53ed88a5}{otherHeuristic}}();}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{comment}{//\ T2.4}}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_t_s_p_a247c98ae1a218b17fad37b6abefd0a7d}{nnRecursion}}(\textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_edge}{here}},\ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},\ std::vector<GeoPoint*>\ \&path,\ \textcolor{keywordtype}{double}\ \&\mbox{\hyperlink{class_edge}{count}},std::vector<GeoPoint*>\ \&\mbox{\hyperlink{class_edge}{bestPath}},\ \textcolor{keywordtype}{double}\ \&\mbox{\hyperlink{class_edge}{bestCount}});}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_t_s_p_a52c17a3da6aa38689108dbe87e2978db}{recursionTimes}}\ =\ 100000;}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_t_s_p_a8ecc55dec57211910e18378e0e0fced8}{isToyGraph}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_t_s_p_a91790ffb4f28481d7f39769d00982ba6}{isExtraGraph}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_t_s_p_aa63bcbff82518756124e67ed93391781}{numNodesFromExtra}}\ =\ 25;\ \textcolor{comment}{//\ Number\ of\ nodes\ used\ if\ extra\ graphs\ selected}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \mbox{\hyperlink{class_edge}{Graph<GeoPoint*>}}\ \mbox{\hyperlink{class_t_s_p_a0ef716b23e8e4b4c2ae1d2d304df6077}{tspNetwork}};\ \textcolor{comment}{//\ Graph}}
+\DoxyCodeLine{00050\ \ \ \ \ std::unordered\_map<int,\ GeoPoint*>\ \mbox{\hyperlink{class_t_s_p_af073f6ce2f47770768054c6ec765007b}{geoMap}};\ \textcolor{comment}{//\ Contains\ all\ geo\ points}}
+\DoxyCodeLine{00051\ \ \ \ \ std::unordered\_map<int,\ Vertex<GeoPoint*>*>\ \mbox{\hyperlink{class_t_s_p_a3182f00392de6f7c96fe224b3bec1cb8}{vertexGeoMap}};\ \textcolor{comment}{//\ Contains\ all\ vertexes\ that\ represent\ geo\ points}}
+\DoxyCodeLine{00052\ \ \ \ \ std::unordered\_map<int,\ std::set<GeoPoint*>>\ \mbox{\hyperlink{class_t_s_p_a3b24ee9b169e4ea7003ee2b0e2d6696f}{edgesGeoPoint}};\ \textcolor{comment}{//contais\ the\ edges\ of\ vertex\ id\ =\ int}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_t_s_p_a3104bd5bde7dc1b30be4a3d82a151668}{parsingGeoPointsAndEdges}}(std::ifstream\ \&\mbox{\hyperlink{class_edge}{in}});}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_t_s_p_a5e5efe546aa75efa08aba4597389c3e7}{parsingGeoPoints}}(std::ifstream\ \&\mbox{\hyperlink{class_edge}{in}});}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_t_s_p_a93e31125379fdae552c5437ebb4e9963}{parsingEdges}}(std::ifstream\ \&\mbox{\hyperlink{class_edge}{in}});}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{comment}{//TSP\ 1}}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_t_s_p_a9e4e183d4cbec18d421f0bb4b4e8b957}{tspRec}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_edge}{numVertexes}},\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_edge}{currentVertex}},\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{class_edge}{curBestMin}},\ std::vector<\mbox{\hyperlink{class_edge}{Vertex<GeoPoint*>}}*>\&\ \mbox{\hyperlink{class_edge}{curPath}},\ \textcolor{keywordtype}{double}\&\ \mbox{\hyperlink{class_edge}{min}},\ std::vector<\mbox{\hyperlink{class_edge}{Vertex<GeoPoint*>}}*>\&\ \mbox{\hyperlink{class_edge}{bestPath}},\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_edge}{ignoreBound}});}
+\DoxyCodeLine{00060\ \ \ \ \ std::vector<Edge<GeoPoint*>>\ \mbox{\hyperlink{class_t_s_p_a0f03e2284b99c53e47ab871c833c8996}{edgesToRemove}};}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{comment}{//TSP\ 2}}
+\DoxyCodeLine{00063\ \ \ \ \ std::vector<Vertex<GeoPoint*>*>\ \mbox{\hyperlink{class_t_s_p_acfcef5d355c524a382a1699badeccf18}{prim}}(\mbox{\hyperlink{class_edge}{Graph<GeoPoint*>}}\ *\ \mbox{\hyperlink{class_edge}{g}});}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{comment}{//TSP\ 3}}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_t_s_p_a110dcdab69f98951000452226dc3bb8f}{createClusters}}(std::vector<std::set<int>>\&\ \mbox{\hyperlink{class_edge}{clusters}},\ std::vector<int>\&\ \mbox{\hyperlink{class_edge}{centroids}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_edge}{k}},\ \mbox{\hyperlink{class_edge}{Vertex<GeoPoint*>}}*\ \mbox{\hyperlink{class_edge}{rootVertex}});}
+\DoxyCodeLine{00067\ \ \ \ \ std::vector<Vertex<GeoPoint*>\ *>\ \mbox{\hyperlink{class_t_s_p_acd17b07eadc1fbb3ad6f9bcd937ad71e}{clusterPrim}}(\mbox{\hyperlink{class_edge}{Graph<GeoPoint*>}}\ *\ \mbox{\hyperlink{class_edge}{g}});}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_t_s_p_a2726b78c9b3f50f6cf0387c12ae21ef2}{preOrderCluster}}(\mbox{\hyperlink{class_edge}{Vertex<GeoPoint*>}}*\ \mbox{\hyperlink{class_edge}{root}},\ std::vector<\mbox{\hyperlink{class_edge}{Vertex<GeoPoint*>}}*>\&\ \mbox{\hyperlink{class_edge}{preorder}});}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{class_t_s_p_a05f4581b120dc52e80425d65f05e58de}{getWeightBetween}}(\mbox{\hyperlink{class_edge}{Vertex<GeoPoint*>}}*\ \mbox{\hyperlink{class_edge}{v1}},\ \mbox{\hyperlink{class_edge}{Vertex<GeoPoint*>}}*\ \mbox{\hyperlink{class_edge}{v2}});}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_t_s_p_a0b72244e7a0750f7adb291e9152df75d}{isAdjacent}}(\mbox{\hyperlink{class_edge}{Vertex<GeoPoint\ *>}}\ *\&\mbox{\hyperlink{class_edge}{v1}},\ \mbox{\hyperlink{class_edge}{Vertex<GeoPoint\ *>}}\ *\&\mbox{\hyperlink{class_edge}{v2}});}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \};}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//PROJ\_DA\_1\_MENU\_H}}
+
+\end{DoxyCode}

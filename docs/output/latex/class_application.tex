@@ -1,0 +1,229 @@
+\doxysection{Application Class Reference}
+\hypertarget{class_application}{}\label{class_application}\index{Application@{Application}}
+
+
+Class that manages the menu.  
+
+
+
+
+{\ttfamily \#include $<$Application.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_application_a8a0c6f6989c32876137e4a8b6022ee81}{Application}} (std\+::string \mbox{\hyperlink{class_application_ab7b151fe7350dc2a7d17ea76972ecc56}{env}})
+\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_application_ab0547067a5688fa2a17c067dacdf3f6a}{clear\+Screen}} ()
+\begin{DoxyCompactList}\small\item\em clears (or simulates clearing) the screen, depending on the OS used \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_application_a27c58712d868d161ec1f407fcab72e24}{run}} (\mbox{\hyperlink{class_edge}{int}} \mbox{\hyperlink{class_edge}{processed\+Key}})
+\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_application_ae97b4ab64aa6e2f229d75b1764100d8a}{record\+Runtime}} (\mbox{\hyperlink{class_edge}{const}} std\+::string \&\mbox{\hyperlink{class_edge}{function\+Name}}, \mbox{\hyperlink{class_edge}{int}} \mbox{\hyperlink{class_edge}{duration}})
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_edge}{static}} \mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_application_ad12666083e189dcf95c8b87bf59d95c2}{delay}} (\mbox{\hyperlink{class_edge}{long}} \mbox{\hyperlink{class_edge}{sleep\+Time}})
+\begin{DoxyCompactList}\small\item\em Small delay for design purposes. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{static}} \mbox{\hyperlink{class_edge}{int}} \mbox{\hyperlink{class_application_a6889e8e33946b8931ccff6f419630331}{process\+Key}} (\mbox{\hyperlink{class_edge}{const}} std\+::string \&\mbox{\hyperlink{class_edge}{option}})
+\begin{DoxyCompactList}\small\item\em Handles the exception thrown by std\+::stoi. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \mbox{\hyperlink{class_application_a8dc9c233e74d5b6cb129eeda5b62fd64}{show\+Main\+Menu}} ()
+\begin{DoxyCompactList}\small\item\em Shows the main menu. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_application_a07eba7cd2a9fcfd846da6ab3e5d2067e}{show\+Go\+Back\+Menu}} (\mbox{\hyperlink{class_edge}{int}} \mbox{\hyperlink{class_edge}{option}}, \mbox{\hyperlink{class_edge}{const}} std\+::string \&\mbox{\hyperlink{class_edge}{function\+Name}})
+\begin{DoxyCompactList}\small\item\em Shows the "{}\+Go back Menu"{} after each function. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_application_abc3227c74cabe2a4df45947088c44c40}{show\+Runtime}} ()
+\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_application_a8e6fe8dfeaa28567ff55ebe61231271d}{backtracking\+Algorithm\+TSP}} ()
+\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_application_ab861f2fedd27be750bd037e47d138887}{triangular\+Approximation\+TSP}} ()
+\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_application_acf11b7d4a5d5be844300ea2be5b3e122}{optimized\+TSP}} ()
+\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_application_a49a85c468d21c6a8cdd38de1396517eb}{real\+World\+TSP}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_t_s_p}{TSP}} \mbox{\hyperlink{class_application_a48c7899f5e0c8c6517cd733b5a6cb61b}{tsp}}
+\item 
+\mbox{\hyperlink{class_edge}{bool}} \mbox{\hyperlink{class_application_a9bbf31f07702ea5ceaff3f3fd2b34a2f}{is\+Big\+Graph}} = \mbox{\hyperlink{class_edge}{false}}
+\item 
+\mbox{\hyperlink{class_edge}{int}} \mbox{\hyperlink{class_application_a91bc0ee8f220422c6ef0fc6634bff926}{graph\+Choosen}}
+\item 
+std\+::string \mbox{\hyperlink{class_application_ab7b151fe7350dc2a7d17ea76972ecc56}{env}}
+\item 
+std\+::string \mbox{\hyperlink{class_application_a8f0ac629d5284ccb186c890c6cb9fdce}{edge\+Path}} = "{}"{}
+\item 
+std\+::string \mbox{\hyperlink{class_application_ac961668e5519a07c23eb4a419bbbd449}{node\+Path}} = "{}"{}
+\item 
+\mbox{\hyperlink{class_edge}{bool}} \mbox{\hyperlink{class_application_a87583baeccf56d277582fad849cf1bc0}{is\+Toy\+Graph}} = \mbox{\hyperlink{class_edge}{false}}
+\item 
+\mbox{\hyperlink{class_edge}{bool}} \mbox{\hyperlink{class_application_a2237d2e658939c3266f50d08949a4e36}{edge\+File\+Separated\+From\+Node\+File}} = \mbox{\hyperlink{class_edge}{false}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class that manages the menu. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_application_a8a0c6f6989c32876137e4a8b6022ee81}\label{class_application_a8a0c6f6989c32876137e4a8b6022ee81} 
+\index{Application@{Application}!Application@{Application}}
+\index{Application@{Application}!Application@{Application}}
+\doxysubsubsection{\texorpdfstring{Application()}{Application()}}
+{\footnotesize\ttfamily Application\+::\+Application (\begin{DoxyParamCaption}\item[{std\+::string}]{env }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_application_a8e6fe8dfeaa28567ff55ebe61231271d}\label{class_application_a8e6fe8dfeaa28567ff55ebe61231271d} 
+\index{Application@{Application}!backtrackingAlgorithmTSP@{backtrackingAlgorithmTSP}}
+\index{backtrackingAlgorithmTSP@{backtrackingAlgorithmTSP}!Application@{Application}}
+\doxysubsubsection{\texorpdfstring{backtrackingAlgorithmTSP()}{backtrackingAlgorithmTSP()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{void}} Application\+::backtracking\+Algorithm\+TSP (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_application_ab0547067a5688fa2a17c067dacdf3f6a}\label{class_application_ab0547067a5688fa2a17c067dacdf3f6a} 
+\index{Application@{Application}!clearScreen@{clearScreen}}
+\index{clearScreen@{clearScreen}!Application@{Application}}
+\doxysubsubsection{\texorpdfstring{clearScreen()}{clearScreen()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{void}} Application\+::clear\+Screen (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+clears (or simulates clearing) the screen, depending on the OS used 
+
+\Hypertarget{class_application_ad12666083e189dcf95c8b87bf59d95c2}\label{class_application_ad12666083e189dcf95c8b87bf59d95c2} 
+\index{Application@{Application}!delay@{delay}}
+\index{delay@{delay}!Application@{Application}}
+\doxysubsubsection{\texorpdfstring{delay()}{delay()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{void}} Application\+::delay (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_edge}{long}}}]{sleep\+Time }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Small delay for design purposes. 
+
+\Hypertarget{class_application_acf11b7d4a5d5be844300ea2be5b3e122}\label{class_application_acf11b7d4a5d5be844300ea2be5b3e122} 
+\index{Application@{Application}!optimizedTSP@{optimizedTSP}}
+\index{optimizedTSP@{optimizedTSP}!Application@{Application}}
+\doxysubsubsection{\texorpdfstring{optimizedTSP()}{optimizedTSP()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{void}} Application\+::optimized\+TSP (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_application_a6889e8e33946b8931ccff6f419630331}\label{class_application_a6889e8e33946b8931ccff6f419630331} 
+\index{Application@{Application}!processKey@{processKey}}
+\index{processKey@{processKey}!Application@{Application}}
+\doxysubsubsection{\texorpdfstring{processKey()}{processKey()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{int}} Application\+::process\+Key (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_edge}{const}} std\+::string \&}]{option }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Handles the exception thrown by std\+::stoi. 
+
+\Hypertarget{class_application_a49a85c468d21c6a8cdd38de1396517eb}\label{class_application_a49a85c468d21c6a8cdd38de1396517eb} 
+\index{Application@{Application}!realWorldTSP@{realWorldTSP}}
+\index{realWorldTSP@{realWorldTSP}!Application@{Application}}
+\doxysubsubsection{\texorpdfstring{realWorldTSP()}{realWorldTSP()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{void}} Application\+::real\+World\+TSP (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_application_ae97b4ab64aa6e2f229d75b1764100d8a}\label{class_application_ae97b4ab64aa6e2f229d75b1764100d8a} 
+\index{Application@{Application}!recordRuntime@{recordRuntime}}
+\index{recordRuntime@{recordRuntime}!Application@{Application}}
+\doxysubsubsection{\texorpdfstring{recordRuntime()}{recordRuntime()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{void}} Application\+::record\+Runtime (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_edge}{const}} std\+::string \&}]{function\+Name,  }\item[{\mbox{\hyperlink{class_edge}{int}}}]{duration }\end{DoxyParamCaption})}
+
+\Hypertarget{class_application_a27c58712d868d161ec1f407fcab72e24}\label{class_application_a27c58712d868d161ec1f407fcab72e24} 
+\index{Application@{Application}!run@{run}}
+\index{run@{run}!Application@{Application}}
+\doxysubsubsection{\texorpdfstring{run()}{run()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{void}} Application\+::run (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_edge}{int}}}]{processed\+Key }\end{DoxyParamCaption})}
+
+\Hypertarget{class_application_a07eba7cd2a9fcfd846da6ab3e5d2067e}\label{class_application_a07eba7cd2a9fcfd846da6ab3e5d2067e} 
+\index{Application@{Application}!showGoBackMenu@{showGoBackMenu}}
+\index{showGoBackMenu@{showGoBackMenu}!Application@{Application}}
+\doxysubsubsection{\texorpdfstring{showGoBackMenu()}{showGoBackMenu()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{void}} Application\+::show\+Go\+Back\+Menu (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_edge}{int}}}]{option,  }\item[{\mbox{\hyperlink{class_edge}{const}} std\+::string \&}]{function\+Name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Shows the "{}\+Go back Menu"{} after each function. 
+
+\Hypertarget{class_application_a8dc9c233e74d5b6cb129eeda5b62fd64}\label{class_application_a8dc9c233e74d5b6cb129eeda5b62fd64} 
+\index{Application@{Application}!showMainMenu@{showMainMenu}}
+\index{showMainMenu@{showMainMenu}!Application@{Application}}
+\doxysubsubsection{\texorpdfstring{showMainMenu()}{showMainMenu()}}
+{\footnotesize\ttfamily std\+::string Application\+::show\+Main\+Menu (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Shows the main menu. 
+
+\Hypertarget{class_application_abc3227c74cabe2a4df45947088c44c40}\label{class_application_abc3227c74cabe2a4df45947088c44c40} 
+\index{Application@{Application}!showRuntime@{showRuntime}}
+\index{showRuntime@{showRuntime}!Application@{Application}}
+\doxysubsubsection{\texorpdfstring{showRuntime()}{showRuntime()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{void}} Application\+::show\+Runtime (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_application_ab861f2fedd27be750bd037e47d138887}\label{class_application_ab861f2fedd27be750bd037e47d138887} 
+\index{Application@{Application}!triangularApproximationTSP@{triangularApproximationTSP}}
+\index{triangularApproximationTSP@{triangularApproximationTSP}!Application@{Application}}
+\doxysubsubsection{\texorpdfstring{triangularApproximationTSP()}{triangularApproximationTSP()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{void}} Application\+::triangular\+Approximation\+TSP (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_application_a2237d2e658939c3266f50d08949a4e36}\label{class_application_a2237d2e658939c3266f50d08949a4e36} 
+\index{Application@{Application}!edgeFileSeparatedFromNodeFile@{edgeFileSeparatedFromNodeFile}}
+\index{edgeFileSeparatedFromNodeFile@{edgeFileSeparatedFromNodeFile}!Application@{Application}}
+\doxysubsubsection{\texorpdfstring{edgeFileSeparatedFromNodeFile}{edgeFileSeparatedFromNodeFile}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{bool}} Application\+::edge\+File\+Separated\+From\+Node\+File = \mbox{\hyperlink{class_edge}{false}}\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_application_a8f0ac629d5284ccb186c890c6cb9fdce}\label{class_application_a8f0ac629d5284ccb186c890c6cb9fdce} 
+\index{Application@{Application}!edgePath@{edgePath}}
+\index{edgePath@{edgePath}!Application@{Application}}
+\doxysubsubsection{\texorpdfstring{edgePath}{edgePath}}
+{\footnotesize\ttfamily std\+::string Application\+::edge\+Path = "{}"{}\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_application_ab7b151fe7350dc2a7d17ea76972ecc56}\label{class_application_ab7b151fe7350dc2a7d17ea76972ecc56} 
+\index{Application@{Application}!env@{env}}
+\index{env@{env}!Application@{Application}}
+\doxysubsubsection{\texorpdfstring{env}{env}}
+{\footnotesize\ttfamily std\+::string Application\+::env\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_application_a91bc0ee8f220422c6ef0fc6634bff926}\label{class_application_a91bc0ee8f220422c6ef0fc6634bff926} 
+\index{Application@{Application}!graphChoosen@{graphChoosen}}
+\index{graphChoosen@{graphChoosen}!Application@{Application}}
+\doxysubsubsection{\texorpdfstring{graphChoosen}{graphChoosen}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{int}} Application\+::graph\+Choosen\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_application_a9bbf31f07702ea5ceaff3f3fd2b34a2f}\label{class_application_a9bbf31f07702ea5ceaff3f3fd2b34a2f} 
+\index{Application@{Application}!isBigGraph@{isBigGraph}}
+\index{isBigGraph@{isBigGraph}!Application@{Application}}
+\doxysubsubsection{\texorpdfstring{isBigGraph}{isBigGraph}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{bool}} Application\+::is\+Big\+Graph = \mbox{\hyperlink{class_edge}{false}}\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_application_a87583baeccf56d277582fad849cf1bc0}\label{class_application_a87583baeccf56d277582fad849cf1bc0} 
+\index{Application@{Application}!isToyGraph@{isToyGraph}}
+\index{isToyGraph@{isToyGraph}!Application@{Application}}
+\doxysubsubsection{\texorpdfstring{isToyGraph}{isToyGraph}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{bool}} Application\+::is\+Toy\+Graph = \mbox{\hyperlink{class_edge}{false}}\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_application_ac961668e5519a07c23eb4a419bbbd449}\label{class_application_ac961668e5519a07c23eb4a419bbbd449} 
+\index{Application@{Application}!nodePath@{nodePath}}
+\index{nodePath@{nodePath}!Application@{Application}}
+\doxysubsubsection{\texorpdfstring{nodePath}{nodePath}}
+{\footnotesize\ttfamily std\+::string Application\+::node\+Path = "{}"{}\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_application_a48c7899f5e0c8c6517cd733b5a6cb61b}\label{class_application_a48c7899f5e0c8c6517cd733b5a6cb61b} 
+\index{Application@{Application}!tsp@{tsp}}
+\index{tsp@{tsp}!Application@{Application}}
+\doxysubsubsection{\texorpdfstring{tsp}{tsp}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_t_s_p}{TSP}} Application\+::tsp\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/antonioabilio/\+Desktop/\+DA-\/\+TSP-\/\+Proj2/src/\mbox{\hyperlink{_application_8h}{Application.\+h}}\item 
+/\+Users/antonioabilio/\+Desktop/\+DA-\/\+TSP-\/\+Proj2/src/\mbox{\hyperlink{_application_8cpp}{Application.\+cpp}}\end{DoxyCompactItemize}

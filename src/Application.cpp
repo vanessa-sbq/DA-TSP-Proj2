@@ -30,10 +30,9 @@ void Application::run(int processedKey) {
             break;
         case 5:
             throw std::invalid_argument(std::to_string(-2));
-            //something that crashes program
             break;
         case 6:
-            //dataGoBoom();
+            tsp.dataGoBoom();
             std::cout << "Thank you very much and Bye-Bye.\n";
             break;
         default:
@@ -208,14 +207,9 @@ void Application::recordRuntime(const std::string& functionName, int duration) {
 }
 
 void Application::showRuntime() {
-
     displayRuntimeData();
-
     showGoBackMenu(0,"Execute runtime."); // At the end make a call to goBackMenu()
-
-
 }
-
 
 
 // T2.1
@@ -231,7 +225,7 @@ void Application::backtrackingAlgorithmTSP(){
     clearScreen();
 
     auto start = std::chrono::high_resolution_clock::now();
-    std::pair<double, std::vector<Vertex<GeoPoint*>*>> result = tsp.tspBTSetup();
+    std::pair<double, std::vector<Vertex<GeoPoint*>*>> result = tsp.tspBTSetup(false);
     auto stop = std::chrono::high_resolution_clock::now();
 
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
@@ -241,7 +235,35 @@ void Application::backtrackingAlgorithmTSP(){
     std::cout << "\nBacktracking took " << duration.count() << " ms.\n";
 
     if (result.second.empty()) {
-        std::cout << "No path was found\n";
+        std::string opti;
+        std::cout << "No path was found\n\nAs a last resort you may want to rerun the function without bounding."
+                  << "\nIt can find some paths that are discarded by the bounding.\nThis is effective but slow.\n\n";
+
+        std::cout << "Would you like to rerun the function without the bounding (Y/n)\n";
+        std::cout << "Input: ";
+        std::cin >> opti;
+
+        clearScreen();
+
+        if (std::regex_match(opti, std::regex("y",std::regex_constants::icase))) {
+
+            std::cout << "Executing now\n";
+            std::cout << (tsp.makeGraphConnected() ? "\nGraph was already fully connected.\n" : "\nGraph was not fully connected.\n");
+            clearScreen();
+
+            start = std::chrono::high_resolution_clock::now();
+            std::pair<double, std::vector<Vertex<GeoPoint*>*>> result = tsp.tspBTSetup(true);
+            stop = std::chrono::high_resolution_clock::now();
+
+            duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+
+            std::cout << "\nNow executing cleanup.\n**Note: The time complexity of this function will not be considered for metrics.**\n";
+            tsp.cleanUpGraph();
+            std::cout << "\nBacktracking took " << duration.count() << " ms.\n";
+
+        }
+
+
     } else {
         std::cout << "The optimal path is: ";
 
@@ -258,7 +280,6 @@ void Application::backtrackingAlgorithmTSP(){
 
 // T2.2
 void Application::triangularApproximationTSP(){
-
 
     clearScreen();
     std::stringstream tourDescription;
@@ -309,28 +330,22 @@ void Application::optimizedTSP(){
     else {
         connectingNeeded = true;
         std::cout << "This function needs the graph to be fully connected.\n";
-        std::cout << "Connecting the graph...";
         if (isToyGraph){
+            std::cout << "Connecting the graph...";
             std::string output = tsp.makeGraphConnected() ? "\nGraph was already fully connected.\n" : "\nGraph was not fully connected.\n";
             std::cout << output;
-        }
-        else{
-            //std::string output = tsp.makeGraphConnectedWithHaversine() ? "\nGraph was already fully connected.\n" : "\nGraph was not fully connected.\n";
-            //std::cout << output;
         }
     }
 
     clearScreen();
 
     auto start = std::chrono::high_resolution_clock::now();
-    tsp.otherHeuristic(false, -1);
+    tsp.otherHeuristic();
     auto stop = std::chrono::high_resolution_clock::now();
 
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
     std::cout << "\n=> Optimized TSP algorithm took " << duration.count() << " ms.\n";
     if (connectingNeeded){
-        std::cout << "** Note: The time complexity of connecting the graph is not considered for metrics **\n";
-        std::cout << "\nNow executing cleanup.\n**Note: The time complexity of this function will not be considered for metrics.**\n";
         tsp.cleanUpGraph();
     }
     recordRuntime("4.3",duration.count());
@@ -342,7 +357,6 @@ void Application::optimizedTSP(){
 void Application::realWorldTSP(){
     clearScreen();
 
-
     std::string opti;
     std::cout << "\nType the vertex id that you want to start the tour: ";
     std::cin >> opti;
@@ -350,9 +364,7 @@ void Application::realWorldTSP(){
 
     clearScreen();
 
-
     std::cout << "Loading......";
-
 
     std::vector<GeoPoint*> res;
     double count = 0.0;
@@ -360,7 +372,7 @@ void Application::realWorldTSP(){
     double best = 0.0;
     clearScreen();
     auto start = std::chrono::high_resolution_clock::now();
-    if(tsp.nnRecursion(stoi(opti),-1,res, count,bestres,best));
+    tsp.nnRecursion(stoi(opti),-1,res, count,bestres,best);
     auto stop = std::chrono::high_resolution_clock::now();
 
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);

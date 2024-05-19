@@ -1,0 +1,115 @@
+\doxysection{Mutable\+Priority\+Queue\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{class_mutable_priority_queue}{}\label{class_mutable_priority_queue}\index{MutablePriorityQueue$<$ T $>$@{MutablePriorityQueue$<$ T $>$}}
+
+
+{\ttfamily \#include $<$Mutable\+Priority\+Queue.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_mutable_priority_queue_aba8ebedcbe659f2680bac229cfaca526}{Mutable\+Priority\+Queue}} ()
+\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_mutable_priority_queue_a058fc182052af82e10cc3719e448b62d}{insert}} (\mbox{\hyperlink{class_edge}{T}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{class_edge}{x}})
+\item 
+\mbox{\hyperlink{class_edge}{T}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{class_mutable_priority_queue_a3880874d7364279ac0d6d31302b28853}{extract\+Min}} ()
+\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_mutable_priority_queue_a0878839cc1d2dba2b8ab2e589ecc6405}{decrease\+Key}} (\mbox{\hyperlink{class_edge}{T}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{class_edge}{x}})
+\item 
+\mbox{\hyperlink{class_edge}{bool}} \mbox{\hyperlink{class_mutable_priority_queue_a2edbb1f4a6fa3ff735700dfcebebe8d4}{empty}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_mutable_priority_queue_ae2518c7a1be2bd1e7c633d82dede5450}{heapify\+Up}} (\mbox{\hyperlink{class_edge}{unsigned}} \mbox{\hyperlink{class_edge}{i}})
+\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_mutable_priority_queue_a699bfb6d976cabb01edead4c24284a08}{heapify\+Down}} (\mbox{\hyperlink{class_edge}{unsigned}} \mbox{\hyperlink{class_edge}{i}})
+\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_mutable_priority_queue_afbe461c0a2ea2f16006ed7e1bf9c105d}{set}} (\mbox{\hyperlink{class_edge}{unsigned}} \mbox{\hyperlink{class_edge}{i}}, \mbox{\hyperlink{class_edge}{T}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{class_edge}{x}})
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ \mbox{\hyperlink{class_edge}{T}} \texorpdfstring{$\ast$}{*} $>$ \mbox{\hyperlink{class_mutable_priority_queue_a28cece6545bdc0df529e7878ad2c3ad4}{H}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$\mbox{\hyperlink{class_edge}{class}} \mbox{\hyperlink{class_edge}{T}}$>$\newline
+class Mutable\+Priority\+Queue$<$ T $>$}
+class T must have\+: (i) accessible field int queue\+Index; (ii) operator\texorpdfstring{$<$}{<} defined. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_mutable_priority_queue_aba8ebedcbe659f2680bac229cfaca526}\label{class_mutable_priority_queue_aba8ebedcbe659f2680bac229cfaca526} 
+\index{MutablePriorityQueue$<$ T $>$@{MutablePriorityQueue$<$ T $>$}!MutablePriorityQueue@{MutablePriorityQueue}}
+\index{MutablePriorityQueue@{MutablePriorityQueue}!MutablePriorityQueue$<$ T $>$@{MutablePriorityQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{MutablePriorityQueue()}{MutablePriorityQueue()}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{class_edge}{class}} \mbox{\hyperlink{class_edge}{T}} $>$ \\
+\mbox{\hyperlink{class_mutable_priority_queue}{Mutable\+Priority\+Queue}}$<$ \mbox{\hyperlink{class_edge}{T}} $>$\mbox{\hyperlink{class_mutable_priority_queue}{\+::\+Mutable\+Priority\+Queue}} (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_mutable_priority_queue_a0878839cc1d2dba2b8ab2e589ecc6405}\label{class_mutable_priority_queue_a0878839cc1d2dba2b8ab2e589ecc6405} 
+\index{MutablePriorityQueue$<$ T $>$@{MutablePriorityQueue$<$ T $>$}!decreaseKey@{decreaseKey}}
+\index{decreaseKey@{decreaseKey}!MutablePriorityQueue$<$ T $>$@{MutablePriorityQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{decreaseKey()}{decreaseKey()}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{class_edge}{class}} \mbox{\hyperlink{class_edge}{T}} $>$ \\
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_mutable_priority_queue}{Mutable\+Priority\+Queue}}$<$ \mbox{\hyperlink{class_edge}{T}} $>$\+::decrease\+Key (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_edge}{T}} \texorpdfstring{$\ast$}{*}}]{x }\end{DoxyParamCaption})}
+
+\Hypertarget{class_mutable_priority_queue_a2edbb1f4a6fa3ff735700dfcebebe8d4}\label{class_mutable_priority_queue_a2edbb1f4a6fa3ff735700dfcebebe8d4} 
+\index{MutablePriorityQueue$<$ T $>$@{MutablePriorityQueue$<$ T $>$}!empty@{empty}}
+\index{empty@{empty}!MutablePriorityQueue$<$ T $>$@{MutablePriorityQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{empty()}{empty()}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{class_edge}{class}} \mbox{\hyperlink{class_edge}{T}} $>$ \\
+\mbox{\hyperlink{class_edge}{bool}} \mbox{\hyperlink{class_mutable_priority_queue}{Mutable\+Priority\+Queue}}$<$ \mbox{\hyperlink{class_edge}{T}} $>$\+::empty (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\Hypertarget{class_mutable_priority_queue_a3880874d7364279ac0d6d31302b28853}\label{class_mutable_priority_queue_a3880874d7364279ac0d6d31302b28853} 
+\index{MutablePriorityQueue$<$ T $>$@{MutablePriorityQueue$<$ T $>$}!extractMin@{extractMin}}
+\index{extractMin@{extractMin}!MutablePriorityQueue$<$ T $>$@{MutablePriorityQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{extractMin()}{extractMin()}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{class_edge}{class}} \mbox{\hyperlink{class_edge}{T}} $>$ \\
+\mbox{\hyperlink{class_edge}{T}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{class_mutable_priority_queue}{Mutable\+Priority\+Queue}}$<$ \mbox{\hyperlink{class_edge}{T}} $>$\+::extract\+Min (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\Hypertarget{class_mutable_priority_queue_a699bfb6d976cabb01edead4c24284a08}\label{class_mutable_priority_queue_a699bfb6d976cabb01edead4c24284a08} 
+\index{MutablePriorityQueue$<$ T $>$@{MutablePriorityQueue$<$ T $>$}!heapifyDown@{heapifyDown}}
+\index{heapifyDown@{heapifyDown}!MutablePriorityQueue$<$ T $>$@{MutablePriorityQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{heapifyDown()}{heapifyDown()}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{class_edge}{class}} \mbox{\hyperlink{class_edge}{T}} $>$ \\
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_mutable_priority_queue}{Mutable\+Priority\+Queue}}$<$ \mbox{\hyperlink{class_edge}{T}} $>$\+::heapify\+Down (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_edge}{unsigned}}}]{i }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_mutable_priority_queue_ae2518c7a1be2bd1e7c633d82dede5450}\label{class_mutable_priority_queue_ae2518c7a1be2bd1e7c633d82dede5450} 
+\index{MutablePriorityQueue$<$ T $>$@{MutablePriorityQueue$<$ T $>$}!heapifyUp@{heapifyUp}}
+\index{heapifyUp@{heapifyUp}!MutablePriorityQueue$<$ T $>$@{MutablePriorityQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{heapifyUp()}{heapifyUp()}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{class_edge}{class}} \mbox{\hyperlink{class_edge}{T}} $>$ \\
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_mutable_priority_queue}{Mutable\+Priority\+Queue}}$<$ \mbox{\hyperlink{class_edge}{T}} $>$\+::heapify\+Up (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_edge}{unsigned}}}]{i }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_mutable_priority_queue_a058fc182052af82e10cc3719e448b62d}\label{class_mutable_priority_queue_a058fc182052af82e10cc3719e448b62d} 
+\index{MutablePriorityQueue$<$ T $>$@{MutablePriorityQueue$<$ T $>$}!insert@{insert}}
+\index{insert@{insert}!MutablePriorityQueue$<$ T $>$@{MutablePriorityQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{insert()}{insert()}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{class_edge}{class}} \mbox{\hyperlink{class_edge}{T}} $>$ \\
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_mutable_priority_queue}{Mutable\+Priority\+Queue}}$<$ \mbox{\hyperlink{class_edge}{T}} $>$\+::insert (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_edge}{T}} \texorpdfstring{$\ast$}{*}}]{x }\end{DoxyParamCaption})}
+
+\Hypertarget{class_mutable_priority_queue_afbe461c0a2ea2f16006ed7e1bf9c105d}\label{class_mutable_priority_queue_afbe461c0a2ea2f16006ed7e1bf9c105d} 
+\index{MutablePriorityQueue$<$ T $>$@{MutablePriorityQueue$<$ T $>$}!set@{set}}
+\index{set@{set}!MutablePriorityQueue$<$ T $>$@{MutablePriorityQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{set()}{set()}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{class_edge}{class}} \mbox{\hyperlink{class_edge}{T}} $>$ \\
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_mutable_priority_queue}{Mutable\+Priority\+Queue}}$<$ \mbox{\hyperlink{class_edge}{T}} $>$\+::set (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_edge}{unsigned}}}]{i,  }\item[{\mbox{\hyperlink{class_edge}{T}} \texorpdfstring{$\ast$}{*}}]{x }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_mutable_priority_queue_a28cece6545bdc0df529e7878ad2c3ad4}\label{class_mutable_priority_queue_a28cece6545bdc0df529e7878ad2c3ad4} 
+\index{MutablePriorityQueue$<$ T $>$@{MutablePriorityQueue$<$ T $>$}!H@{H}}
+\index{H@{H}!MutablePriorityQueue$<$ T $>$@{MutablePriorityQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{H}{H}}
+{\footnotesize\ttfamily template$<$\mbox{\hyperlink{class_edge}{class}} \mbox{\hyperlink{class_edge}{T}} $>$ \\
+std\+::vector$<$\mbox{\hyperlink{class_edge}{T}} \texorpdfstring{$\ast$}{*}$>$ \mbox{\hyperlink{class_mutable_priority_queue}{Mutable\+Priority\+Queue}}$<$ \mbox{\hyperlink{class_edge}{T}} $>$\+::H\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/antonioabilio/\+Desktop/\+DA-\/\+TSP-\/\+Proj2/src/\mbox{\hyperlink{_mutable_priority_queue_8h}{Mutable\+Priority\+Queue.\+h}}\end{DoxyCompactItemize}

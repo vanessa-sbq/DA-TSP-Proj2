@@ -1,0 +1,292 @@
+\doxysection{Application.\+h}
+\hypertarget{_application_8h_source}{}\label{_application_8h_source}\index{/Users/antonioabilio/Desktop/DA-\/TSP-\/Proj2/src/Application.h@{/Users/antonioabilio/Desktop/DA-\/TSP-\/Proj2/src/Application.h}}
+\mbox{\hyperlink{_application_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ APLICATION\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ APLICATION\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <fstream>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <sstream>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <utility>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <cstdlib>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <regex>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <iomanip>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_t_s_p_8h}{TSP.h}}"{}}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_graph_8h}{Graph.h}}"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_geo_point_8h}{GeoPoint.h}}"{}}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ DATASET\_PATHS\ "{}../dataset/"{}}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ EXTRA\_FULLY\_CONNECTED\_GRAPHS\_25\_EDGES\ "{}Extra\_Fully\_Connected\_Graphs/edges\_25.csv"{}}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ EXTRA\_FULLY\_CONNECTED\_GRAPHS\_50\_EDGES\ "{}Extra\_Fully\_Connected\_Graphs/edges\_50.csv"{}}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ EXTRA\_FULLY\_CONNECTED\_GRAPHS\_75\_EDGES\ "{}Extra\_Fully\_Connected\_Graphs/edges\_75.csv"{}}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ EXTRA\_FULLY\_CONNECTED\_GRAPHS\_100\_EDGES\ "{}Extra\_Fully\_Connected\_Graphs/edges\_100.csv"{}}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ EXTRA\_FULLY\_CONNECTED\_GRAPHS\_200\_EDGES\ "{}Extra\_Fully\_Connected\_Graphs/edges\_200.csv"{}}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ EXTRA\_FULLY\_CONNECTED\_GRAPHS\_300\_EDGES\ "{}Extra\_Fully\_Connected\_Graphs/edges\_300.csv"{}}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ EXTRA\_FULLY\_CONNECTED\_GRAPHS\_400\_EDGES\ "{}Extra\_Fully\_Connected\_Graphs/edges\_400.csv"{}}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ EXTRA\_FULLY\_CONNECTED\_GRAPHS\_500\_EDGES\ "{}Extra\_Fully\_Connected\_Graphs/edges\_500.csv"{}}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ EXTRA\_FULLY\_CONNECTED\_GRAPHS\_600\_EDGES\ "{}Extra\_Fully\_Connected\_Graphs/edges\_600.csv"{}}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ EXTRA\_FULLY\_CONNECTED\_GRAPHS\_700\_EDGES\ "{}Extra\_Fully\_Connected\_Graphs/edges\_700.csv"{}}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ EXTRA\_FULLY\_CONNECTED\_GRAPHS\_800\_EDGES\ "{}Extra\_Fully\_Connected\_Graphs/edges\_800.csv"{}}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ EXTRA\_FULLY\_CONNECTED\_GRAPHS\_900\_EDGES\ "{}Extra\_Fully\_Connected\_Graphs/edges\_900.csv"{}}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ EXTRA\_FULLY\_CONNECTED\_GRAPHS\_NODES\ "{}Extra\_Fully\_Connected\_Graphs/nodes.csv"{}}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ TOY\_GRAPH\_SHIPPING\ "{}Toy-\/Graphs/shipping.csv"{}}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ TOY\_GRAPH\_STADIUMS\ "{}Toy-\/Graphs/stadiums.csv"{}}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ TOY\_GRAPH\_TOURISM\ "{}Toy-\/Graphs/tourism.csv"{}}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ REAL\_WORLD\_GRAPH\_1\_EDGES\ "{}Real-\/world\ Graphs/graph1/edges.csv"{}}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ REAL\_WORLD\_GRAPH\_1\_NODES\ "{}Real-\/world\ Graphs/graph1/nodes.csv"{}}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ REAL\_WORLD\_GRAPH\_2\_EDGES\ "{}Real-\/world\ Graphs/graph2/edges.csv"{}}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#define\ REAL\_WORLD\_GRAPH\_2\_NODES\ "{}Real-\/world\ Graphs/graph2/nodes.csv"{}}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#define\ REAL\_WORLD\_GRAPH\_3\_EDGES\ "{}Real-\/world\ Graphs/graph3/edges.csv"{}}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ REAL\_WORLD\_GRAPH\_3\_NODES\ "{}Real-\/world\ Graphs/graph3/nodes.csv"{}}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00051\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_application}{Application}}\ \{}
+\DoxyCodeLine{00052\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00053\ \ \ \ \ \mbox{\hyperlink{class_application_a8a0c6f6989c32876137e4a8b6022ee81}{Application}}(std::string\ \mbox{\hyperlink{class_application_ab7b151fe7350dc2a7d17ea76972ecc56}{env}})\ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ this-\/>env\ =\ std::move(\mbox{\hyperlink{class_application_ab7b151fe7350dc2a7d17ea76972ecc56}{env}});}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ restartConstructor:}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_application_ab0547067a5688fa2a17c067dacdf3f6a}{clearScreen}}();}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ std::string\ choiceString;}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ choice;}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Select\ a\ graph:\(\backslash\)n"{}};}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}1.\ Extra\ Fully\ Connected\ Graphs\(\backslash\)n"{}};}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}2.\ Toy\ Graphs\(\backslash\)n"{}};}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}3.\ Real\ World\ Graphs\(\backslash\)n"{}};}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Enter\ your\ choice:\ "{}};}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ std::cin\ >>\ choiceString;}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}\ \{}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \ choice\ =\ std::stoi(choiceString);}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{catch}\ (std::invalid\_argument\&\ argument)\ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n*\ Error\ while\ parsing\ option,\ please\ input\ a\ valid\ numeric\ option.\ *\(\backslash\)n"{}};}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_application_ad12666083e189dcf95c8b87bf59d95c2}{delay}}(2000);}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ restartConstructor;}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ std::string\ stringGraphChoice;}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ graphChoice;}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}(choice)\ \{}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 1:}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_application_ab0547067a5688fa2a17c067dacdf3f6a}{clearScreen}}();}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_ac961668e5519a07c23eb4a419bbbd449}{nodePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_aa759c2d284b1a492dcf748f4c8c50408}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_NODES}};}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a2237d2e658939c3266f50d08949a4e36}{edgeFileSeparatedFromNodeFile}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Extra\ Fully\ Connected\ Graphs:\(\backslash\)n"{}};}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}1.\ 25\ Nodes\(\backslash\)n"{}};}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}2.\ 50\ Nodes\(\backslash\)n"{}};}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}3.\ 75\ Nodes\(\backslash\)n"{}};}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}4.\ 100\ Nodes\(\backslash\)n"{}};}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}5.\ 200\ Nodes\(\backslash\)n"{}};}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}6.\ 300\ Nodes\(\backslash\)n"{}};}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}7.\ 400\ Nodes\(\backslash\)n"{}};}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}8.\ 500\ Nodes\(\backslash\)n"{}};}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}9.\ 600\ Nodes\(\backslash\)n"{}};}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}10.\ 700\ Nodes\(\backslash\)n"{}};}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}11.\ 800\ Nodes\(\backslash\)n"{}};}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}12.\ 900\ Nodes\(\backslash\)n\(\backslash\)nInput:\ "{}};}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cin\ >>\ stringGraphChoice;}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}\ \{}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ graphChoice\ =\ std::stoi(stringGraphChoice);}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{catch}\ (std::invalid\_argument\&\ argument)\ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n*\ Error\ while\ parsing\ option,\ please\ input\ a\ valid\ numeric\ option.\ *\(\backslash\)n"{}};}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_application_ad12666083e189dcf95c8b87bf59d95c2}{delay}}(2000);}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ restartConstructor;}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (graphChoice)\ \{}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 1:}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a8f0ac629d5284ccb186c890c6cb9fdce}{edgePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_af049ab9d2cec1c9e04b6959c81fe45b1}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_25\_EDGES}};}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a91bc0ee8f220422c6ef0fc6634bff926}{graphChoosen}}\ =\ 1;}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 2:}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a8f0ac629d5284ccb186c890c6cb9fdce}{edgePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_a891725f1624df5f88cd7dffb49dc97b0}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_50\_EDGES}};}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a91bc0ee8f220422c6ef0fc6634bff926}{graphChoosen}}\ =\ 2;}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 3:}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a8f0ac629d5284ccb186c890c6cb9fdce}{edgePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_a7734fcb478fe9f40baff9e00b72c1238}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_75\_EDGES}};}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a91bc0ee8f220422c6ef0fc6634bff926}{graphChoosen}}\ =\ 3;}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 4:}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a8f0ac629d5284ccb186c890c6cb9fdce}{edgePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_a2f3fbd6a2352095f39692f14df444375}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_100\_EDGES}};}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a91bc0ee8f220422c6ef0fc6634bff926}{graphChoosen}}\ =\ 4;}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 5:}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a8f0ac629d5284ccb186c890c6cb9fdce}{edgePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_a9e192fc8fa3e551605d8f4944f088ed7}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_200\_EDGES}};}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a91bc0ee8f220422c6ef0fc6634bff926}{graphChoosen}}\ =\ 5;}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 6:}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a8f0ac629d5284ccb186c890c6cb9fdce}{edgePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_a6786b6c22b7119e334c242281269f209}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_300\_EDGES}};}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a91bc0ee8f220422c6ef0fc6634bff926}{graphChoosen}}\ =\ 6;}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 7:}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a8f0ac629d5284ccb186c890c6cb9fdce}{edgePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_a2579a0c58bfe079ce98e48edb3636bd8}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_400\_EDGES}};}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a91bc0ee8f220422c6ef0fc6634bff926}{graphChoosen}}\ =\ 7;}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 8:}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a8f0ac629d5284ccb186c890c6cb9fdce}{edgePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_a01b3044fa2d0b0b721b560ad43a87cff}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_500\_EDGES}};}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a91bc0ee8f220422c6ef0fc6634bff926}{graphChoosen}}\ =\ 8;}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 9:}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a8f0ac629d5284ccb186c890c6cb9fdce}{edgePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_a355a41c2a8d19519d4abb449cfebd186}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_600\_EDGES}};}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a91bc0ee8f220422c6ef0fc6634bff926}{graphChoosen}}\ =\ 9;}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 10:}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a8f0ac629d5284ccb186c890c6cb9fdce}{edgePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_a679e337168c742030d657142f3d61aa5}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_700\_EDGES}};}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a91bc0ee8f220422c6ef0fc6634bff926}{graphChoosen}}\ =\ 10;}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 11:}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a8f0ac629d5284ccb186c890c6cb9fdce}{edgePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_aff2fe81ced371b6d09106522609f6843}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_800\_EDGES}};}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a91bc0ee8f220422c6ef0fc6634bff926}{graphChoosen}}\ =\ 11;}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 12:}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a8f0ac629d5284ccb186c890c6cb9fdce}{edgePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_acdf9d1a043a1a7706a74141cf2458ab4}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_900\_EDGES}};}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a91bc0ee8f220422c6ef0fc6634bff926}{graphChoosen}}\ =\ 12;}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_application_ad12666083e189dcf95c8b87bf59d95c2}{delay}}(3000);}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Unrecognized\ option,\ defaulting\ to\ graph\ with\ 25\ edges.\(\backslash\)n"{}};}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a8f0ac629d5284ccb186c890c6cb9fdce}{edgePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_af049ab9d2cec1c9e04b6959c81fe45b1}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_25\_EDGES}};}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a91bc0ee8f220422c6ef0fc6634bff926}{graphChoosen}}\ =\ 1;}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 2:}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_application_a87583baeccf56d277582fad849cf1bc0}{isToyGraph}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_application_ab0547067a5688fa2a17c067dacdf3f6a}{clearScreen}}();}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Toy\ Graphs:\(\backslash\)n"{}};}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}1.\ Shipping\(\backslash\)n"{}};}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}2.\ Stadiums\(\backslash\)n"{}};}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}3.\ Tourism\(\backslash\)n\(\backslash\)nInput:\ "{}};}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cin\ >>\ stringGraphChoice;}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}\ \{}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ graphChoice\ =\ std::stoi(stringGraphChoice);}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{catch}\ (std::invalid\_argument\&\ argument)\ \{}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n*\ Error\ while\ parsing\ option,\ please\ input\ a\ valid\ numeric\ option.\ *\(\backslash\)n"{}};}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_application_ad12666083e189dcf95c8b87bf59d95c2}{delay}}(2000);}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ restartConstructor;}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (graphChoice)\ \{}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 1:}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_ac961668e5519a07c23eb4a419bbbd449}{nodePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_a7891e40cc5e4ac4906389104858f91e9}{TOY\_GRAPH\_SHIPPING}};}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a91bc0ee8f220422c6ef0fc6634bff926}{graphChoosen}}\ =\ 13;}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 2:}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_ac961668e5519a07c23eb4a419bbbd449}{nodePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_a643fd8cbd705d81f669ee62ed4e81881}{TOY\_GRAPH\_STADIUMS}};}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a91bc0ee8f220422c6ef0fc6634bff926}{graphChoosen}}\ =\ 14;}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 3:}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_ac961668e5519a07c23eb4a419bbbd449}{nodePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_a4448fde23ba724a07ffa9cd0a25edef1}{TOY\_GRAPH\_TOURISM}};}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a91bc0ee8f220422c6ef0fc6634bff926}{graphChoosen}}\ =\ 15;}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_application_ad12666083e189dcf95c8b87bf59d95c2}{delay}}(3000);}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Unrecognized\ option,\ defaulting\ to\ shipping\ graph.\(\backslash\)n"{}};}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_ac961668e5519a07c23eb4a419bbbd449}{nodePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_a7891e40cc5e4ac4906389104858f91e9}{TOY\_GRAPH\_SHIPPING}};}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a91bc0ee8f220422c6ef0fc6634bff926}{graphChoosen}}\ =\ 13;}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 3:}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_application_ab0547067a5688fa2a17c067dacdf3f6a}{clearScreen}}();}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a2237d2e658939c3266f50d08949a4e36}{edgeFileSeparatedFromNodeFile}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a9bbf31f07702ea5ceaff3f3fd2b34a2f}{isBigGraph}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Real\ World\ Graphs:\(\backslash\)n"{}};}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}1.\ Graph\ 1\(\backslash\)n"{}};}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}2.\ Graph\ 2\(\backslash\)n"{}};}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}3.\ Graph\ 3\(\backslash\)n\(\backslash\)nInput:\ "{}};}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cin\ >>\ stringGraphChoice;}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}\ \{}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ graphChoice\ =\ std::stoi(stringGraphChoice);}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{catch}\ (std::invalid\_argument\&\ argument)\ \{}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n*\ Error\ while\ parsing\ option,\ please\ input\ a\ valid\ numeric\ option.\ *\(\backslash\)n"{}};}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_application_ad12666083e189dcf95c8b87bf59d95c2}{delay}}(2000);}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ restartConstructor;}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (graphChoice)\ \{}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 1:}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a8f0ac629d5284ccb186c890c6cb9fdce}{edgePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_a30e3cce9bbdea16b78cd06e34ed49dbc}{REAL\_WORLD\_GRAPH\_1\_EDGES}};}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_ac961668e5519a07c23eb4a419bbbd449}{nodePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_a83f3160bc91492a3b55ebdc1ace4bfcf}{REAL\_WORLD\_GRAPH\_1\_NODES}};}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a91bc0ee8f220422c6ef0fc6634bff926}{graphChoosen}}\ =\ 16;}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 2:}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a8f0ac629d5284ccb186c890c6cb9fdce}{edgePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_aecd9cc69fed8b2a9d989992f4d81380a}{REAL\_WORLD\_GRAPH\_2\_EDGES}};}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_ac961668e5519a07c23eb4a419bbbd449}{nodePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_a17d72df0585dc45d7f6a2e6c6ab9a8be}{REAL\_WORLD\_GRAPH\_2\_NODES}};}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a91bc0ee8f220422c6ef0fc6634bff926}{graphChoosen}}\ =\ 17;}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 3:}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a8f0ac629d5284ccb186c890c6cb9fdce}{edgePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_aab66df04ea8314b5d9b27e67c3181296}{REAL\_WORLD\_GRAPH\_3\_EDGES}};}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_ac961668e5519a07c23eb4a419bbbd449}{nodePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_ae0a13ba2390bf7cb4fdde5872698ef00}{REAL\_WORLD\_GRAPH\_3\_NODES}};}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a91bc0ee8f220422c6ef0fc6634bff926}{graphChoosen}}\ =\ 18;}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_application_ad12666083e189dcf95c8b87bf59d95c2}{delay}}(3000);}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Unrecognized\ option,\ defaulting\ to\ first\ real\ world\ graph.\(\backslash\)n"{}};}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a8f0ac629d5284ccb186c890c6cb9fdce}{edgePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_a30e3cce9bbdea16b78cd06e34ed49dbc}{REAL\_WORLD\_GRAPH\_1\_EDGES}};}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_ac961668e5519a07c23eb4a419bbbd449}{nodePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_a83f3160bc91492a3b55ebdc1ace4bfcf}{REAL\_WORLD\_GRAPH\_1\_NODES}};}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a91bc0ee8f220422c6ef0fc6634bff926}{graphChoosen}}\ =\ 16;}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_application_ad12666083e189dcf95c8b87bf59d95c2}{delay}}(3000);}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Unrecognized\ option,\ defaulting\ to\ extra\ fully\ connected\ graph\ with\ 25\ edges.\(\backslash\)n"{}};}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a2237d2e658939c3266f50d08949a4e36}{edgeFileSeparatedFromNodeFile}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a8f0ac629d5284ccb186c890c6cb9fdce}{edgePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_af049ab9d2cec1c9e04b6959c81fe45b1}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_25\_EDGES}};}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_ac961668e5519a07c23eb4a419bbbd449}{nodePath}}\ =\ \mbox{\hyperlink{_application_8h_a5c89e916668f2473852c0740c4b7cbb2}{DATASET\_PATHS}}\ \mbox{\hyperlink{_application_8h_aa759c2d284b1a492dcf748f4c8c50408}{EXTRA\_FULLY\_CONNECTED\_GRAPHS\_NODES}};}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{class_application_a91bc0ee8f220422c6ef0fc6634bff926}{graphChoosen}}\ =\ 1;}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00250\ }
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_application_a48c7899f5e0c8c6517cd733b5a6cb61b}{tsp}}.\mbox{\hyperlink{class_t_s_p_aa3097a75109f777a1b90ac74c26c9a3b}{parseData}}(\mbox{\hyperlink{class_application_ac961668e5519a07c23eb4a419bbbd449}{nodePath}},\ \mbox{\hyperlink{class_application_a8f0ac629d5284ccb186c890c6cb9fdce}{edgePath}},\ \mbox{\hyperlink{class_application_a2237d2e658939c3266f50d08949a4e36}{edgeFileSeparatedFromNodeFile}});}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_application_ab0547067a5688fa2a17c067dacdf3f6a}{clearScreen}}();}
+\DoxyCodeLine{00253\ \ \ \ \ \}}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_application_ab0547067a5688fa2a17c067dacdf3f6a}{clearScreen}}();}
+\DoxyCodeLine{00256\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_application_a27c58712d868d161ec1f407fcab72e24}{run}}(\textcolor{keywordtype}{int}\ processedKey);}
+\DoxyCodeLine{00257\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_application_ae97b4ab64aa6e2f229d75b1764100d8a}{recordRuntime}}(\textcolor{keyword}{const}\ std::string\&\ functionName,\ \textcolor{keywordtype}{int}\ duration);}
+\DoxyCodeLine{00258\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_application_ad12666083e189dcf95c8b87bf59d95c2}{delay}}(\textcolor{keywordtype}{long}\ sleepTime);}
+\DoxyCodeLine{00259\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_application_a6889e8e33946b8931ccff6f419630331}{processKey}}(\textcolor{keyword}{const}\ std::string\ \&option);}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00262\ }
+\DoxyCodeLine{00263\ \ \ \ \ \mbox{\hyperlink{class_t_s_p}{TSP}}\ \mbox{\hyperlink{class_application_a48c7899f5e0c8c6517cd733b5a6cb61b}{tsp}};}
+\DoxyCodeLine{00264\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_application_a9bbf31f07702ea5ceaff3f3fd2b34a2f}{isBigGraph}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00265\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_application_a91bc0ee8f220422c6ef0fc6634bff926}{graphChoosen}};}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \ \ \ \ \textcolor{comment}{/*\ Private\ functions\ */}}
+\DoxyCodeLine{00268\ \ \ \ \ std::string\ \mbox{\hyperlink{class_application_a8dc9c233e74d5b6cb129eeda5b62fd64}{showMainMenu}}();}
+\DoxyCodeLine{00269\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_application_a07eba7cd2a9fcfd846da6ab3e5d2067e}{showGoBackMenu}}(\textcolor{keywordtype}{int}\ option,\ \textcolor{keyword}{const}\ std::string\&\ functionName);}
+\DoxyCodeLine{00270\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_application_abc3227c74cabe2a4df45947088c44c40}{showRuntime}}();}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00272\ \ \ \ \ \textcolor{comment}{/*\ TSP\ functions\ */}}
+\DoxyCodeLine{00273\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_application_a8e6fe8dfeaa28567ff55ebe61231271d}{backtrackingAlgorithmTSP}}();\ \textcolor{comment}{//\ T2.1}}
+\DoxyCodeLine{00274\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_application_ab861f2fedd27be750bd037e47d138887}{triangularApproximationTSP}}();\ \textcolor{comment}{//\ T2.2}}
+\DoxyCodeLine{00275\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_application_acf11b7d4a5d5be844300ea2be5b3e122}{optimizedTSP}}();\ \textcolor{comment}{//\ T2.3}}
+\DoxyCodeLine{00276\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_application_a49a85c468d21c6a8cdd38de1396517eb}{realWorldTSP}}();\ \textcolor{comment}{//\ T2.4}}
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00278\ \ \ \ \ \textcolor{comment}{/*\ Attributes\ */}}
+\DoxyCodeLine{00279\ \ \ \ \ std::string\ \mbox{\hyperlink{class_application_ab7b151fe7350dc2a7d17ea76972ecc56}{env}};}
+\DoxyCodeLine{00280\ \ \ \ \ std::string\ \mbox{\hyperlink{class_application_a8f0ac629d5284ccb186c890c6cb9fdce}{edgePath}}\ =\ \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{00281\ \ \ \ \ std::string\ \mbox{\hyperlink{class_application_ac961668e5519a07c23eb4a419bbbd449}{nodePath}}\ =\ \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{00282\ }
+\DoxyCodeLine{00283\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_application_a87583baeccf56d277582fad849cf1bc0}{isToyGraph}}\ =\ \textcolor{keyword}{false};\ \textcolor{comment}{//\ Used\ for\ adding\ missing\ edges}}
+\DoxyCodeLine{00284\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_application_a2237d2e658939c3266f50d08949a4e36}{edgeFileSeparatedFromNodeFile}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00285\ \};}
+\DoxyCodeLine{00286\ }
+\DoxyCodeLine{00287\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//APLICATION\_H}}
+
+\end{DoxyCode}

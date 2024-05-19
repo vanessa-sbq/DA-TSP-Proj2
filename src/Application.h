@@ -11,6 +11,7 @@
 #include <chrono>
 #include <regex>
 #include <iomanip>
+#include <map>
 
 #include "TSP.h"
 #include "Graph.h"
@@ -247,21 +248,14 @@ public:
                 this->graphChoosen = 1;
         }
 
-        // DEBUG
-        // TODO remove clearScreen();
-        // TODO remove std::cout << "The current path for nodes is " << nodePath << " and edge's is " << edgePath << " cur env " << env << "\n";
-
         tsp.parseData(nodePath, edgePath, edgeFileSeparatedFromNodeFile);
         clearScreen();
     }
 
     void clearScreen();
-
     void run(int processedKey);
     void recordRuntime(const std::string& functionName, int duration);
-
     static void delay(long sleepTime);
-
     static int processKey(const std::string &option);
 
 private:
@@ -274,17 +268,17 @@ private:
     std::string showMainMenu();
     void showGoBackMenu(int option, const std::string& functionName);
     void showRuntime();
-    /* TSP functions */
 
+    /* TSP functions */
     void backtrackingAlgorithmTSP(); // T2.1
     void triangularApproximationTSP(); // T2.2
     void optimizedTSP(); // T2.3
     void realWorldTSP(); // T2.4
 
     /* Attributes */
-    std::string env; // System environment variable
-    std::string edgePath = ""; // Path for edges.csv
-    std::string nodePath = ""; // Path for nodes.csv
+    std::string env;
+    std::string edgePath = "";
+    std::string nodePath = "";
 
     bool isToyGraph = false; // Used for adding missing edges
     bool edgeFileSeparatedFromNodeFile = false;

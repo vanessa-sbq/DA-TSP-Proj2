@@ -1,0 +1,445 @@
+\doxysection{TSP Class Reference}
+\hypertarget{class_t_s_p}{}\label{class_t_s_p}\index{TSP@{TSP}}
+
+
+{\ttfamily \#include $<$TSP.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_t_s_p_a78100470cf2a45cb6aaf8097b0170ac5}{set\+Is\+Toy\+Graph}} (\mbox{\hyperlink{class_edge}{bool}} \mbox{\hyperlink{class_t_s_p_a8ecc55dec57211910e18378e0e0fced8}{is\+Toy\+Graph}})
+\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_t_s_p_aa3097a75109f777a1b90ac74c26c9a3b}{parse\+Data}} (std\+::string \mbox{\hyperlink{class_edge}{nodes\+File\+Path}}, std\+::string \mbox{\hyperlink{class_edge}{edges\+File\+Path}}, \mbox{\hyperlink{class_edge}{bool}} \mbox{\hyperlink{class_edge}{both\+Files\+Provided}})
+\begin{DoxyCompactList}\small\item\em Function that helps parse data. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_t_s_p_a0e92f357e672ee5ffeca63dde9afc764}{data\+Go\+Boom}} ()
+\begin{DoxyCompactList}\small\item\em Frees the data on program exit. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{bool}} \mbox{\hyperlink{class_t_s_p_a9cde97d885ad25cd1c46e88d688cdb7d}{make\+Graph\+Connected}} ()
+\begin{DoxyCompactList}\small\item\em Makes the graph connected, and sets non-\/existing edges to infinite distance (Should only be used on Toy Graphs) \end{DoxyCompactList}\item 
+std\+::pair$<$ \mbox{\hyperlink{class_edge}{double}}, std\+::vector$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*} $>$ $>$ \mbox{\hyperlink{class_t_s_p_adf7ed4984edf8f3743372ae35e254f67}{tsp\+BTSetup}} (\mbox{\hyperlink{class_edge}{bool}} \mbox{\hyperlink{class_edge}{ignore\+Bound}})
+\begin{DoxyCompactList}\small\item\em Set up function for the backtracking and bounding algorithm. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_t_s_p_a550727387aeb56f0ce7eb55294c50809}{clean\+Up\+Graph}} ()
+\begin{DoxyCompactList}\small\item\em Cleans up the graph after making it connected. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{double}} \mbox{\hyperlink{class_t_s_p_a62e17df6802c6bcc506b8e5e5bc1d6b3}{triangular\+Approximation}} (std\+::stringstream \&\mbox{\hyperlink{class_edge}{sd}})
+\begin{DoxyCompactList}\small\item\em Computes an approximate solution to the \doxylink{class_t_s_p}{TSP} using a triangular approximation. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{double}} \mbox{\hyperlink{class_t_s_p_a05391f65069f15e4d5b34a7c53ed88a5}{other\+Heuristic}} ()
+\begin{DoxyCompactList}\small\item\em Faster version of the Triangular Approximation Heuristic, analyzing only one cluster at a time instead of the whole network. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{bool}} \mbox{\hyperlink{class_t_s_p_a247c98ae1a218b17fad37b6abefd0a7d}{nn\+Recursion}} (\mbox{\hyperlink{class_edge}{int}} \mbox{\hyperlink{class_edge}{here}}, \mbox{\hyperlink{class_edge}{int}} id, std\+::vector$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \&path, \mbox{\hyperlink{class_edge}{double}} \&\mbox{\hyperlink{class_edge}{count}}, std\+::vector$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \&\mbox{\hyperlink{class_edge}{best\+Path}}, \mbox{\hyperlink{class_edge}{double}} \&\mbox{\hyperlink{class_edge}{best\+Count}})
+\begin{DoxyCompactList}\small\item\em Performs a nearest neighbor recursion for the Travelling Salesman Problem (\doxylink{class_t_s_p}{TSP}). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_t_s_p_a3104bd5bde7dc1b30be4a3d82a151668}{parsing\+Geo\+Points\+And\+Edges}} (std\+::ifstream \&\mbox{\hyperlink{class_edge}{in}})
+\begin{DoxyCompactList}\small\item\em Function that helps parsing the nodes/edges that are inside the csv. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_t_s_p_a5e5efe546aa75efa08aba4597389c3e7}{parsing\+Geo\+Points}} (std\+::ifstream \&\mbox{\hyperlink{class_edge}{in}})
+\begin{DoxyCompactList}\small\item\em Function that helps parsing the nodes that are inside the csv. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_t_s_p_a93e31125379fdae552c5437ebb4e9963}{parsing\+Edges}} (std\+::ifstream \&\mbox{\hyperlink{class_edge}{in}})
+\begin{DoxyCompactList}\small\item\em Function that helps parsing the edges that are inside the csv. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_t_s_p_a9e4e183d4cbec18d421f0bb4b4e8b957}{tsp\+Rec}} (\mbox{\hyperlink{class_edge}{unsigned}} \mbox{\hyperlink{class_edge}{int}} \mbox{\hyperlink{class_edge}{num\+Vertexes}}, \mbox{\hyperlink{class_edge}{unsigned}} \mbox{\hyperlink{class_edge}{int}} \mbox{\hyperlink{class_edge}{current\+Vertex}}, \mbox{\hyperlink{class_edge}{double}} \mbox{\hyperlink{class_edge}{cur\+Best\+Min}}, std\+::vector$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*} $>$ \&\mbox{\hyperlink{class_edge}{cur\+Path}}, \mbox{\hyperlink{class_edge}{double}} \&\mbox{\hyperlink{class_edge}{min}}, std\+::vector$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*} $>$ \&\mbox{\hyperlink{class_edge}{best\+Path}}, \mbox{\hyperlink{class_edge}{bool}} \mbox{\hyperlink{class_edge}{ignore\+Bound}})
+\begin{DoxyCompactList}\small\item\em Backtracking and Bounding algorithm to solve the \doxylink{class_t_s_p}{TSP} for small graphs. \end{DoxyCompactList}\item 
+std\+::vector$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*} $>$ \mbox{\hyperlink{class_t_s_p_acfcef5d355c524a382a1699badeccf18}{prim}} (\mbox{\hyperlink{class_graph}{Graph}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{class_edge}{g}})
+\begin{DoxyCompactList}\small\item\em Computes the Minimum Spanning Tree (MST) of a graph using Prim\textquotesingle{}s algorithm. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_t_s_p_a110dcdab69f98951000452226dc3bb8f}{create\+Clusters}} (std\+::vector$<$ std\+::set$<$ \mbox{\hyperlink{class_edge}{int}} $>$ $>$ \&\mbox{\hyperlink{class_edge}{clusters}}, std\+::vector$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \&\mbox{\hyperlink{class_edge}{centroids}}, \mbox{\hyperlink{class_edge}{int}} \mbox{\hyperlink{class_edge}{k}}, \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{class_edge}{root\+Vertex}})
+\begin{DoxyCompactList}\small\item\em Creates clusters of Geo\+Points based on k and relative distance (K-\/means Clustering) \end{DoxyCompactList}\item 
+std\+::vector$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*} $>$ \mbox{\hyperlink{class_t_s_p_acd17b07eadc1fbb3ad6f9bcd937ad71e}{cluster\+Prim}} (\mbox{\hyperlink{class_graph}{Graph}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{class_edge}{g}})
+\begin{DoxyCompactList}\small\item\em Executes Prim\textquotesingle{}s algorithm on a part of the graph (cluster), depending on which vertices are visited. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_t_s_p_a2726b78c9b3f50f6cf0387c12ae21ef2}{pre\+Order\+Cluster}} (\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{class_edge}{root}}, std\+::vector$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*} $>$ \&\mbox{\hyperlink{class_edge}{preorder}})
+\begin{DoxyCompactList}\small\item\em Does a pre-\/order traversal on an MST. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{double}} \mbox{\hyperlink{class_t_s_p_a05f4581b120dc52e80425d65f05e58de}{get\+Weight\+Between}} (\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{class_edge}{v1}}, \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{class_edge}{v2}})
+\begin{DoxyCompactList}\small\item\em Computes the weight of an edge between two vertices. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{bool}} \mbox{\hyperlink{class_t_s_p_a0b72244e7a0750f7adb291e9152df75d}{is\+Adjacent}} (\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*}\&\mbox{\hyperlink{class_edge}{v1}}, \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*}\&\mbox{\hyperlink{class_edge}{v2}})
+\begin{DoxyCompactList}\small\item\em Checks if two vertices are adjacent in the graph. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_edge}{int}} \mbox{\hyperlink{class_t_s_p_a52c17a3da6aa38689108dbe87e2978db}{recursion\+Times}} = 100000
+\item 
+\mbox{\hyperlink{class_edge}{bool}} \mbox{\hyperlink{class_t_s_p_a8ecc55dec57211910e18378e0e0fced8}{is\+Toy\+Graph}} = \mbox{\hyperlink{class_edge}{false}}
+\item 
+\mbox{\hyperlink{class_edge}{bool}} \mbox{\hyperlink{class_t_s_p_a91790ffb4f28481d7f39769d00982ba6}{is\+Extra\+Graph}} = \mbox{\hyperlink{class_edge}{false}}
+\item 
+\mbox{\hyperlink{class_edge}{int}} \mbox{\hyperlink{class_t_s_p_aa63bcbff82518756124e67ed93391781}{num\+Nodes\+From\+Extra}} = 25
+\item 
+\mbox{\hyperlink{class_graph}{Graph}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \mbox{\hyperlink{class_t_s_p_a0ef716b23e8e4b4c2ae1d2d304df6077}{tsp\+Network}}
+\item 
+std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{class_edge}{int}}, \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \mbox{\hyperlink{class_t_s_p_af073f6ce2f47770768054c6ec765007b}{geo\+Map}}
+\item 
+std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{class_edge}{int}}, \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*} $>$ \mbox{\hyperlink{class_t_s_p_a3182f00392de6f7c96fe224b3bec1cb8}{vertex\+Geo\+Map}}
+\item 
+std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{class_edge}{int}}, std\+::set$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ $>$ \mbox{\hyperlink{class_t_s_p_a3b24ee9b169e4ea7003ee2b0e2d6696f}{edges\+Geo\+Point}}
+\item 
+std\+::vector$<$ \mbox{\hyperlink{class_edge}{Edge}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ $>$ \mbox{\hyperlink{class_t_s_p_a0f03e2284b99c53e47ab871c833c8996}{edges\+To\+Remove}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_t_s_p_a550727387aeb56f0ce7eb55294c50809}\label{class_t_s_p_a550727387aeb56f0ce7eb55294c50809} 
+\index{TSP@{TSP}!cleanUpGraph@{cleanUpGraph}}
+\index{cleanUpGraph@{cleanUpGraph}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{cleanUpGraph()}{cleanUpGraph()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{void}} TSP\+::clean\+Up\+Graph (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Cleans up the graph after making it connected. 
+
+Time Complexity\+: O(\+K \texorpdfstring{$\ast$}{*} E), where K is the number of edges to remove and E is the number of adjacent edges of the origin vertex \Hypertarget{class_t_s_p_acd17b07eadc1fbb3ad6f9bcd937ad71e}\label{class_t_s_p_acd17b07eadc1fbb3ad6f9bcd937ad71e} 
+\index{TSP@{TSP}!clusterPrim@{clusterPrim}}
+\index{clusterPrim@{clusterPrim}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{clusterPrim()}{clusterPrim()}}
+{\footnotesize\ttfamily std\+::vector$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*} $>$ TSP\+::cluster\+Prim (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_graph}{Graph}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*}}]{g }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Executes Prim\textquotesingle{}s algorithm on a part of the graph (cluster), depending on which vertices are visited. 
+
+Time Complexity\+: O((V + E) \texorpdfstring{$\ast$}{*} log(\+V)), where V is the number of vertices in the cluster and E is the number of edges in the cluster \begin{DoxyReturn}{Returns}
+A set containing the MST of the cluster 
+\end{DoxyReturn}
+\Hypertarget{class_t_s_p_a110dcdab69f98951000452226dc3bb8f}\label{class_t_s_p_a110dcdab69f98951000452226dc3bb8f} 
+\index{TSP@{TSP}!createClusters@{createClusters}}
+\index{createClusters@{createClusters}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{createClusters()}{createClusters()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{void}} TSP\+::create\+Clusters (\begin{DoxyParamCaption}\item[{std\+::vector$<$ std\+::set$<$ \mbox{\hyperlink{class_edge}{int}} $>$ $>$ \&}]{clusters,  }\item[{std\+::vector$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \&}]{centroids,  }\item[{\mbox{\hyperlink{class_edge}{int}}}]{k,  }\item[{\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*}}]{root\+Vertex }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Creates clusters of Geo\+Points based on k and relative distance (K-\/means Clustering) 
+
+Time Complexity\+: O(\+V \texorpdfstring{$\ast$}{*} k), where V is the number of vertices in the graph and k is the number of clusters 
+\begin{DoxyParams}{Parameters}
+{\em clusters} & vector of clusters to be filled \\
+\hline
+{\em k} & number of clusters to be created \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_t_s_p_a0e92f357e672ee5ffeca63dde9afc764}\label{class_t_s_p_a0e92f357e672ee5ffeca63dde9afc764} 
+\index{TSP@{TSP}!dataGoBoom@{dataGoBoom}}
+\index{dataGoBoom@{dataGoBoom}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{dataGoBoom()}{dataGoBoom()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{void}} TSP\+::data\+Go\+Boom (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Frees the data on program exit. 
+
+\Hypertarget{class_t_s_p_a05f4581b120dc52e80425d65f05e58de}\label{class_t_s_p_a05f4581b120dc52e80425d65f05e58de} 
+\index{TSP@{TSP}!getWeightBetween@{getWeightBetween}}
+\index{getWeightBetween@{getWeightBetween}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{getWeightBetween()}{getWeightBetween()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{double}} TSP\+::get\+Weight\+Between (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*}}]{v1,  }\item[{\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*}}]{v2 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Computes the weight of an edge between two vertices. 
+
+Time Complexity\+: O(\+E), where E is the number of outgoing edges of v1 
+\begin{DoxyParams}{Parameters}
+{\em v1} & Origin vertex \\
+\hline
+{\em v2} & Destination vertex \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+weight between v1 and v2 
+\end{DoxyReturn}
+\Hypertarget{class_t_s_p_a0b72244e7a0750f7adb291e9152df75d}\label{class_t_s_p_a0b72244e7a0750f7adb291e9152df75d} 
+\index{TSP@{TSP}!isAdjacent@{isAdjacent}}
+\index{isAdjacent@{isAdjacent}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{isAdjacent()}{isAdjacent()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{bool}} TSP\+::is\+Adjacent (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*}\&}]{v1,  }\item[{\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*}\&}]{v2 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Checks if two vertices are adjacent in the graph. 
+
+This function checks if there is an edge between the vertices {\ttfamily v1} and {\ttfamily v2}. It has time complexity of O(\+E), being E the edges of vertex v1
+
+
+\begin{DoxyParams}{Parameters}
+{\em v1} & A reference to a pointer to the first vertex. \\
+\hline
+{\em v2} & A reference to a pointer to the second vertex. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if {\ttfamily v1} and {\ttfamily v2} are adjacent, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{class_t_s_p_a9cde97d885ad25cd1c46e88d688cdb7d}\label{class_t_s_p_a9cde97d885ad25cd1c46e88d688cdb7d} 
+\index{TSP@{TSP}!makeGraphConnected@{makeGraphConnected}}
+\index{makeGraphConnected@{makeGraphConnected}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{makeGraphConnected()}{makeGraphConnected()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{bool}} TSP\+::make\+Graph\+Connected (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Makes the graph connected, and sets non-\/existing edges to infinite distance (Should only be used on Toy Graphs) 
+
+Time Complexity\+: O(\+V \texorpdfstring{$\ast$}{*} V \texorpdfstring{$\ast$}{*} E), where V is the number of vertices in the graph and E is the number of adjacent edges of each vertex \begin{DoxyReturn}{Returns}
+Returns a bool telling if the graph was already connected or not 
+\end{DoxyReturn}
+\Hypertarget{class_t_s_p_a247c98ae1a218b17fad37b6abefd0a7d}\label{class_t_s_p_a247c98ae1a218b17fad37b6abefd0a7d} 
+\index{TSP@{TSP}!nnRecursion@{nnRecursion}}
+\index{nnRecursion@{nnRecursion}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{nnRecursion()}{nnRecursion()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{bool}} TSP\+::nn\+Recursion (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_edge}{int}}}]{here,  }\item[{\mbox{\hyperlink{class_edge}{int}}}]{id,  }\item[{std\+::vector$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \&}]{path,  }\item[{\mbox{\hyperlink{class_edge}{double}} \&}]{count,  }\item[{std\+::vector$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \&}]{best\+Path,  }\item[{\mbox{\hyperlink{class_edge}{double}} \&}]{best\+Count }\end{DoxyParamCaption})}
+
+
+
+Performs a nearest neighbor recursion for the Travelling Salesman Problem (\doxylink{class_t_s_p}{TSP}). 
+
+This function implements the nearest neighbor heuristic to find an approximate solution to the Travelling Salesman Problem. It recursively explores paths from the current vertex to its adjacent vertices, selecting the edge with the minimum weight that hasn\textquotesingle{}t been selected yet. It updates the best path and count of the path length found so far. The function is bounded by the global variable recursion\+Times, that guarantees that if a recursion level has reached 100 thousand levels deep, the recursion must end, even if there\textquotesingle{}s no answer to that point.
+
+The function has average time complexity of O(10\texorpdfstring{$^\wedge$}{\string^}5 \texorpdfstring{$\ast$}{*} E²), however, in the worst case where E = V² it has time complexity of O(10\texorpdfstring{$^\wedge$}{\string^}5 \texorpdfstring{$\ast$}{*} V\texorpdfstring{$^\wedge$}{\string^}4)
+
+
+\begin{DoxyParams}{Parameters}
+{\em here} & The ID of the current vertex. \\
+\hline
+{\em id} & The ID of the previous vertex, used to avoid going back to the same vertex immediately. \\
+\hline
+{\em path} & A reference to the vector storing the current path of Geo\+Points. \\
+\hline
+{\em count} & A reference to the current path length. \\
+\hline
+{\em best\+Path} & A reference to the vector storing the best path of Geo\+Points found so far. \\
+\hline
+{\em best\+Count} & A reference to the length of the best path found so far. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if a complete tour is found; otherwise, false. 
+\end{DoxyReturn}
+\Hypertarget{class_t_s_p_a05391f65069f15e4d5b34a7c53ed88a5}\label{class_t_s_p_a05391f65069f15e4d5b34a7c53ed88a5} 
+\index{TSP@{TSP}!otherHeuristic@{otherHeuristic}}
+\index{otherHeuristic@{otherHeuristic}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{otherHeuristic()}{otherHeuristic()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{double}} TSP\+::other\+Heuristic (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Faster version of the Triangular Approximation Heuristic, analyzing only one cluster at a time instead of the whole network. 
+
+Time Complexity\+: O(k \texorpdfstring{$\ast$}{*} ((V + E) \texorpdfstring{$\ast$}{*} log(\+V))), where k is the number of clusters and ((V + E) \texorpdfstring{$\ast$}{*} log) is the complexity of Prim\textquotesingle{}s algorithm for a cluster \begin{DoxyReturn}{Returns}
+Total distance 
+\end{DoxyReturn}
+\Hypertarget{class_t_s_p_aa3097a75109f777a1b90ac74c26c9a3b}\label{class_t_s_p_aa3097a75109f777a1b90ac74c26c9a3b} 
+\index{TSP@{TSP}!parseData@{parseData}}
+\index{parseData@{parseData}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{parseData()}{parseData()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{void}} TSP\+::parse\+Data (\begin{DoxyParamCaption}\item[{std\+::string}]{nodes\+File\+Path,  }\item[{std\+::string}]{edges\+File\+Path,  }\item[{\mbox{\hyperlink{class_edge}{bool}}}]{both\+Files\+Provided }\end{DoxyParamCaption})}
+
+
+
+Function that helps parse data. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em both\+Files\+Provided} & If false the first argument will contain the file that incorporates both nodes / edges. If true then first argument will contain the file path for the nodes csv and the second argument will contain the file path for the edges csv. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_t_s_p_a93e31125379fdae552c5437ebb4e9963}\label{class_t_s_p_a93e31125379fdae552c5437ebb4e9963} 
+\index{TSP@{TSP}!parsingEdges@{parsingEdges}}
+\index{parsingEdges@{parsingEdges}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{parsingEdges()}{parsingEdges()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{void}} TSP\+::parsing\+Edges (\begin{DoxyParamCaption}\item[{std\+::ifstream \&}]{in }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Function that helps parsing the edges that are inside the csv. 
+
+Time Complexity\+: O(\+E), where E is the number of edges to be parsed
+
+This functions expects the following order\+: origin, destination, haversine\+\_\+distance. \Hypertarget{class_t_s_p_a5e5efe546aa75efa08aba4597389c3e7}\label{class_t_s_p_a5e5efe546aa75efa08aba4597389c3e7} 
+\index{TSP@{TSP}!parsingGeoPoints@{parsingGeoPoints}}
+\index{parsingGeoPoints@{parsingGeoPoints}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{parsingGeoPoints()}{parsingGeoPoints()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{void}} TSP\+::parsing\+Geo\+Points (\begin{DoxyParamCaption}\item[{std\+::ifstream \&}]{in }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Function that helps parsing the nodes that are inside the csv. 
+
+Time Complexity\+: O(\+V), where V is the number of nodes to be parsed
+
+This functions expects the following order\+: id, longitude, latitude. \Hypertarget{class_t_s_p_a3104bd5bde7dc1b30be4a3d82a151668}\label{class_t_s_p_a3104bd5bde7dc1b30be4a3d82a151668} 
+\index{TSP@{TSP}!parsingGeoPointsAndEdges@{parsingGeoPointsAndEdges}}
+\index{parsingGeoPointsAndEdges@{parsingGeoPointsAndEdges}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{parsingGeoPointsAndEdges()}{parsingGeoPointsAndEdges()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{void}} TSP\+::parsing\+Geo\+Points\+And\+Edges (\begin{DoxyParamCaption}\item[{std\+::ifstream \&}]{in }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Function that helps parsing the nodes/edges that are inside the csv. 
+
+Time Complexity\+: O(V + E), where V is the number of nodes and E the number of edges to be parsed
+
+This functions expects the following order\+: \begin{DoxyVerb}         "origin, destination, distance" or "origin, destination, distance, label origin, label destination"
+\end{DoxyVerb}
+ \Hypertarget{class_t_s_p_a2726b78c9b3f50f6cf0387c12ae21ef2}\label{class_t_s_p_a2726b78c9b3f50f6cf0387c12ae21ef2} 
+\index{TSP@{TSP}!preOrderCluster@{preOrderCluster}}
+\index{preOrderCluster@{preOrderCluster}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{preOrderCluster()}{preOrderCluster()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{void}} TSP\+::pre\+Order\+Cluster (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*}}]{root,  }\item[{std\+::vector$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*} $>$ \&}]{preorder }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Does a pre-\/order traversal on an MST. 
+
+Time Complexity\+: O(\+VE), where V is the number of vertices in the MST and E is the number of edges of each vertex 
+\begin{DoxyParams}{Parameters}
+{\em root} & root node of the pre-\/order traversal \\
+\hline
+{\em preorder} & vector that contains the solution (vertices in preorder) \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_t_s_p_acfcef5d355c524a382a1699badeccf18}\label{class_t_s_p_acfcef5d355c524a382a1699badeccf18} 
+\index{TSP@{TSP}!prim@{prim}}
+\index{prim@{prim}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{prim()}{prim()}}
+{\footnotesize\ttfamily std\+::vector$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*} $>$ TSP\+::prim (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_graph}{Graph}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*}}]{g }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Computes the Minimum Spanning Tree (MST) of a graph using Prim\textquotesingle{}s algorithm. 
+
+This function computes the MST of the given graph {\ttfamily g} using Prim\textquotesingle{}s algorithm. It returns the vertices of the MST in the order they are visited. It has time complexity of O(\+E\texorpdfstring{$\ast$}{*}log(\+V))
+
+
+\begin{DoxyParams}{Parameters}
+{\em g} & A pointer to the graph on which Prim\textquotesingle{}s algorithm is to be executed. \\
+\hline
+{\em visit\+Order} & A reference to a vector that will store the order in which vertices are visited. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A vector of vertices that are part of the MST. 
+\end{DoxyReturn}
+\Hypertarget{class_t_s_p_a78100470cf2a45cb6aaf8097b0170ac5}\label{class_t_s_p_a78100470cf2a45cb6aaf8097b0170ac5} 
+\index{TSP@{TSP}!setIsToyGraph@{setIsToyGraph}}
+\index{setIsToyGraph@{setIsToyGraph}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{setIsToyGraph()}{setIsToyGraph()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{void}} TSP\+::set\+Is\+Toy\+Graph (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_edge}{bool}}}]{is\+Toy\+Graph }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{class_t_s_p_a62e17df6802c6bcc506b8e5e5bc1d6b3}\label{class_t_s_p_a62e17df6802c6bcc506b8e5e5bc1d6b3} 
+\index{TSP@{TSP}!triangularApproximation@{triangularApproximation}}
+\index{triangularApproximation@{triangularApproximation}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{triangularApproximation()}{triangularApproximation()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{double}} TSP\+::triangular\+Approximation (\begin{DoxyParamCaption}\item[{std\+::stringstream \&}]{sd }\end{DoxyParamCaption})}
+
+
+
+Computes an approximate solution to the \doxylink{class_t_s_p}{TSP} using a triangular approximation. 
+
+This function computes an approximate solution to the Traveling Salesman Problem (\doxylink{class_t_s_p}{TSP}) using a minimum spanning tree (MST) and a pre-\/order traversal of the MST. The solution might not be optimal but provides a feasible route even in non-\/fully connected graphs.
+
+It has time complexity O(V+\+E\texorpdfstring{$\ast$}{*}log(V)), bounded by Prim\textquotesingle{}s Algorithm Complexity
+
+
+\begin{DoxyParams}{Parameters}
+{\em sd} & A stringstream to store the sequence of visited vertices. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The total cost of the tour. 
+\end{DoxyReturn}
+\Hypertarget{class_t_s_p_adf7ed4984edf8f3743372ae35e254f67}\label{class_t_s_p_adf7ed4984edf8f3743372ae35e254f67} 
+\index{TSP@{TSP}!tspBTSetup@{tspBTSetup}}
+\index{tspBTSetup@{tspBTSetup}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{tspBTSetup()}{tspBTSetup()}}
+{\footnotesize\ttfamily std\+::pair$<$ \mbox{\hyperlink{class_edge}{double}}, std\+::vector$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*} $>$ $>$ TSP\+::tsp\+BTSetup (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_edge}{bool}}}]{ignore\+Bound }\end{DoxyParamCaption})}
+
+
+
+Set up function for the backtracking and bounding algorithm. 
+
+Time Complexity\+: O(N!), because it calls the backtracking and bounding recursive function \begin{DoxyReturn}{Returns}
+Returns the minimum distance of the circuit and the corresponding circuit 
+\end{DoxyReturn}
+\Hypertarget{class_t_s_p_a9e4e183d4cbec18d421f0bb4b4e8b957}\label{class_t_s_p_a9e4e183d4cbec18d421f0bb4b4e8b957} 
+\index{TSP@{TSP}!tspRec@{tspRec}}
+\index{tspRec@{tspRec}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{tspRec()}{tspRec()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{void}} TSP\+::tsp\+Rec (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_edge}{unsigned}} \mbox{\hyperlink{class_edge}{int}}}]{n,  }\item[{\mbox{\hyperlink{class_edge}{unsigned}} \mbox{\hyperlink{class_edge}{int}}}]{curI,  }\item[{\mbox{\hyperlink{class_edge}{double}}}]{cur\+Dist,  }\item[{std\+::vector$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*} $>$ \&}]{cur\+Path,  }\item[{\mbox{\hyperlink{class_edge}{double}} \&}]{min\+Dist,  }\item[{std\+::vector$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*} $>$ \&}]{path,  }\item[{\mbox{\hyperlink{class_edge}{bool}}}]{ignore\+Bound }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Backtracking and Bounding algorithm to solve the \doxylink{class_t_s_p}{TSP} for small graphs. 
+
+Time Complexity\+: O(N!), where N is the number of nodes in the graph 
+\begin{DoxyParams}{Parameters}
+{\em n} & number of nodes in the graph \\
+\hline
+{\em curI} & current index \\
+\hline
+{\em cur\+Dist} & current distance \\
+\hline
+{\em cur\+Path} & current path \\
+\hline
+{\em min\+Dist} & minimum distance \\
+\hline
+{\em path} & vector that contains the paths \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_t_s_p_a3b24ee9b169e4ea7003ee2b0e2d6696f}\label{class_t_s_p_a3b24ee9b169e4ea7003ee2b0e2d6696f} 
+\index{TSP@{TSP}!edgesGeoPoint@{edgesGeoPoint}}
+\index{edgesGeoPoint@{edgesGeoPoint}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{edgesGeoPoint}{edgesGeoPoint}}
+{\footnotesize\ttfamily std\+::unordered\+\_\+map$<$\mbox{\hyperlink{class_edge}{int}}, std\+::set$<$\mbox{\hyperlink{class_geo_point}{Geo\+Point}}\texorpdfstring{$\ast$}{*}$>$ $>$ TSP\+::edges\+Geo\+Point\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_t_s_p_a0f03e2284b99c53e47ab871c833c8996}\label{class_t_s_p_a0f03e2284b99c53e47ab871c833c8996} 
+\index{TSP@{TSP}!edgesToRemove@{edgesToRemove}}
+\index{edgesToRemove@{edgesToRemove}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{edgesToRemove}{edgesToRemove}}
+{\footnotesize\ttfamily std\+::vector$<$\mbox{\hyperlink{class_edge}{Edge}}$<$\mbox{\hyperlink{class_geo_point}{Geo\+Point}}\texorpdfstring{$\ast$}{*}$>$ $>$ TSP\+::edges\+To\+Remove\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_t_s_p_af073f6ce2f47770768054c6ec765007b}\label{class_t_s_p_af073f6ce2f47770768054c6ec765007b} 
+\index{TSP@{TSP}!geoMap@{geoMap}}
+\index{geoMap@{geoMap}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{geoMap}{geoMap}}
+{\footnotesize\ttfamily std\+::unordered\+\_\+map$<$\mbox{\hyperlink{class_edge}{int}}, \mbox{\hyperlink{class_geo_point}{Geo\+Point}}\texorpdfstring{$\ast$}{*}$>$ TSP\+::geo\+Map\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_t_s_p_a91790ffb4f28481d7f39769d00982ba6}\label{class_t_s_p_a91790ffb4f28481d7f39769d00982ba6} 
+\index{TSP@{TSP}!isExtraGraph@{isExtraGraph}}
+\index{isExtraGraph@{isExtraGraph}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{isExtraGraph}{isExtraGraph}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{bool}} TSP\+::is\+Extra\+Graph = \mbox{\hyperlink{class_edge}{false}}\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_t_s_p_a8ecc55dec57211910e18378e0e0fced8}\label{class_t_s_p_a8ecc55dec57211910e18378e0e0fced8} 
+\index{TSP@{TSP}!isToyGraph@{isToyGraph}}
+\index{isToyGraph@{isToyGraph}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{isToyGraph}{isToyGraph}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{bool}} TSP\+::is\+Toy\+Graph = \mbox{\hyperlink{class_edge}{false}}\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_t_s_p_aa63bcbff82518756124e67ed93391781}\label{class_t_s_p_aa63bcbff82518756124e67ed93391781} 
+\index{TSP@{TSP}!numNodesFromExtra@{numNodesFromExtra}}
+\index{numNodesFromExtra@{numNodesFromExtra}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{numNodesFromExtra}{numNodesFromExtra}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{int}} TSP\+::num\+Nodes\+From\+Extra = 25\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_t_s_p_a52c17a3da6aa38689108dbe87e2978db}\label{class_t_s_p_a52c17a3da6aa38689108dbe87e2978db} 
+\index{TSP@{TSP}!recursionTimes@{recursionTimes}}
+\index{recursionTimes@{recursionTimes}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{recursionTimes}{recursionTimes}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{int}} TSP\+::recursion\+Times = 100000\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_t_s_p_a0ef716b23e8e4b4c2ae1d2d304df6077}\label{class_t_s_p_a0ef716b23e8e4b4c2ae1d2d304df6077} 
+\index{TSP@{TSP}!tspNetwork@{tspNetwork}}
+\index{tspNetwork@{tspNetwork}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{tspNetwork}{tspNetwork}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_graph}{Graph}}$<$\mbox{\hyperlink{class_geo_point}{Geo\+Point}}\texorpdfstring{$\ast$}{*}$>$ TSP\+::tsp\+Network\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_t_s_p_a3182f00392de6f7c96fe224b3bec1cb8}\label{class_t_s_p_a3182f00392de6f7c96fe224b3bec1cb8} 
+\index{TSP@{TSP}!vertexGeoMap@{vertexGeoMap}}
+\index{vertexGeoMap@{vertexGeoMap}!TSP@{TSP}}
+\doxysubsubsection{\texorpdfstring{vertexGeoMap}{vertexGeoMap}}
+{\footnotesize\ttfamily std\+::unordered\+\_\+map$<$\mbox{\hyperlink{class_edge}{int}}, \mbox{\hyperlink{class_vertex}{Vertex}}$<$\mbox{\hyperlink{class_geo_point}{Geo\+Point}}\texorpdfstring{$\ast$}{*}$>$\texorpdfstring{$\ast$}{*}$>$ TSP\+::vertex\+Geo\+Map\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/antonioabilio/\+Desktop/\+DA-\/\+TSP-\/\+Proj2/src/\mbox{\hyperlink{_t_s_p_8h}{TSP.\+h}}\item 
+/\+Users/antonioabilio/\+Desktop/\+DA-\/\+TSP-\/\+Proj2/src/\mbox{\hyperlink{_t_s_p_8cpp}{TSP.\+cpp}}\end{DoxyCompactItemize}

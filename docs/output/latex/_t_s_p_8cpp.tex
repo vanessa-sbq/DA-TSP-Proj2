@@ -1,0 +1,86 @@
+\doxysection{/\+Users/antonioabilio/\+Desktop/\+DA-\/\+TSP-\/\+Proj2/src/\+TSP.cpp File Reference}
+\hypertarget{_t_s_p_8cpp}{}\label{_t_s_p_8cpp}\index{/Users/antonioabilio/Desktop/DA-\/TSP-\/Proj2/src/TSP.cpp@{/Users/antonioabilio/Desktop/DA-\/TSP-\/Proj2/src/TSP.cpp}}
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$sstream$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$cmath$>$}\newline
+{\ttfamily \#include $<$unordered\+\_\+map$>$}\newline
+{\ttfamily \#include "{}TSP.\+h"{}}\newline
+{\ttfamily \#include "{}Application.\+h"{}}\newline
+{\ttfamily \#include $<$set$>$}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_edge}{int}} \mbox{\hyperlink{_t_s_p_8cpp_a5fda3d9d3ffc952d9f1524d0ce8ea623}{count\+Headers}} (\mbox{\hyperlink{class_edge}{const}} std\+::string \&\mbox{\hyperlink{class_edge}{header}})
+\begin{DoxyCompactList}\small\item\em Helper function for data parsing. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{double}} \mbox{\hyperlink{_t_s_p_8cpp_ab2cc0e224221dc0edb320243905535e4}{calculate\+Haversine\+Distance}} (\mbox{\hyperlink{class_edge}{const}} std\+::pair$<$ \mbox{\hyperlink{class_edge}{double}}, \mbox{\hyperlink{class_edge}{double}} $>$ \mbox{\hyperlink{class_edge}{p1}}, \mbox{\hyperlink{class_edge}{const}} std\+::pair$<$ \mbox{\hyperlink{class_edge}{double}}, \mbox{\hyperlink{class_edge}{double}} $>$ \mbox{\hyperlink{class_edge}{p2}})
+\begin{DoxyCompactList}\small\item\em Calculates the distance between two locations based on the Haversine formula. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{Edge}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{_t_s_p_8cpp_af0ad97df456761523849785f04abfcdf}{edge\+From\+Cur\+Vertex\+To\+Next\+Vertex}} (\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{class_edge}{current\+Vertex}}, \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{class_edge}{next\+Vertex}})
+\begin{DoxyCompactList}\small\item\em Helper function. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{Edge}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{_t_s_p_8cpp_ab604eb7e8be521a6017eaf34dcc5d437}{edge\+From\+Cur\+Vertex\+To\+Next\+Vertex\+With\+Harversine}} (\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{class_edge}{current\+Vertex}}, \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{class_edge}{next\+Vertex}})
+\begin{DoxyCompactList}\small\item\em Helper function. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{_t_s_p_8cpp_ab2cc0e224221dc0edb320243905535e4}\label{_t_s_p_8cpp_ab2cc0e224221dc0edb320243905535e4} 
+\index{TSP.cpp@{TSP.cpp}!calculateHaversineDistance@{calculateHaversineDistance}}
+\index{calculateHaversineDistance@{calculateHaversineDistance}!TSP.cpp@{TSP.cpp}}
+\doxysubsubsection{\texorpdfstring{calculateHaversineDistance()}{calculateHaversineDistance()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{double}} calculate\+Haversine\+Distance (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_edge}{const}} std\+::pair$<$ \mbox{\hyperlink{class_edge}{double}}, \mbox{\hyperlink{class_edge}{double}} $>$}]{p1,  }\item[{\mbox{\hyperlink{class_edge}{const}} std\+::pair$<$ \mbox{\hyperlink{class_edge}{double}}, \mbox{\hyperlink{class_edge}{double}} $>$}]{p2 }\end{DoxyParamCaption})}
+
+
+
+Calculates the distance between two locations based on the Haversine formula. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p1} & First location \\
+\hline
+{\em p2} & Second location \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns a double representing the distance between p1 and p2 
+\end{DoxyReturn}
+\Hypertarget{_t_s_p_8cpp_a5fda3d9d3ffc952d9f1524d0ce8ea623}\label{_t_s_p_8cpp_a5fda3d9d3ffc952d9f1524d0ce8ea623} 
+\index{TSP.cpp@{TSP.cpp}!countHeaders@{countHeaders}}
+\index{countHeaders@{countHeaders}!TSP.cpp@{TSP.cpp}}
+\doxysubsubsection{\texorpdfstring{countHeaders()}{countHeaders()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{int}} count\+Headers (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_edge}{const}} std\+::string \&}]{header }\end{DoxyParamCaption})}
+
+
+
+Helper function for data parsing. 
+
+Helps check if a given csv contains headers. \begin{DoxyReturn}{Returns}
+-\/1 if there are no matching headers 
+
+n \texorpdfstring{$>$}{>} 0 where n is the number of headers 
+\end{DoxyReturn}
+\Hypertarget{_t_s_p_8cpp_af0ad97df456761523849785f04abfcdf}\label{_t_s_p_8cpp_af0ad97df456761523849785f04abfcdf} 
+\index{TSP.cpp@{TSP.cpp}!edgeFromCurVertexToNextVertex@{edgeFromCurVertexToNextVertex}}
+\index{edgeFromCurVertexToNextVertex@{edgeFromCurVertexToNextVertex}!TSP.cpp@{TSP.cpp}}
+\doxysubsubsection{\texorpdfstring{edgeFromCurVertexToNextVertex()}{edgeFromCurVertexToNextVertex()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{Edge}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*} edge\+From\+Cur\+Vertex\+To\+Next\+Vertex (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*}}]{current\+Vertex,  }\item[{\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*}}]{next\+Vertex }\end{DoxyParamCaption})}
+
+
+
+Helper function. 
+
+Time Complexity\+: O(\+E), where E is the number of adjacent edges of the current vertex
+
+Given two vertexes, the one we are now, and the one we want to go to the function returns nullptr if it fails to find the desired edge and returns the edge that connects the two vertexes in case it finds it. \Hypertarget{_t_s_p_8cpp_ab604eb7e8be521a6017eaf34dcc5d437}\label{_t_s_p_8cpp_ab604eb7e8be521a6017eaf34dcc5d437} 
+\index{TSP.cpp@{TSP.cpp}!edgeFromCurVertexToNextVertexWithHarversine@{edgeFromCurVertexToNextVertexWithHarversine}}
+\index{edgeFromCurVertexToNextVertexWithHarversine@{edgeFromCurVertexToNextVertexWithHarversine}!TSP.cpp@{TSP.cpp}}
+\doxysubsubsection{\texorpdfstring{edgeFromCurVertexToNextVertexWithHarversine()}{edgeFromCurVertexToNextVertexWithHarversine()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{Edge}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*} edge\+From\+Cur\+Vertex\+To\+Next\+Vertex\+With\+Harversine (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*}}]{current\+Vertex,  }\item[{\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_geo_point}{Geo\+Point}} \texorpdfstring{$\ast$}{*} $>$ \texorpdfstring{$\ast$}{*}}]{next\+Vertex }\end{DoxyParamCaption})}
+
+
+
+Helper function. 
+
+Time Complexity\+: O(\+E), where E is the number of adjacent edges of the current vertex
+
+Given two vertexes, the one we are now, and the one we want to go to the function returns the distance calculated with the haversine formula if it fails to find the desired edge and returns the edge that connects the two vertexes in case it finds it. 
