@@ -614,8 +614,8 @@ double TSP::triangularApproximation(std::stringstream &sd){
     std::vector<Vertex<GeoPoint*>*> tour;
     std::unordered_set<Vertex<GeoPoint*>*> visited;
     Vertex<GeoPoint*>* auxV;
-    tour.push_back(visitOrder[0]);
-    for(size_t i = 1; i <= visitOrder.size() - 1; ++i){
+    visitOrder[0]->setPath(edgeFromCurVertexToNextVertex(visitOrder.back(), visitOrder[0]));
+    for(size_t i = 0; i <= visitOrder.size() - 1; ++i){
         auto v = visitOrder.at(i);
 
         if(i == visitOrder.size() - 1){
@@ -666,16 +666,9 @@ double TSP::triangularApproximation(std::stringstream &sd){
         }
 */
         //else{
-        //std::cout << tour[i]->getInfo()->getId() << std::endl;
+        //std::cout << tour[i]->getInfo()->getId() << " " << tour[i]->getDist() << std::endl;
         totalCost += tour[i]->getDist();
         //}
-    }
-
-    for(auto v : root->getAdj()){
-        if(v->getDest()->getInfo()->getId() == auxV->getInfo()->getId()) {
-            totalCost += v->getWeight();
-            break;
-        }
     }
 
     //std::cout<<std::endl << tour.size();
@@ -992,7 +985,8 @@ double TSP::getWeightBetween(Vertex<GeoPoint*>* v1, Vertex<GeoPoint*>* v2){
  * @param bestCount A reference to the length of the best path found so far.
  * @return True if a complete tour is found; otherwise, false.
  */
-bool TSP::nnRecursion(int here, int id, std::vector<GeoPoint *> &path, double& count, std::vector<GeoPoint*> &bestPath, double &bestCount) {
+bool TSP::nnRecursion(int here, int id, std::vector<GeoPoint *> &path, double& count, std::vector<GeoPoint*> &bestPath, double &bestCount)
+{
     Vertex<GeoPoint*>* startVertex = this->vertexGeoMap[here];
     startVertex->setVisited(true);
 
