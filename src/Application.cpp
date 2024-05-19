@@ -374,7 +374,7 @@ void Application::realWorldTSP(){
             }
         }
     } else {
-        std::cout << std::endl <<std::endl << "The graph DOES NOT have a TSP answer!, but its best answer is with cost:  "<< best;
+        std::cout << std::endl <<std::endl << "The graph DOES NOT have a TSP answer!, but its best answer is with cost:  "<< best << " and has visited " << bestres.size() << " edges";
         if(!this->isBigGraph){
             std::cout << std::endl << "and Path:  ";
             for(auto v : bestres){

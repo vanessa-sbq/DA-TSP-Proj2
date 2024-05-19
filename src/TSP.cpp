@@ -1016,12 +1016,12 @@ bool TSP::nnRecursion(int here, int id, std::vector<GeoPoint *> &path, double& c
     }
 
     if(this->recursionTimes == 0){
-        std::cout << "size -> " << path.size() << std::endl;
+        //std::cout << "size -> " << path.size() << std::endl;
         return true;
     }
 
     if(path.size() == this->vertexGeoMap.size() + 1){
-        std::cout << "size -> " << path.size() << std::endl;
+        //std::cout << "size -> " << path.size() << std::endl;
         return true;
     }
 /*
