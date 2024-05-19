@@ -582,7 +582,7 @@ bool TSP::isAdjacent(Vertex<GeoPoint *> *&v1, Vertex<GeoPoint *> *&v2) {
  * a minimum spanning tree (MST) and a pre-order traversal of the MST. The solution might not be
  * optimal but provides a feasible route even in non-fully connected graphs.
  *
- * It has time complexity O(E*log(V)), bounded by Prim's Algorithm Complexity
+ * It has time complexity O(V+E*log(V)), bounded by Prim's Algorithm Complexity
  *
  * @param sd A stringstream to store the sequence of visited vertices.
  * @return The total cost of the tour.
