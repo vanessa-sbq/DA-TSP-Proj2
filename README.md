@@ -22,45 +22,38 @@ The project utilizes multiple datasets that describe points of delivery in urban
 ## Features
 
 ### Data Handling
-- Load and parse provided datasets to create appropriate graph structures for TSP analysis.
+- Loaded and parsed provided datasets to create appropriate graph structures for TSP analysis.
 
 ### User Interface
-- Develop a user-friendly interface to expose all implemented functionalities and facilitate demonstration.
+- Developed a user-friendly interface to expose all implemented functionalities and facilitate demonstration.
 
 ## Functionalities
 
 1. **Backtracking Algorithm**
-   - Implement a backtracking approach to find the optimal TSP solution for small graphs.
-   - Validate the approach using small toy graphs and illustrate the feasibility limits for larger graphs.
+   - Implemented a backtracking approach to find the optimal TSP solution for small graphs.
+   - Validated the approach using small toy graphs and illustrate the feasibility limits for larger graphs.
 
 2. **Triangular Approximation Heuristic**
-   - Implement a 2-approximation algorithm leveraging the triangular inequality.
-   - Compare the results with the backtracking approach for small graphs and apply the heuristic to larger graphs using the Haversine distance for missing edges.
+   - Implemented a 2-approximation algorithm leveraging the triangular inequality.
+   - Compared the results with the backtracking approach for small graphs and apply the heuristic to larger graphs using the Haversine distance for missing edges.
 
 3. **Additional Heuristics**
-   - Design and implement an efficient heuristic of choice to solve the TSP.
-   - Focus on achieving a balance between solution quality and execution time.
-   - Compare the heuristic with the triangular approximation algorithm in terms of performance and optimality.
+   - Designed and implemented an efficient heuristic of choice to solve the TSP.
+   - Focused on achieving a balance between solution quality and execution time.
+   - Compared the heuristic with the triangular approximation algorithm in terms of performance and optimality.
 
 4. **TSP in the Real World**
-   - Develop an algorithm to provide TSP solutions for real-world, non-fully connected graphs.
-   - Ensure the algorithm can handle arbitrary starting points and provide near-optimal solutions in feasible time.
-   - Discuss the complexity and feasibility of TSP solutions in real-world scenarios.
+   - Developed an algorithm to provide TSP solutions for real-world, non-fully connected graphs.
+   - Ensured the algorithm can handle arbitrary starting points and provide near-optimal solutions in feasible time.
+   - Discussed the complexity and feasibility of TSP solutions in real-world scenarios.
 
 ## Documentation
 
-- Include Doxygen documentation for all implemented code, indicating the time complexity of each algorithm.
+- Included Doxygen documentation for all implemented code, indicating the time complexity of each algorithm.
 
 ## Implementation Details
 
 This project is implemented in C++ and involves the development of various algorithms to address the TSP. The project emphasizes understanding the computational challenges and devising effective heuristic solutions for realistic applications.
-
-## Demonstration & Presentation
-
-Prepare a concise 15-minute presentation highlighting:
-- The implemented TSP solutions and their analysis.
-- The trade-offs between efficiency and optimality for different algorithms.
-- The performance comparison of heuristics and backtracking approaches using provided datasets.
 
 ## Authors
 
